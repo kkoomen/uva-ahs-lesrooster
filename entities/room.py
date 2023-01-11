@@ -1,8 +1,7 @@
-class LectureRoom:
+class Room:
     """
-    Lecture rooms are used for hoorcollege, werkcollege and practica lectures
-    and can be assigned to an `Event` in order to schedule that `Event` in a
-    particular lecture room.
+    Rooms are used for lecures, seminars and practicals and can be assigned to
+    an `Event` in order to schedule that `Event` in a particular room.
     """
 
     def __init__(self, room_id: str, capacity: int) -> None:

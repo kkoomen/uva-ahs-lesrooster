@@ -5,17 +5,17 @@ import csv
 
 from entities.course import Course
 from entities.event import Event
-from entities.lecture_room import LectureRoom
+from entities.room import Room
 from entities.student import Student
 from entities.timetable import Timetable
 from utils.helpers import asset_path
 
 
-def load_lecture_rooms() -> list[LectureRoom]:
+def load_rooms() -> list[Room]:
     """
-    Load the lecture rooms data and create LectureRoom instances for each row.
+    Load the lecture rooms data and create Room instances for each row.
     """
-    lecture_rooms = []
+    rooms = []
     with open(asset_path('zalen.csv'), 'r') as file:
         # Skip the header.
         file.readline()
@@ -23,9 +23,9 @@ def load_lecture_rooms() -> list[LectureRoom]:
         reader = csv.reader(file)
         for row in reader:
             room_id, capacity = row
-            lecture_rooms.append(LectureRoom(room_id, int(capacity)))
+            rooms.append(Room(room_id, int(capacity)))
         file.close()
-    return lecture_rooms
+    return rooms
 
 
 def load_courses() -> list[Course]:
@@ -82,7 +82,7 @@ def load_students() -> list[Student]:
 
 
 def main():
-    lecture_rooms = load_lecture_rooms()
+    rooms = load_rooms()
     courses = load_courses()
     students = load_students()
 
@@ -92,7 +92,7 @@ def main():
     for _ in range(events):
         event_type = random.choice(['hc', 'wc', 'pr'])
         timeslot = random.choice([9, 11, 13, 15, 17])
-        room = random.choice(lecture_rooms)
+        room = random.choice(rooms)
         weekday = random.choice([1, 2, 3, 4, 5])
         event = Event(event_type, timeslot, room, weekday)
         timetable.add_event(event)
