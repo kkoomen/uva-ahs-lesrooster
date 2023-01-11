@@ -1,6 +1,8 @@
 from entities.event import Event
-from utils.types import TimetableList
+import matplotlib.pyplot as plt
 
+
+TimetableList = list[list[Event]]
 
 class Timetable:
     """
@@ -45,3 +47,36 @@ class Timetable:
             weekday_events.remove(event)
             return True
         return False
+
+    def plot(self) -> None:
+        # Create a list of timeslots to be used as the y-axis.
+        timeslots = [9, 11, 13, 15, 17]
+
+        # Create a list of days to be used as the x-axis.
+        days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
+
+        # Create a 2D array of zeros with the same shape as the timetable list.
+        events = [[0 for _ in range(len(timeslots))] for _ in range(len(days))]
+
+        # Iterate through the timetable and add 1 for each event that is
+        # schedules in that timeslot.
+        for i, day in enumerate(self.timetable):
+            for event in day:
+                j = timeslots.index(event.timeslot)
+                events[j][i] += 1
+
+        # Create a heatmap of the events.
+        plt.imshow(events, cmap='gray_r', extent=[-0.5, len(days)-0.5,
+                                                  len(timeslots)-0.5, -0.5])
+
+        # Create the x-axis and y-axis ticks.
+        plt.xticks(range(len(days)), days)
+        plt.yticks(range(len(timeslots)), [f'{t}:00 - {t+2}:00' for t in timeslots])
+
+        # iterate over data and adding the roomname to the corresponding cell
+        for i in range(len(days)):
+            for j in range(len(timeslots)):
+                if events[j][i] != '':
+                    plt.text(i, j, events[j][i], ha='center', va='center', color='r')
+
+        plt.show()

@@ -1,5 +1,4 @@
 from entities.lecture_room import LectureRoom
-from utils.types import EventType, Timeslot, Weekday
 
 
 class Event:
@@ -8,10 +7,10 @@ class Event:
     """
 
     def __init__(self,
-                 event_type: EventType,
-                 timeslot: Timeslot,
+                 event_type: str,
+                 timeslot: int,
                  room: LectureRoom,
-                 weekday: Weekday,
+                 weekday: int,
                  student_numbers: list[str] = []) -> None:
         self.type = event_type
         self.timeslot = timeslot

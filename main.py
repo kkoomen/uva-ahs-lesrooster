@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
+import random
 import csv
 
 from entities.course import Course
+from entities.event import Event
 from entities.lecture_room import LectureRoom
 from entities.student import Student
+from entities.timetable import Timetable
 from utils.helpers import asset_path
 
 
@@ -83,7 +86,17 @@ def main():
     courses = load_courses()
     students = load_students()
 
-    # TODO: output them in the expected format
+    # Create a timetable with random events and plot it.
+    events = 100
+    timetable = Timetable()
+    for _ in range(events):
+        event_type = random.choice(['hc', 'wc', 'pr'])
+        timeslot = random.choice([9, 11, 13, 15, 17])
+        room = random.choice(lecture_rooms)
+        weekday = random.choice([1, 2, 3, 4, 5])
+        event = Event(event_type, timeslot, room, weekday)
+        timetable.add_event(event)
+    timetable.plot()
 
 
 if __name__ == '__main__':
