@@ -4,7 +4,7 @@ from utils.types import EventType, Timeslot, Weekday
 
 class Event:
     """
-    A single event can be created which can be used to add to the timetable.
+    A timetable event which can be added to the timetable.
     """
 
     def __init__(self,
