@@ -1,5 +1,5 @@
 """
-This file contains constants that are used throughout the projects.
+This file contains constants that are used throughout the project.
 """
 
 import os
