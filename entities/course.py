@@ -5,7 +5,6 @@ class Course:
     the amount of enrolments.
     """
 
-
     def __init__(self,
                  name: str,
                  lectures_amount: int,
