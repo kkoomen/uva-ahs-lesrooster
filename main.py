@@ -96,7 +96,7 @@ def main():
         weekday = random.choice([1, 2, 3, 4, 5])
         event = Event(event_type, timeslot, room, weekday)
         timetable.add_event(event)
-    timetable.plot()
+    timetable.show_plot()
 
 
 if __name__ == '__main__':

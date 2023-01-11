@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 TimetableList = list[list[Event]]
 
+
 class Timetable:
     """
     A single timetable can contain events that can be added or removed.
@@ -48,7 +49,10 @@ class Timetable:
             return True
         return False
 
-    def plot(self) -> None:
+    def show_plot(self) -> None:
+        """
+        Plot all the events in the timetable.
+        """
         # Create a list of timeslots to be used as the y-axis.
         timeslots = [9, 11, 13, 15, 17]
 
