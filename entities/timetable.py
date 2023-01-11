@@ -2,9 +2,6 @@ from entities.event import Event
 import matplotlib.pyplot as plt
 
 
-TimetableList = list[list[Event]]
-
-
 class Timetable:
     """
     A single timetable can contain events that can be added or removed.
@@ -26,7 +23,7 @@ class Timetable:
     """
 
     def __init__(self) -> None:
-        self.timetable: TimetableList = [[], [], [], [], []]
+        self.timetable: list[list[Event]] = [[], [], [], [], []]
 
     def add_event(self, event: Event) -> bool:
         """
