@@ -10,7 +10,7 @@ class Timetable:
     A single timetable can contain events that can be added or removed.
 
     An example timetable structure is described below:
-    {
+    [
         [ // monday
             Event(type:hc, timeslot:9, room:C0.110, weekday:1, student_numbers:[1,2...]),
             Event(type:hc, timeslot:9, room:C1.04, weekday:1, student_numbers:[1,2...]),
@@ -22,7 +22,7 @@ class Timetable:
         ],
         [ // thursday ],
         [ // friday ],
-    }
+    ]
     """
 
     def __init__(self) -> None:
