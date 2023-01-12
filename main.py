@@ -3,10 +3,10 @@
 import os
 import random
 
-from entities.event import Event
-from entities.timetable import Timetable
-from utils.constants import OUT_DIR
-from utils.data import load_courses, load_rooms, load_students
+from code.entities.event import Event
+from code.entities.timetable import Timetable
+from code.utils.constants import OUT_DIR
+from code.utils.data import load_courses, load_rooms, load_students
 
 # Create the output directory if it doesn't exist yet.
 if not os.path.isdir(OUT_DIR):

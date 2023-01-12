@@ -4,7 +4,7 @@ This file contains helper functions that are used throughout the project.
 
 import os
 
-from utils.constants import DATA_DIR
+from code.utils.constants import DATA_DIR
 
 
 def data_path(filename: str) -> str:

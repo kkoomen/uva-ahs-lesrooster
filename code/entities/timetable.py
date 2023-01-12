@@ -1,8 +1,8 @@
 import csv
 import os
-from entities.event import Event
+from code.entities.event import Event
 import matplotlib.pyplot as plt
-from utils.constants import OUT_DIR, WEEKDAYS
+from code.utils.constants import OUT_DIR, WEEKDAYS
 
 
 class Timetable:

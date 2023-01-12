@@ -1,5 +1,5 @@
-from entities.room import Room
-from entities.student import Student
+from code.entities.room import Room
+from code.entities.student import Student
 
 
 class Event:

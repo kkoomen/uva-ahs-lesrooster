@@ -1,8 +1,8 @@
 import csv
-from entities.course import Course
-from entities.room import Room
-from entities.student import Student
-from utils.helpers import data_path
+from code.entities.course import Course
+from code.entities.room import Room
+from code.entities.student import Student
+from code.utils.helpers import data_path
 
 
 def load_rooms() -> list[Room]:
