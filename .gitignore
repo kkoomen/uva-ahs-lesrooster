@@ -204,4 +204,4 @@ poetry.toml
 *.xlsx
 
 # Data files
-*.csv
+out/

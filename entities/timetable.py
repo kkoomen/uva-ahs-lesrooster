@@ -2,7 +2,7 @@ import csv
 import os
 from entities.event import Event
 import matplotlib.pyplot as plt
-from utils.constants import ROOT_DIR, WEEKDAYS
+from utils.constants import OUT_DIR, WEEKDAYS
 
 
 class Timetable:
@@ -61,7 +61,7 @@ class Timetable:
         'Lisa Gold','Programming 2','hc','ma',9,'C1.04'
         'Lisa Gold','Programming 2','hc','ma',9,'C1.04'
         """
-        filepath = os.path.join(ROOT_DIR, filename)
+        filepath = os.path.join(OUT_DIR, filename)
         rows = 0
         with open(filepath, 'w') as file:
             writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
