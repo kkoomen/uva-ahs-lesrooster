@@ -2,7 +2,7 @@ import csv
 from entities.course import Course
 from entities.room import Room
 from entities.student import Student
-from utils.helpers import asset_path
+from utils.helpers import data_path
 
 
 def load_rooms() -> list[Room]:
@@ -10,7 +10,7 @@ def load_rooms() -> list[Room]:
     Load the lecture rooms data and create Room instances for each row.
     """
     rooms = []
-    with open(asset_path('zalen.csv'), 'r') as file:
+    with open(data_path('zalen.csv'), 'r') as file:
         # Skip the header.
         file.readline()
 
@@ -28,7 +28,7 @@ def load_courses() -> list[Course]:
     Load the courses data and create Student instances for each row.
     """
     courses = []
-    with open(asset_path('vakken.csv'), 'r') as file:
+    with open(data_path('vakken.csv'), 'r') as file:
         # Skip the header.
         file.readline()
 
@@ -62,7 +62,7 @@ def load_students() -> list[Student]:
     Load the students data and create Student instances for each row.
     """
     students = []
-    with open(asset_path('studenten_en_vakken.csv'), 'r') as file:
+    with open(data_path('studenten_en_vakken.csv'), 'r') as file:
         # Skip the header.
         file.readline()
 
