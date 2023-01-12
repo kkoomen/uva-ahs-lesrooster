@@ -1,4 +1,5 @@
 from entities.room import Room
+from entities.student import Student
 
 
 class Event:
@@ -7,16 +8,18 @@ class Event:
     """
 
     def __init__(self,
+                 title: str,
                  event_type: str,
                  timeslot: int,
                  room: Room,
                  weekday: int,
-                 student_numbers: list[str] = []) -> None:
+                 enrolled_students: list[Student] = []) -> None:
+        self.title = title
         self.type = event_type
         self.timeslot = timeslot
         self.room = room
         self.weekday = weekday
-        self.student_numbers = student_numbers
+        self.enrolled_students = enrolled_students
 
     def __repr__(self) -> str:
-        return f'{self.__class__.__name__}(type:{self.type}, timeslot:{self.timeslot}, room:{self.room}, weekday:{self.weekday}, student_numbers:{self.student_numbers})'
+        return f'{self.__class__.__name__}(title:{self.title}, type:{self.type}, timeslot:{self.timeslot}, room:{self.room}, weekday:{self.weekday}, enrolled_students:{self.enrolled_students})'

@@ -16,3 +16,6 @@ class Student:
 
     def __repr__(self):
         return f'{self.__class__.__name__}(first_name:{self.first_name}, last_name:{self.last_name}, student_number:{self.student_number}, enrolled_courses:{self.enrolled_courses})'
+
+    def get_full_name(self) -> str:
+        return f'{self.first_name} {self.last_name}'

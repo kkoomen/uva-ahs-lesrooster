@@ -22,8 +22,9 @@ def load_rooms() -> list[Room]:
 
         reader = csv.reader(file)
         for row in reader:
-            room_id, capacity = row
-            rooms.append(Room(room_id, int(capacity)))
+            room_id = row[0].strip()
+            capacity = int(row[1])
+            rooms.append(Room(room_id, capacity))
         file.close()
     return rooms
 
@@ -39,7 +40,7 @@ def load_courses() -> list[Course]:
 
         reader = csv.reader(file)
         for row in reader:
-            name = row[0]
+            name = row[0].strip()
             lectures_amount = int(row[1])
             seminars_amount = int(row[2])
             seminar_capacity = int(row[3] or 0)
@@ -74,7 +75,7 @@ def load_students() -> list[Student]:
         reader = csv.reader(file)
         for row in reader:
             last_name, first_name, student_number = row[:3]
-            enrolled_courses = [course for course in row[3:8] if course]
+            enrolled_courses = [course.strip() for course in row[3:8] if course]
             student = Student(first_name, last_name, student_number, enrolled_courses)
             students.append(student)
         file.close()
@@ -90,13 +91,16 @@ def main():
     events = 100
     timetable = Timetable()
     for _ in range(events):
+        title = random.choice(courses).name
         event_type = random.choice(['hc', 'wc', 'pr'])
         timeslot = random.choice([9, 11, 13, 15, 17])
         room = random.choice(rooms)
         weekday = random.choice([1, 2, 3, 4, 5])
-        event = Event(event_type, timeslot, room, weekday)
+        enrolled_students = random.choices(students, k=random.randint(8, 40))
+        event = Event(title, event_type, timeslot, room, weekday, enrolled_students)
         timetable.add_event(event)
-    timetable.show_plot()
+    # timetable.show_plot()
+    timetable.export_csv('timetable.csv', verbose=True)
 
 
 if __name__ == '__main__':

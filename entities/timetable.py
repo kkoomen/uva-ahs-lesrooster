@@ -1,5 +1,8 @@
+import csv
+import os
 from entities.event import Event
 import matplotlib.pyplot as plt
+from utils.constants import ROOT_DIR, WEEKDAYS
 
 
 class Timetable:
@@ -45,6 +48,46 @@ class Timetable:
             weekday_events.remove(event)
             return True
         return False
+
+    def export_csv(self, filename: str, verbose=False) -> None:
+        """
+        Export the timetable data to a CSV.
+
+        Below is an example of the exported data:
+        student name,course,type,weekday,timeslot,room
+        'John Doe','Algortimen en Heuristieken','hc','ma',9,'C0.110'
+        'Mary Jane','Algortimen en Heuristieken','hc','ma',9,'C0.110'
+        'Mike Smith','Algortimen en Heuristieken','hc','ma',9,'C0.110'
+        'Lisa Gold','Programming 2','hc','ma',9,'C1.04'
+        'Lisa Gold','Programming 2','hc','ma',9,'C1.04'
+        """
+        filepath = os.path.join(ROOT_DIR, filename)
+        rows = 0
+        with open(filepath, 'w') as file:
+            writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
+
+            # Write the header
+            writer.writerow(['student name', 'course', 'type', 'weekday',
+                             'timeslot', 'room'])
+
+            for day in self.timetable:
+                for event in day:
+                    for student in event.enrolled_students:
+                        row = [
+                            student.get_full_name(),
+                            event.title,
+                            event.type,
+                            WEEKDAYS[event.weekday - 1],
+                            event.timeslot,
+                            event.room.location_id
+                        ]
+
+                        rows += 1
+                        writer.writerow(row)
+            file.close()
+
+        if verbose:
+            print(f'Succesfully saved timetable with {rows} records as {filepath}')
 
     def show_plot(self) -> None:
         """
