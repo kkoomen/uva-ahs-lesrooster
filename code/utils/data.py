@@ -1,4 +1,5 @@
 import csv
+
 from code.entities.course import Course
 from code.entities.room import Room
 from code.entities.student import Student
