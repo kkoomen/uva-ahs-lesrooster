@@ -19,7 +19,8 @@ project.
 ├── main.py     # main file to be run
 ├── data        # contains all data files
 ├── code        # the main codebase
-└── out         # any generated output file will be put here
+├── out         # any generated output file will be put here
+└── docs        # contains the documented process of this project
 ```
 
 # Tests
