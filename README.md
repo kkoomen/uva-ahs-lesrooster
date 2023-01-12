@@ -16,11 +16,10 @@ project.
 
 ```
 .
-├── main.py         # main file to be run
-├── assets          # contains all csv files
-├── entities        # contains all entity classes
-├── out             # any generated output file will be put here
-└── utils           # utility functions, like constansts and helper functions
+├── main.py     # main file to be run
+├── data        # contains all data files
+├── code        # the main codebase
+└── out         # any generated output file will be put here
 ```
 
 # Tests
