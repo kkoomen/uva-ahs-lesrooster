@@ -3,7 +3,6 @@ import logging
 import random
 
 from code.entities.event import Event
-from code.entities.student import Student
 from code.entities.timeslot import Timeslot
 from code.entities.timetable import Timetable
 
