@@ -37,13 +37,15 @@ class Timetable:
     MAX_TIMESLOTS_PER_WEEK = 145
 
     def __init__(self) -> None:
+        self.logger = logging.getLogger(__name__)
+
         self.timetable: list[list[Event]] = [[], [], [], [], []]
         self.rooms = load_rooms()
         self.courses = load_courses()
         self.students = load_students()
+
         self.largest_room = self.get_largest_room()
 
-        self.logger = logging.getLogger(__name__)
 
     def get_largest_room(self) -> Room:
         """

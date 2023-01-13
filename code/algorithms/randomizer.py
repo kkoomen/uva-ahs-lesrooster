@@ -44,15 +44,15 @@ class Randomizer:
         """
         for course in self.timetable.courses:
             for _ in range(course.lectures_amount):
-                event = self.create_random_event(f'{course.name} (HC)', course, 'hc')
+                event = self.create_random_event(f'{course.name} hoorcollege', course, 'hc')
                 self.timetable.add_event(event)
 
             for _ in range(course.seminars_amount):
-                event = self.create_random_event(f'{course.name} (WC)', course, 'wc')
+                event = self.create_random_event(f'{course.name} werkcollege', course, 'wc')
                 self.timetable.add_event(event)
 
             for _ in range(course.practicals_amount):
-                event = self.create_random_event(f'{course.name} (PR)', course, 'pr')
+                event = self.create_random_event(f'{course.name} practicum', course, 'pr')
                 self.timetable.add_event(event)
 
     def reassign_events(self, events: list[Event]) -> None:
