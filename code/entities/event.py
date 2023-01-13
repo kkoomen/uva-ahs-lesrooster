@@ -2,7 +2,6 @@ import random
 
 from code.entities.course import Course
 from code.entities.room import Room
-from code.entities.student import Student
 
 
 class Event:
@@ -16,8 +15,7 @@ class Event:
                  timeslot: int,
                  course: Course,
                  room: Room,
-                 weekday: int,
-                 enrolled_students: list[Student] = []) -> None:
+                 weekday: int) -> None:
         self.id = random.getrandbits(32)
         self.title = title
         self.type = event_type
@@ -25,7 +23,6 @@ class Event:
         self.course = course
         self.room = room
         self.weekday = weekday
-        self.enrolled_students = enrolled_students
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(title:{self.title}, type:{self.type}, timeslot:{self.timeslot}, course:{self.course.name}, room:{self.room}, weekday:{self.weekday})'

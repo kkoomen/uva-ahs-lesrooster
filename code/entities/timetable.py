@@ -53,6 +53,16 @@ class Timetable:
 
         self.largest_room = self.get_largest_room()
 
+        self.register_students_to_courses()
+
+    def register_students_to_courses(self):
+        """
+        Register all the students to the courses that they signed up for.
+        """
+        for course in self.courses:
+            students = [s for s in self.students if course.name in s.enrolled_courses]
+            course.register_students(students)
+
     def get_largest_room(self) -> Room:
         """
         Find the room that has the most capacity.
