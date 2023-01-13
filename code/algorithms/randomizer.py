@@ -1,9 +1,10 @@
 import copy
-import random
 import logging
+import random
 
 from code.entities.event import Event
 from code.entities.student import Student
+from code.entities.timeslot import Timeslot
 from code.entities.timetable import Timetable
 
 
@@ -23,7 +24,7 @@ class Randomizer:
         """
         Create an event with random timeslot, room and weekday.
         """
-        timeslot = random.choice([9, 11, 13, 15, 17])
+        timeslot = random.choice(Timeslot.OPTIONS)
         room = random.choice(self.timetable.rooms)
         weekday = random.choice([1, 2, 3, 4, 5])
         students = self.get_random_students()
@@ -33,7 +34,7 @@ class Randomizer:
         """
         Clone the current event, but with other data than itself.
         """
-        timeslot = random.choice([n for n in [9, 11, 13, 15, 17] if n != event.timeslot])
+        timeslot = random.choice([n for n in Timeslot.OPTIONS if n != event.timeslot])
         room = random.choice([r for r in self.timetable.rooms if r != event.room])
         weekday = random.choice([n for n in [1, 2, 3, 4, 5] if n != event.weekday])
         return Event(event.title, event.type, timeslot, event.course, room, weekday, event.enrolled_students)

@@ -4,6 +4,7 @@ import os
 
 from code.entities.event import Event
 from code.entities.room import Room
+from code.entities.timeslot import Timeslot
 from code.utils.constants import OUT_DIR, WEEKDAYS
 from code.utils.data import load_courses, load_rooms, load_students
 import matplotlib.pyplot as plt
@@ -20,17 +21,23 @@ class Timetable:
 
     An example timetable structure is described below:
     [
-        [ // monday
-            Event(type:hc, timeslot:9, room:C0.110, weekday:1, student_numbers:[Student, Student]),
-            Event(type:hc, timeslot:9, room:C1.04, weekday:1, student_numbers:[Student, Student]),
-            Event(type:hc, timeslot:11, room:C0.110, weekday:1, student_numbers:[Student]),
-        ],
-        [ // tuesday ],
-        [ // wednesday
-            Event(type:hc, timeslot:9, room:C1.08, weekday:3, student_numbers:[Student]),
-        ],
-        [ // thursday ],
-        [ // friday ],
+        {
+            9: Timeslot(events:[
+                Event(type:hc, timeslot:9, room:C0.110, weekday:1, student_numbers:[Student, Student]),
+                Event(type:hc, timeslot:9, room:C1.04, weekday:1, student_numbers:[Student, Student]),
+            ])
+            11: Timeslot(events:[
+                Event(type:hc, timeslot:11, room:C0.110, weekday:1, student_numbers:[Student]),
+            ])
+        }
+        { // tuesday },
+        { // wednesday
+            9: Timeslot(events:[
+                Event(type:hc, timeslot:9, room:C1.08, weekday:3, student_numbers:[Student]),
+            ])
+        },
+        { // thursday },
+        { // friday },
     ]
     """
 
@@ -39,22 +46,23 @@ class Timetable:
     def __init__(self) -> None:
         self.logger = logging.getLogger(__name__)
 
-        self.timetable: list[list[Event]] = [[], [], [], [], []]
+        self.timetable: list[dict[int, Timeslot]] = [{}, {}, {}, {}, {}]
         self.rooms = load_rooms()
         self.courses = load_courses()
         self.students = load_students()
 
         self.largest_room = self.get_largest_room()
 
-
     def get_largest_room(self) -> Room:
         """
         Find the room that has the most capacity.
         """
         largest_room = self.rooms[0]
+
         for room in self.rooms:
             if room.capacity > largest_room.capacity:
                 largest_room = room
+
         return largest_room
 
     def is_largest_room(self, room: Room) -> bool:
@@ -63,32 +71,22 @@ class Timetable:
         """
         return room.location_id == self.largest_room.location_id
 
-    def add_event(self, event: Event) -> bool:
+    def add_event(self, event: Event) -> None:
         """
         Add a single event to the timetable.
-
-        :returns: True if the event has been added, False otherwise.
         """
-        self.timetable[event.weekday - 1].append(event)
-        return True
+        weekday = self.timetable[event.weekday - 1]
 
-    def remove_event(self, event: Event) -> bool:
+        if event.timeslot not in weekday:
+            weekday[event.timeslot] = Timeslot()
+
+        weekday[event.timeslot].add_event(event)
+
+    def remove_event(self, event: Event) -> None:
         """
         Remove a single event from the timetable.
-
-        :returns: True if `event` existed and has been removed, False otherwise.
         """
-        weekday_events = self.timetable[event.weekday - 1]
-
-        try:
-            for index, ev in enumerate(weekday_events):
-                if ev.id == event.id:
-                    weekday_events.pop(index)
-                    return True
-        except ValueError:
-            pass
-        finally:
-            return False
+        self.timetable[event.weekday - 1][event.timeslot].remove_event(event)
 
     def remove_events(self, events: list[Event]) -> None:
         """
@@ -96,12 +94,6 @@ class Timetable:
         """
         for event in events:
             self.remove_event(event)
-
-    def get_events_by_weekday(self, weekday: int) -> list[Event]:
-        """
-        Get the events for a day by weekday (1-5 equals mon-fri)
-        """
-        return self.timetable[weekday - 1]
 
     def get_total_timeslots(self) -> int:
         """
@@ -112,7 +104,13 @@ class Timetable:
         timeslots in a week is 145, meaning that the returned number will be
         less or equal than the maximum value.
         """
-        return sum([len(day) for day in self.timetable])
+        total = 0
+
+        for day in self.timetable:
+            for timeslot in day.values():
+                total += timeslot.get_total_events()
+
+        return total
 
 
     def calculate_value(self) -> int:
@@ -123,56 +121,12 @@ class Timetable:
         return self.get_total_timeslots()
 
 
-    def get_day_timeslots(self, day: list[Event]) -> dict[int, list[Event]]:
-        """
-        Group the events inside a day based on their timeslot time.
-        """
-        timeslots = {}
-
-        for event in day:
-            if event.timeslot not in timeslots:
-                timeslots[event.timeslot] = []
-
-            timeslots[event.timeslot].append(event)
-
-        return timeslots
-
     def is_valid(self) -> bool:
         """
         Check if the timetable structure is valid by checking constraints.
         """
         return len(self.get_violations()) == 0 and \
             self.get_total_timeslots() <= self.MAX_TIMESLOTS_PER_WEEK
-
-    def get_timeslot_duplicate_course_events(self, timeslot: list[Event]) -> list[Event]:
-        """
-        Find duplicate events for a specific course in a certain timeslot.
-        """
-        duplicated_events = []
-        visited_course_names = []
-
-        for event in timeslot:
-            if event.course.name in visited_course_names:
-                duplicated_events.append(event)
-            else:
-                visited_course_names.append(event.course.name)
-
-        return duplicated_events
-
-    def get_timeslot_double_booked_events(self, timeslot: list[Event]) -> list[Event]:
-        """
-        Find the events that are booked in the same room.
-        """
-        double_booked_events = []
-        visited_room_ids = []
-
-        for event in timeslot:
-            if event.room.location_id in visited_room_ids:
-                double_booked_events.append(event)
-            else:
-                visited_room_ids.append(event.room.location_id)
-
-        return double_booked_events
 
     def get_violations(self) -> list[Event]:
         """
@@ -182,11 +136,10 @@ class Timetable:
         violations = []
 
         for day in self.timetable:
-            timeslots = self.get_day_timeslots(day)
-            for (timeframe, timeslot) in timeslots.items():
-                # Timeframe 17 (17:00 - 19:00) can contain only one booking and
+            for (hour, timeslot) in day.items():
+                # Timeslot 17 (17:00 - 19:00) can contain only one booking and
                 # can only be booked in the largest room.
-                if timeframe == 17:
+                if hour == 17:
                     # We can only have 1 booking at most, so discard everything
                     # besides the first booking.
                     valid_events = [event for event in timeslot if self.is_largest_room(event.room)]
@@ -197,16 +150,16 @@ class Timetable:
                     invalid_events = [event for event in timeslot if not self.is_largest_room(event.room)]
                     violations += invalid_events
                 else:
-                    violations += self.get_timeslot_duplicate_course_events(timeslot)
-                    violations += self.get_timeslot_double_booked_events(timeslot)
+                    violations += timeslot.get_duplicate_course_events()
+                    violations += timeslot.get_double_booked_events()
 
         # Remove duplicates
-        violations_cleaned = list({id(event):event for event in violations}.values())
+        violations_cleaned = list({event.id:event for event in violations}.values())
 
         return violations_cleaned
 
 
-    def export_csv(self, filename: str, verbose=False) -> None:
+    def export_csv(self, filename: str) -> None:
         """
         Export the timetable data to a CSV.
 
@@ -223,41 +176,36 @@ class Timetable:
         with open(filepath, 'w') as file:
             writer = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
 
-            # Write the header
+            # Write the header.
             writer.writerow(['student name', 'course', 'type', 'weekday',
                              'timeslot', 'room'])
 
+            # Write all the other rows.
             for day in self.timetable:
-                for event in day:
-                    for student in event.enrolled_students:
-                        row = [
-                            student.get_full_name(),
-                            event.title,
-                            event.type,
-                            WEEKDAYS[event.weekday - 1],
-                            event.timeslot,
-                            event.room.location_id
-                        ]
+                for timeslot in day.values():
+                    for event in timeslot:
+                        for student in event.enrolled_students:
+                            row = [
+                                student.get_full_name(),
+                                event.title,
+                                event.type,
+                                WEEKDAYS[event.weekday - 1],
+                                event.timeslot,
+                                event.room.location_id
+                            ]
 
-                        rows += 1
-                        writer.writerow(row)
+                            rows += 1
+                            writer.writerow(row)
             file.close()
 
         self.logger.info(f'Successfully saved timetable with {rows} records as {filepath}')
-
-    def print_info(self) -> None:
-        """
-        Print timetable information.
-        """
-        for i, day in enumerate(self.timetable):
-            print(f'{WEEKDAYS[i]}: {len(day)}')
 
     def show_plot(self) -> None:
         """
         Plot all the events in the timetable.
         """
         # Create a list of timeslots to be used as the y-axis.
-        timeslots = [9, 11, 13, 15, 17]
+        timeslots = Timeslot.OPTIONS
 
         # Create a list of days to be used as the x-axis.
         days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
@@ -266,11 +214,12 @@ class Timetable:
         events = [[0 for _ in range(len(timeslots))] for _ in range(len(days))]
 
         # Iterate through the timetable and add 1 for each event that is
-        # schedules in that timeslot.
+        # scheduled in that timeslot.
         for i, day in enumerate(self.timetable):
-            for event in day:
-                j = timeslots.index(event.timeslot)
-                events[j][i] += 1
+            for timeslot in day.values():
+                for event in timeslot:
+                    j = timeslots.index(event.timeslot)
+                    events[j][i] += 1
 
         # Create a heatmap of the events.
         plt.imshow(events, cmap='gray_r', extent=[-0.5, len(days)-0.5,
