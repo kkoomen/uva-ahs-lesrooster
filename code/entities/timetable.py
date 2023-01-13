@@ -184,7 +184,10 @@ class Timetable:
                     violations += self.get_timeslot_duplicate_course_events(timeslot)
                     violations += self.get_timeslot_double_booked_events(timeslot)
 
-        return violations
+        # Remove duplicates
+        violations_cleaned = list({id(event):event for event in violations}.values())
+
+        return violations_cleaned
 
 
     def export_csv(self, filename: str, verbose=False) -> None:
