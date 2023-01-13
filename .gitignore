@@ -205,3 +205,6 @@ poetry.toml
 
 # Data files
 out/
+
+# Log files
+logs/

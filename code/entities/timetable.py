@@ -1,4 +1,5 @@
 import csv
+import logging
 import os
 
 from code.entities.event import Event
@@ -15,7 +16,7 @@ class Timetable:
     Constraints:
     - Each timeslot can contain each room at most once.
     - Each timeslot can contain an event of a certain course at most once.
-    - Only the biggest room can be scheduled inside the
+    - Only the largest room can be scheduled in the 17-19 timeframe.
 
     An example timetable structure is described below:
     [
@@ -33,12 +34,16 @@ class Timetable:
     ]
     """
 
+    MAX_TIMESLOTS_PER_WEEK = 145
+
     def __init__(self) -> None:
         self.timetable: list[list[Event]] = [[], [], [], [], []]
         self.rooms = load_rooms()
         self.courses = load_courses()
         self.students = load_students()
         self.largest_room = self.get_largest_room()
+
+        self.logger = logging.getLogger(__name__)
 
     def get_largest_room(self) -> Room:
         """
@@ -96,7 +101,7 @@ class Timetable:
         """
         return self.timetable[weekday - 1]
 
-    def calculate_value(self) -> int:
+    def get_total_timeslots(self) -> int:
         """
         Calculates the amount of timeslots for a week. Each timeslot is (for
         simplicity) a 2-hour timeslot. Available timeslots are 9-11, 11-13,
@@ -106,6 +111,14 @@ class Timetable:
         less or equal than the maximum value.
         """
         return sum([len(day) for day in self.timetable])
+
+
+    def calculate_value(self) -> int:
+        """
+        Calculates the value for the timetable. This may vary depending on what
+        we consider a nice value.
+        """
+        return self.get_total_timeslots()
 
 
     def get_day_timeslots(self, day: list[Event]) -> dict[int, list[Event]]:
@@ -126,7 +139,8 @@ class Timetable:
         """
         Check if the timetable structure is valid by checking constraints.
         """
-        return len(self.get_violations()) == 0
+        return len(self.get_violations()) == 0 and \
+            self.get_total_timeslots() <= self.MAX_TIMESLOTS_PER_WEEK
 
     def get_timeslot_duplicate_course_events(self, timeslot: list[Event]) -> list[Event]:
         """
@@ -227,8 +241,7 @@ class Timetable:
                         writer.writerow(row)
             file.close()
 
-        if verbose:
-            print(f'Succesfully saved timetable with {rows} records as {filepath}')
+        self.logger.info(f'Successfully saved timetable with {rows} records as {filepath}')
 
     def print_info(self) -> None:
         """

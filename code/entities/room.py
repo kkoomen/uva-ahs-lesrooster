@@ -10,3 +10,9 @@ class Room:
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(location_id:{self.location_id}, capacity:{self.capacity})'
+
+    def __ne__(self, other) -> bool:
+        """
+        Implement the != operator.
+        """
+        return self.location_id != other.location_id

@@ -1,5 +1,6 @@
 import copy
 import random
+import logging
 
 from code.entities.event import Event
 from code.entities.student import Student
@@ -10,12 +11,11 @@ class Randomizer:
 
     def __init__(self, timetable: Timetable) -> None:
         self.timetable = copy.deepcopy(timetable)
+        self.logger = logging.getLogger(__name__)
 
     def get_random_students(self) -> list[Student]:
         """
-        Get random students.
-
-        TODO: do randint() upper- and lowerbound based on `event`.
+        Get a random amount of students.
         """
         return random.choices(self.timetable.students, k=random.randint(8, 40))
 
@@ -31,13 +31,12 @@ class Randomizer:
 
     def create_similar_event(self, event) -> Event:
         """
-        Clone the current event, but with other data.
+        Clone the current event, but with other data than itself.
         """
         timeslot = random.choice([n for n in [9, 11, 13, 15, 17] if n != event.timeslot])
-        room = random.choice([r for r in self.timetable.rooms if r.location_id != event.room.location_id])
+        room = random.choice([r for r in self.timetable.rooms if r != event.room])
         weekday = random.choice([n for n in [1, 2, 3, 4, 5] if n != event.weekday])
-        students = self.get_random_students()
-        return Event(event.title, event.type, timeslot, event.course, room, weekday, students)
+        return Event(event.title, event.type, timeslot, event.course, room, weekday, event.enrolled_students)
 
     def assign_random_events(self) -> None:
         """
@@ -71,14 +70,14 @@ class Randomizer:
         """
         self.assign_random_events()
         violations = self.timetable.get_violations()
-        print(f'initial value: {self.timetable.calculate_value()}')
 
+        retries = 0
         while len(violations) > 0:
-            # self.timetable.print_info()
+            retries += 1
+
+            self.logger.debug(f'[RETRY #{retries}] Found {len(violations)} violations, going to reassign them...')
+
             self.reassign_events(violations)
             violations = self.timetable.get_violations()
 
-            # The maximum value (amount of timeslots) can be 145. To prevent an
-            # infinite loop, we make sure to stop if it has more than 145 timeslots.
-            if self.timetable.calculate_value() > 145:
-                break
+        self.logger.info(f'[DONE] Successfully created random timetable (retries:{retries})')
