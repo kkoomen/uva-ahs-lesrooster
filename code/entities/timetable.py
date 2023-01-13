@@ -194,7 +194,7 @@ class Timetable:
             for day in self.timetable:
                 for timeslot in day.values():
                     for event in timeslot:
-                        for student in event.enrolled_students:
+                        for student in event.course.enrolled_students:
                             row = [
                                 student.get_full_name(),
                                 event.title,

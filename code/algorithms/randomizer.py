@@ -14,12 +14,6 @@ class Randomizer:
         self.timetable = copy.deepcopy(timetable)
         self.logger = logging.getLogger(__name__)
 
-    def get_random_students(self) -> list[Student]:
-        """
-        Get a random amount of students.
-        """
-        return random.choices(self.timetable.students, k=random.randint(8, 40))
-
     def create_random_event(self, title, course, event_type: str) -> Event:
         """
         Create an event with random timeslot, room and weekday.
@@ -27,8 +21,7 @@ class Randomizer:
         timeslot = random.choice(Timeslot.OPTIONS)
         room = random.choice(self.timetable.rooms)
         weekday = random.choice([1, 2, 3, 4, 5])
-        students = self.get_random_students()
-        return Event(title, event_type, timeslot, course, room, weekday, students)
+        return Event(title, event_type, timeslot, course, room, weekday)
 
     def create_similar_event(self, event) -> Event:
         """
@@ -37,7 +30,7 @@ class Randomizer:
         timeslot = random.choice([n for n in Timeslot.OPTIONS if n != event.timeslot])
         room = random.choice([r for r in self.timetable.rooms if r != event.room])
         weekday = random.choice([n for n in [1, 2, 3, 4, 5] if n != event.weekday])
-        return Event(event.title, event.type, timeslot, event.course, room, weekday, event.enrolled_students)
+        return Event(event.title, event.type, timeslot, event.course, room, weekday)
 
     def assign_random_events(self) -> None:
         """
