@@ -93,50 +93,6 @@ class Randomizer(Algorithm):
 
         self.swap_events(reassigned_events)
 
-    def swap_students(self):
-        """
-        Swap students in the whole timetable. The swapping will only be done
-        within the scheduled events inside a course. Seminars and practicals may
-        contain 2 or more groups the students will be divided over. Students
-        will be swapped within these groups.
-        """
-        # The key will be a course name with the event type, i.e. 'Database wc'.
-        # The value is a list of scheduled events for that course type.
-        #
-        # Example:
-        # {
-        #   'Databases hc': [Event()]
-        #   'Databases wc': [Event(), Event(), Event()]
-        #   'Databases pr': [Event(), Event()]
-        #   'Calculus 2 hc': [Event(), Event()]
-        #   'Calculus 2 wc': [Event(), Event()]
-        #   'Calculus 2 pr': [Event()]
-        # }
-        course_events: dict[str, list[Event]] = {}
-
-        for day in self.timetable:
-            for timeslot in day.values():
-                for event in timeslot:
-                    key = f'{event.course.name} {event.type}'
-
-                    if key not in course_events:
-                        course_events[key] = []
-
-                    course_events[key].append(event)
-
-        for events in course_events.values():
-            # Only swap among the events if there are 2 or more.
-            if len(events) >= 2:
-                # Gather all students
-                students = [student for event in events for student in event.students]
-
-                # Divide the students in groups
-                student_groups = split_list_random(students, len(events))
-
-                # Assign the students to the events
-                for i, event in enumerate(events):
-                    event.assign_students(student_groups[i])
-
     def swap_events(self, events: list[Event]) -> None:
         """
         Swap each event with any random other event in the timetable.
@@ -156,10 +112,10 @@ class Randomizer(Algorithm):
             self.timetable.remove_event(event)
             self.timetable.remove_event(other_event)
 
-            event.set_timeslot(other_event.timeslot)
             event.set_weekday(other_event.weekday)
-            other_event.set_timeslot(event.timeslot)
+            event.set_timeslot(other_event.timeslot)
             other_event.set_weekday(event.weekday)
+            other_event.set_timeslot(event.timeslot)
 
             self.timetable.add_event(event)
             self.timetable.add_event(other_event)
@@ -187,7 +143,6 @@ class Randomizer(Algorithm):
                 break
 
             self.reassign_events(violations)
-            self.swap_students()
             violations = self.timetable.get_violations()
 
         self.logger.info(f'[DONE] Successfully created random timetable (retries:{retries})')
