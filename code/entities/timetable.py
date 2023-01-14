@@ -224,8 +224,7 @@ class Timetable:
         # Create a 2D array of zeros with the same shape as the timetable list.
         events = [[0 for _ in range(len(timeslots))] for _ in range(len(days))]
 
-        # Iterate through the timetable and add 1 for each event that is
-        # scheduled in that timeslot.
+        # Add 1 for each event that is scheduled in that timeslot.
         for i, day in enumerate(self.timetable):
             for timeslot in day.values():
                 for event in timeslot:
@@ -240,7 +239,7 @@ class Timetable:
         plt.xticks(range(len(days)), days)
         plt.yticks(range(len(timeslots)), [f'{t}:00 - {t+2}:00' for t in timeslots])
 
-        # iterate over data and adding the roomname to the corresponding cell
+        # Adding the amount of events scheduled for each timeslot.
         for i in range(len(days)):
             for j in range(len(timeslots)):
                 if events[j][i] != '':
