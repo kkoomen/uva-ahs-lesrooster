@@ -9,7 +9,7 @@ from code.entities.timeslot import Timeslot
 from code.utils.constants import OUT_DIR
 from code.utils.data import load_courses, load_rooms, load_students
 from code.utils.enums import Weekdays
-from code.utils.helpers import remove_duplicates
+from code.utils.helpers import flatten, remove_duplicates
 import matplotlib.pyplot as plt
 
 
@@ -126,14 +126,36 @@ class Timetable:
 
     def calculate_malus_score(self) -> int:
         """
-        Calculates the malus score for the timetable. The perfect score is 0,
-        and anything higher is bad.
+        Calculates the malus score for the timetable. A perfect score is 0,
+        anything higher is worse.
         """
         score = 0
 
+        # Get the malus score for each timeslot
         for day in self.timetable:
             for timeslot in day.values():
                 score += timeslot.calculate_malus_score()
+
+        # Get events by course for each day
+        course_events_timetable = self.get_events_by_course_per_day()
+        for course_events in course_events_timetable:
+            for index, event in enumerate(course_events):
+                # We also want to check the previous index, so index must be > 0.
+                if index == 0:
+                    continue
+
+                # Check if the amount of empty timeslots in between the
+                # current and previous timeslot.
+                prev_event = course_events[index - 1]
+                total_empty_timeslots = (event.timeslot - prev_event.timeslot) / Timeslot.TIMEFRAME
+
+                if total_empty_timeslots == 1:
+                    # 1 empty timeslot in-between two timeslots is 1 malus point
+                    score += 1
+                elif total_empty_timeslots == 2:
+                    # 2 empty timeslot in-between two timeslots is 3 malus point
+                    score += 3
+
 
         return score
 
@@ -143,6 +165,27 @@ class Timetable:
         """
         return len(self.get_violations()) == 0 and \
             self.get_total_timeslots() <= self.MAX_TIMESLOTS_PER_WEEK
+
+    def get_events_by_course_per_day(self) -> list[list[Event]]:
+        """
+        Group all events by course for each day in the timetable.
+        """
+        timetable = [[], [], [], [], []]
+
+        for day in self.timetable:
+            course_events: dict[str, list[Event]] = {}
+
+            for timeslot in day.values():
+                for event in timeslot:
+                    if event.course.id not in course_events:
+                        course_events[event.course.id] = []
+                    course_events[event.course.id].append(event)
+
+
+            # Append a sorted list (based on timeslot value) of course events.
+            timetable.append(sorted(flatten(list(course_events.values()))))
+
+        return timetable
 
     def get_empty_timeslot_violations(self) -> list[Event]:
         """
@@ -156,32 +199,19 @@ class Timetable:
         """
         violations = []
 
-        for day in self.timetable:
-            # Group all events for this day by course.
-            course_events: dict[str, list[Event]] = {}
-            for timeslot in day.values():
-                for event in timeslot:
-                    if event.course.id not in course_events:
-                        course_events[event.course.id] = []
+        course_events_timetable = self.get_events_by_course_per_day()
+        for course_events in course_events_timetable:
+            for index, event in enumerate(course_events):
+                # We also want to check the previous index, so index must be > 0.
+                if index == 0:
+                    continue
 
-                    course_events[event.course.id].append(event)
-
-            for events in course_events.values():
-                # Sort the events by timeslot.
-                sorted_events = sorted(events)
-
-                # Check if there are 3x 2-hour timeslot (difference of 6 hours).
-                for index, event in enumerate(sorted_events):
-                    # We want to check the previous one, so index must be > 0.
-                    if index == 0:
-                        continue
-
-                    # Check if the amount of empty timeslots in between the
-                    # current and previous timeslot.
-                    prev_event = sorted_events[index - 1]
-                    total_empty_timeslots = (event.timeslot - prev_event.timeslot) / Timeslot.TIMEFRAME
-                    if total_empty_timeslots >= 3:
-                        violations += [prev_event, event]
+                # Check if the amount of empty timeslots in between the
+                # current and previous timeslot.
+                prev_event = course_events[index - 1]
+                total_empty_timeslots = (event.timeslot - prev_event.timeslot) / Timeslot.TIMEFRAME
+                if total_empty_timeslots >= 3:
+                    violations += [prev_event, event]
 
         return remove_duplicates(violations)
 

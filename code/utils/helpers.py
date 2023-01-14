@@ -5,6 +5,7 @@ This file contains helper functions that are used throughout the project.
 import copy
 import os
 import random
+from itertools import chain
 
 from code.utils.constants import DATA_DIR
 
@@ -63,3 +64,13 @@ def remove_duplicates(items: list) -> list:
             new_list.append(item)
 
     return new_list
+
+
+def flatten(items: list) -> list:
+    """
+    Flatten a list of lists.
+
+    >>> flatten(['a', ['b', 'c']])
+    ['a', 'b', 'c']
+    """
+    return list(chain.from_iterable(items))

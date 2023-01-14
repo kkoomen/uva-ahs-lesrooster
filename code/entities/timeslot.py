@@ -107,6 +107,7 @@ class Timeslot:
         """
         points = 0
 
+        # The 17:00 - 19:00 timeslot adds 5 malus points.
         if self.value == 17:
             points += 5
 

@@ -142,7 +142,7 @@ class Randomizer(Algorithm):
             # Because the students are not swapped in the violations, it might
             # run into an infinite loop, so if the retries is above a certain
             # threshold, we stop trying.
-            if retries >= 2000:
+            if retries >= 10000:
                 found_solution = False
                 break
 
