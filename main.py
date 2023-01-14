@@ -14,9 +14,11 @@ def main():
     randomizer.run()
 
     is_valid = randomizer.timetable.is_valid()
-    logger.info(f'Valid timetable: {is_valid}')
-    logger.info(f'Timetable value: {randomizer.timetable.calculate_value()}')
-    logger.info(f'Found {len(randomizer.timetable.get_violations())} violations')
+    logger.info('Timetable info:')
+    logger.info(f'\tValid: {is_valid}')
+    logger.info(f'\tTotal timeslots: {randomizer.timetable.get_total_timeslots()}')
+    logger.info(f'\tMalus score: {randomizer.timetable.calculate_malus_score()}')
+    logger.info(f'\tViolations amount: {len(randomizer.timetable.get_violations())}')
 
     if is_valid:
         randomizer.timetable.export_csv('timetable.csv')

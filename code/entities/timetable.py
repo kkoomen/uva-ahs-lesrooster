@@ -89,7 +89,7 @@ class Timetable:
         weekday = self.timetable[event.weekday - 1]
 
         if event.timeslot not in weekday:
-            weekday[event.timeslot] = Timeslot()
+            weekday[event.timeslot] = Timeslot(event.timeslot)
 
         weekday[event.timeslot].add_event(event)
 
@@ -124,12 +124,18 @@ class Timetable:
         return total
 
 
-    def calculate_value(self) -> int:
+    def calculate_malus_score(self) -> int:
         """
-        Calculates the value for the timetable. This may vary depending on what
-        we consider a nice value.
+        Calculates the malus score for the timetable. The perfect score is 0,
+        and anything higher is bad.
         """
-        return self.get_total_timeslots()
+        score = 0
+
+        for day in self.timetable:
+            for timeslot in day.values():
+                score += timeslot.calculate_malus_score()
+
+        return score
 
 
     def is_valid(self) -> bool:
@@ -161,13 +167,9 @@ class Timetable:
                     invalid_events = [event for event in timeslot if not self.is_largest_room(event.room)]
                     violations += invalid_events
                 else:
-                    violations += timeslot.get_duplicate_course_events()
-                    violations += timeslot.get_double_booked_events()
+                    violations += timeslot.get_violations()
 
-        # Remove duplicates
-        violations_cleaned = list({event.id:event for event in violations}.values())
-
-        return violations_cleaned
+        return violations
 
 
     def export_csv(self, filename: str) -> None:
