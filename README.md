@@ -12,6 +12,13 @@ project.
 - `pip3 install -r requirements.txt`
 - `./main.py`
 
+# Process logboek
+
+Ik houd een persoonlijk proces logboek bij in deze repo waar ik mijn proces en
+resultaten beschrijf na elke fase te hebben afgerond.
+
+[Klik hier](./docs/README.md) om het te bekijken.
+
 # Project structuur
 
 ```
