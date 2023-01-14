@@ -13,6 +13,10 @@ from code.utils.helpers import split_list_random
 
 
 class Randomizer(Algorithm):
+    """
+    This algorithm will create random events in the timetable and reassign any
+    of the events that violate the constraints.
+    """
 
     def __init__(self) -> None:
         self.timetable = Timetable()
@@ -136,7 +140,7 @@ class Randomizer(Algorithm):
             self.logger.debug(f'[RETRY #{retries}] Found {len(violations)} violations, going to reassign them...')
 
             # Because the students are not swapped in the violations, it might
-            # run into an infinite loop, so if the retries is above a certaint
+            # run into an infinite loop, so if the retries is above a certain
             # threshold, we stop trying.
             if retries >= 2000:
                 found_solution = False
