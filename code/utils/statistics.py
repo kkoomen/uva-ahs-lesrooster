@@ -18,14 +18,10 @@ def print_algorithm_average_statistics(algorithm: Algorithm,
         found_solution, retries = algorithm.run()
         avg_retries += retries
 
-        if min_retries is None:
-            min_retries = retries
-        elif retries < min_retries:
+        if min_retries is None or retries < min_retries:
             min_retries = retries
 
-        if max_retries is None:
-            max_retries = retries
-        elif retries > max_retries:
+        if max_retries is None or retries > max_retries:
             max_retries = retries
 
         if found_solution:

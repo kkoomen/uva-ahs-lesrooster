@@ -81,6 +81,24 @@ class Timeslot:
 
         return double_booked_events
 
+    def get_timeslot_17_violations(self) -> list[Event]:
+        violations = []
+
+        # Timeslot 17 (17:00 - 19:00) can contain only one booking and can only
+        # be booked in the largest room.
+        if self.value == 17:
+            # We can only have 1 booking at most, so discard everything
+            # besides the first booking.
+            valid_events = [event for event in self.events if event.room.is_largest]
+            violations += valid_events[1:]
+
+            # Those that are booked from 17:00 that are not in the
+            # largest room are violations.
+            invalid_events = [event for event in self.events if not event.room.is_largest]
+            violations += invalid_events
+
+        return violations
+
     def calculate_malus_score(self) -> int:
         """
         Calculates the malus score for this particular timeslot.
@@ -119,6 +137,7 @@ class Timeslot:
         """
         violations = []
 
+        violations += self.get_timeslot_17_violations()
         violations += self.get_overlapping_student_courses_events()
         violations += self.get_duplicate_course_events()
         violations += self.get_double_booked_events()

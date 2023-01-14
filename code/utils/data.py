@@ -12,12 +12,22 @@ def load_rooms() -> list[Room]:
     """
     rooms = []
 
+    largest_room = None
     with open(data_path('zalen.csv'), 'r') as file:
         reader = csv.DictReader(file)
         for row in reader:
             room_id = row['Zaalnummer'].strip()
             capacity = int(row['Max. capaciteit'])
-            rooms.append(Room(room_id, capacity))
+            room = Room(room_id, capacity)
+
+            if largest_room is None or largest_room.capacity > capacity:
+                largest_room = room
+
+            rooms.append(room)
+
+        if isinstance(largest_room, Room):
+            largest_room.set_is_largest(True)
+
         file.close()
 
     return rooms

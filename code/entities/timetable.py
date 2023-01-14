@@ -150,21 +150,8 @@ class Timetable:
         violations = []
 
         for day in self.timetable:
-            for (hour, timeslot) in day.items():
-                # Timeslot 17 (17:00 - 19:00) can contain only one booking and
-                # can only be booked in the largest room.
-                if hour == 17:
-                    # We can only have 1 booking at most, so discard everything
-                    # besides the first booking.
-                    valid_events = [event for event in timeslot if self.is_largest_room(event.room)]
-                    violations += valid_events[1:]
-
-                    # Those that are booked from 17:00 that are not in the
-                    # largest room are violations.
-                    invalid_events = [event for event in timeslot if not self.is_largest_room(event.room)]
-                    violations += invalid_events
-                else:
-                    violations += timeslot.get_violations()
+            for timeslot in day.values():
+                violations += timeslot.get_violations()
 
         return violations
 
