@@ -1,11 +1,13 @@
 import copy
 import logging
+import math
 import random
 
 from code.entities.event import Event
 from code.entities.timeslot import Timeslot
 from code.entities.timetable import Timetable
 from code.utils.enums import Weekdays
+from code.utils.helpers import split_list_random
 
 
 class Randomizer:
@@ -42,12 +44,24 @@ class Randomizer:
                 self.timetable.add_event(event)
 
             for _ in range(course.seminars_amount):
-                event = self.create_random_event(f'{course.name} werkcollege', course, 'wc')
-                self.timetable.add_event(event)
+                # Create groups based on the seminar capacity and enrolment.
+                total_groups = math.ceil(course.enrolment / course.seminar_capacity)
+                group_capacity = math.ceil(course.enrolment / total_groups)
+                student_groups = split_list_random(course.enrolled_students, group_capacity)
+                for i in range(total_groups):
+                    event = self.create_random_event(f'{course.name} werkcollege {i + 1}', course, 'wc')
+                    event.assign_students(student_groups[i])
+                    self.timetable.add_event(event)
 
             for _ in range(course.practicals_amount):
-                event = self.create_random_event(f'{course.name} practicum', course, 'pr')
-                self.timetable.add_event(event)
+                # Create groups based on the practicals capacity and enrolment.
+                total_groups = math.ceil(course.enrolment / course.practical_capacity)
+                group_capacity = math.ceil(course.enrolment / total_groups)
+                student_groups = split_list_random(course.enrolled_students, group_capacity)
+                for i in range(total_groups):
+                    event = self.create_random_event(f'{course.name} practicum {i + 1}', course, 'pr')
+                    event.assign_students(student_groups[i])
+                    self.timetable.add_event(event)
 
     def reassign_events(self, events: list[Event]) -> None:
         """
@@ -58,9 +72,11 @@ class Randomizer:
             new_event = self.create_similar_event(event)
             self.timetable.add_event(new_event)
 
-    def run(self) -> None:
+    def run(self) -> int:
         """
         Assign random events until the timetable is valid.
+
+        :returns: The total amount of retries.
         """
         self.assign_random_events()
         violations = self.timetable.get_violations()
@@ -75,3 +91,5 @@ class Randomizer:
             violations = self.timetable.get_violations()
 
         self.logger.info(f'[DONE] Successfully created random timetable (retries:{retries})')
+
+        return retries
