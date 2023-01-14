@@ -250,6 +250,8 @@ class Timetable:
         for i in range(len(days)):
             for j in range(len(timeslots)):
                 if events[j][i] != '':
-                    plt.text(i, j, events[j][i], ha='center', va='center', color='r')
+                    plt.text(i, j, events[j][i], ha='center', va='center',
+                             color='r', fontweight='bold', fontsize='x-large')
 
+        plt.gca().set_title('Timetable')
         plt.show()
