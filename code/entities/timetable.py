@@ -140,7 +140,6 @@ class Timetable:
                         # 2 empty timeslot in-between two timeslots is 3 malus point.
                         score += 3
 
-
         return score
 
     def is_valid(self) -> bool:
@@ -320,7 +319,6 @@ class Timetable:
         e.end = datetime.fromisoformat(f'{today_date}T{end_time}:00:00{utc_offset}')
 
         return e
-
 
     def export_ics(self, filename: str = 'timetable.ics') -> None:
         """
