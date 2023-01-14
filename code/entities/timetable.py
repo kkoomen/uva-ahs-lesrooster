@@ -1,3 +1,4 @@
+from collections.abc import Generator
 import csv
 import logging
 import os
@@ -15,26 +16,21 @@ class Timetable:
     """
     A single timetable can contain events that can be added or removed.
 
-    Constraints:
-    - Each timeslot can contain each room at most once.
-    - Each timeslot can contain an event of a certain course at most once.
-    - Only the largest room can be scheduled in the 17-19 timeframe.
-
     An example timetable structure is described below:
     [
         {
             9: Timeslot(events:[
-                Event(type:hc, timeslot:9, room:C0.110, weekday:1, student_numbers:[Student, Student]),
-                Event(type:hc, timeslot:9, room:C1.04, weekday:1, student_numbers:[Student, Student]),
+                Event(type:hc, timeslot:9, room:C0.110, weekday:1, student:[Student, Student]),
+                Event(type:hc, timeslot:9, room:C1.04, weekday:1, student:[Student, Student]),
             ])
             11: Timeslot(events:[
-                Event(type:hc, timeslot:11, room:C0.110, weekday:1, student_numbers:[Student]),
+                Event(type:hc, timeslot:11, room:C0.110, weekday:1, student:[Student]),
             ])
         }
         { // tuesday },
         { // wednesday
             9: Timeslot(events:[
-                Event(type:hc, timeslot:9, room:C1.08, weekday:3, student_numbers:[Student]),
+                Event(type:hc, timeslot:9, room:C1.08, weekday:3, student:[Student]),
             ])
         },
         { // thursday },
@@ -55,6 +51,10 @@ class Timetable:
         self.largest_room = self.get_largest_room()
 
         self.register_students_to_courses()
+
+    def __iter__(self) -> Generator:
+        for day in self.timetable:
+            yield day
 
     def register_students_to_courses(self):
         """
@@ -171,6 +171,11 @@ class Timetable:
 
         return violations
 
+    def clear(self) -> None:
+        """
+        Remove all data from the timetable.
+        """
+        self.timetable = [{}, {}, {}, {}, {}]
 
     def export_csv(self, filename: str) -> None:
         """

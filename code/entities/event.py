@@ -33,3 +33,9 @@ class Event:
 
     def assign_students(self, students: list[Student]) -> None:
         self.students = students
+
+    def set_timeslot(self, timeslot: int) -> None:
+        self.timeslot = timeslot
+
+    def set_weekday(self, weekday: int) -> None:
+        self.weekday = weekday

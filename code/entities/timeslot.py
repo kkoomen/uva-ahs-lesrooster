@@ -1,3 +1,5 @@
+from collections.abc import Generator
+
 from code.entities.event import Event
 
 
@@ -6,6 +8,11 @@ class Timeslot:
     Timeslots are used inside the Timetable class and contain scheduled events.
 
     Constraints:
+    - Each timeslot can contain each room at most once.
+    - Each timeslot can contain an event of a certain course at most once.
+    - Only the largest room can be scheduled in the 17-19 timeframe.
+
+    Malus points:
     - The 17:00 - 19:00 timeslot adds 5 malus points.
     - Every course conflict that each student has adds 1 malus point.
     """
@@ -37,7 +44,7 @@ class Timeslot:
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(events:{len(self.events)})'
 
-    def __iter__(self):
+    def __iter__(self) -> Generator:
         """
         Allows to iterate over the timeslot events.
         """
