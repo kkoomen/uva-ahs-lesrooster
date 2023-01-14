@@ -5,6 +5,7 @@ import random
 from code.entities.event import Event
 from code.entities.timeslot import Timeslot
 from code.entities.timetable import Timetable
+from code.utils.enums import Weekdays
 
 
 class Randomizer:
@@ -28,7 +29,7 @@ class Randomizer:
         """
         timeslot = random.choice([n for n in Timeslot.OPTIONS if n != event.timeslot])
         room = random.choice([r for r in self.timetable.rooms if r != event.room])
-        weekday = random.choice([n for n in [1, 2, 3, 4, 5] if n != event.weekday])
+        weekday = random.choice([weekday.value for weekday in Weekdays])
         return Event(event.title, event.type, timeslot, event.course, room, weekday)
 
     def assign_random_events(self) -> None:

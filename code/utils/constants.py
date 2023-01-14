@@ -8,5 +8,3 @@ ROOT_DIR = os.path.realpath(os.path.join(os.path.basename(__file__), '../'))
 DATA_DIR = os.path.join(ROOT_DIR, 'data')
 OUT_DIR = os.path.join(ROOT_DIR, 'out')
 LOG_DIR = os.path.join(ROOT_DIR, 'logs')
-
-WEEKDAYS = ['mon', 'tue', 'wed', 'thu', 'fri']

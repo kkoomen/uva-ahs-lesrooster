@@ -5,7 +5,8 @@ import os
 from code.entities.event import Event
 from code.entities.room import Room
 from code.entities.timeslot import Timeslot
-from code.utils.constants import OUT_DIR, WEEKDAYS
+from code.utils.constants import OUT_DIR
+from code.utils.enums import Weekdays
 from code.utils.data import load_courses, load_rooms, load_students
 import matplotlib.pyplot as plt
 
@@ -199,7 +200,7 @@ class Timetable:
                                 student.get_full_name(),
                                 event.title,
                                 event.type,
-                                WEEKDAYS[event.weekday - 1],
+                                Weekdays(event.weekday).name,
                                 event.timeslot,
                                 event.room.location_id
                             ]
