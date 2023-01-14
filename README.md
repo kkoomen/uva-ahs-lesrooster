@@ -1,4 +1,4 @@
-# Lesrooter
+# Lesrooster
 
 Deze repository bevat een implementatie voor de
 [Lectures & Lesrooster](https://ah.proglab.nl/cases/lectures-en-lesroosters)
