@@ -34,4 +34,4 @@ class Course:
         """
         Register a list of students to this course.
         """
-        self.enrolled_students += students
+        self.enrolled_students = students

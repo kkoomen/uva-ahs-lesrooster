@@ -32,10 +32,19 @@ class Event:
         return f'{self.__class__.__name__}(title:{self.title}, type:{self.type}, timeslot:{self.timeslot}, course:{self.course.name}, room:{self.room}, weekday:{self.weekday})'
 
     def assign_students(self, students: list[Student]) -> None:
+        """
+        Assign new students to the event.
+        """
         self.students = students
 
     def set_timeslot(self, timeslot: int) -> None:
+        """
+        Set a new timeslot value.
+        """
         self.timeslot = timeslot
 
     def set_weekday(self, weekday: int) -> None:
+        """
+        Set a new weekday value.
+        """
         self.weekday = weekday

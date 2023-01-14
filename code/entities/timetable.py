@@ -123,7 +123,6 @@ class Timetable:
 
         return total
 
-
     def calculate_malus_score(self) -> int:
         """
         Calculates the malus score for the timetable. The perfect score is 0,
@@ -137,7 +136,6 @@ class Timetable:
 
         return score
 
-
     def is_valid(self) -> bool:
         """
         Check if the timetable structure is valid by checking constraints.
@@ -148,7 +146,6 @@ class Timetable:
     def get_violations(self) -> list[Event]:
         """
         Returns the events that violate the constraints.
-        Constraints are specified above in the class docblock.
         """
         violations = []
 
