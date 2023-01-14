@@ -6,6 +6,8 @@ import copy
 import os
 import random
 from itertools import chain
+from tzlocal import get_localzone
+from datetime import datetime
 
 from code.utils.constants import DATA_DIR
 
@@ -66,11 +68,14 @@ def remove_duplicates(items: list) -> list:
     return new_list
 
 
-def flatten(items: list) -> list:
+def get_utc_offset() -> str:
     """
-    Flatten a list of lists.
+    Get the utc offset by automatically detecting the local timezone.
+    """
+    tz = get_localzone()
 
-    >>> flatten(['a', ['b', 'c']])
-    ['a', 'b', 'c']
-    """
-    return list(chain.from_iterable(items))
+    # Returns something like '+0100'
+    offset = datetime.now(tz).strftime('%z')
+
+    # Convert '+0100' to '+01:00'
+    return f'{offset[:3]}:{offset[3:]}'
