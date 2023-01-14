@@ -1,5 +1,6 @@
 from typing import Union
 from code.entities.student import Student
+from code.utils.helpers import make_id
 
 
 class Course:
@@ -18,6 +19,7 @@ class Course:
                  practical_capacity: int,
                  enrolment: int,
                  enrolled_students: Union[None, list[Student]] = None) -> None:
+        self.id = make_id()
         self.name = name
         self.lectures_amount = lectures_amount
         self.seminars_amount = seminars_amount

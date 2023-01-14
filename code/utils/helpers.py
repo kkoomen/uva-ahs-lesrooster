@@ -40,3 +40,26 @@ def split_list_random(items: list, k: int) -> list[list]:
         groups.append(group)
 
     return groups
+
+
+def make_id() -> int:
+    """
+    Create a random id.
+    """
+    return random.getrandbits(32)
+
+
+def remove_duplicates(items: list) -> list:
+    """
+    Remove duplicates in a list.
+
+    >>> remove_duplicates(['a', 'b', 'b', 'c'])
+    ['a', 'b', 'c']
+    """
+    new_list = []
+
+    for item in items:
+        if item not in new_list:
+            new_list.append(item)
+
+    return new_list

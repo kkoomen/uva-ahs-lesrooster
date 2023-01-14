@@ -9,6 +9,7 @@ from code.entities.timeslot import Timeslot
 from code.utils.constants import OUT_DIR
 from code.utils.data import load_courses, load_rooms, load_students
 from code.utils.enums import Weekdays
+from code.utils.helpers import remove_duplicates
 import matplotlib.pyplot as plt
 
 
@@ -143,17 +144,62 @@ class Timetable:
         return len(self.get_violations()) == 0 and \
             self.get_total_timeslots() <= self.MAX_TIMESLOTS_PER_WEEK
 
-    def get_violations(self) -> list[Event]:
+    def get_empty_timeslot_violations(self) -> list[Event]:
         """
-        Returns the events that violate the constraints.
+        Go through each day of the week and check per course if that day
+        contains two events for a course with 3 or more empty timeslots
+        in-between. Mark the two events (1 before and after the 3 empty slots)
+        as violations, as this is strictly prohibited.
+
+        NOTE: 1 or 2 empty timeslots is allowed, but adds a malus point, which
+        is less severe than having 3 or more.
         """
         violations = []
 
         for day in self.timetable:
+            # Group all events for this day by course.
+            course_events: dict[str, list[Event]] = {}
+            for timeslot in day.values():
+                for event in timeslot:
+                    if event.course.id not in course_events:
+                        course_events[event.course.id] = []
+
+                    course_events[event.course.id].append(event)
+
+            for events in course_events.values():
+                # Sort the events by timeslot.
+                sorted_events = sorted(events)
+
+                # Check if there are 3x 2-hour timeslot (difference of 6 hours).
+                for index, event in enumerate(sorted_events):
+                    # We want to check the previous one, so index must be > 0.
+                    if index == 0:
+                        continue
+
+                    # Check if the amount of empty timeslots in between the
+                    # current and previous timeslot.
+                    prev_event = sorted_events[index - 1]
+                    total_empty_timeslots = (event.timeslot - prev_event.timeslot) / Timeslot.TIMEFRAME
+                    if total_empty_timeslots >= 3:
+                        violations += [prev_event, event]
+
+        return remove_duplicates(violations)
+
+    def get_violations(self) -> list[Event]:
+        """
+        Find the events that violate the constraints.
+        """
+        violations = []
+
+        # Get all the violations for each timeslot.
+        for day in self.timetable:
             for timeslot in day.values():
                 violations += timeslot.get_violations()
 
-        return violations
+        # Get all violations that contain 3 or more empty timeslots per course.
+        violations += self.get_empty_timeslot_violations()
+
+        return remove_duplicates(violations)
 
     def clear(self) -> None:
         """

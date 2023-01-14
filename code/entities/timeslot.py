@@ -1,6 +1,7 @@
 from collections.abc import Generator
 
 from code.entities.event import Event
+from code.utils.helpers import remove_duplicates
 
 
 class Timeslot:
@@ -18,6 +19,7 @@ class Timeslot:
     """
 
     OPTIONS = [9, 11, 13, 15, 17]
+    TIMEFRAME = 2
 
     def __init__(self, value: int) -> None:
         self.value = value
@@ -142,7 +144,4 @@ class Timeslot:
         violations += self.get_duplicate_course_events()
         violations += self.get_double_booked_events()
 
-        # Remove duplicates
-        violations_cleaned = list({event.id:event for event in violations}.values())
-
-        return violations_cleaned
+        return remove_duplicates(violations)

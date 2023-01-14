@@ -4,6 +4,7 @@ from typing import Union
 from code.entities.course import Course
 from code.entities.room import Room
 from code.entities.student import Student
+from code.utils.helpers import make_id
 
 
 class Event:
@@ -19,7 +20,7 @@ class Event:
                  room: Room,
                  weekday: int,
                  students: Union[None, list[Student]] = None) -> None:
-        self.id = random.getrandbits(32)
+        self.id = make_id()
         self.title = title
         self.type = event_type
         self.timeslot = timeslot
@@ -30,6 +31,12 @@ class Event:
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(title:{self.title}, type:{self.type}, timeslot:{self.timeslot}, course:{self.course.name}, room:{self.room}, weekday:{self.weekday})'
+
+    def __lt__(self, other) -> bool:
+        """
+        Implement the < operator.
+        """
+        return self.timeslot < other.timeslot
 
     def assign_students(self, students: list[Student]) -> None:
         """
