@@ -114,12 +114,12 @@ class Timetable:
         """
         score = 0
 
-        # Get the malus score for each timeslot
+        # Get the malus score for each timeslot.
         for day in self.timetable:
             for timeslot in day.values():
                 score += timeslot.calculate_malus_score()
 
-        # Get events by course for each day
+        # Get events by course for each day.
         course_events_timetable = self.get_events_by_course_per_day()
         for day in course_events_timetable:
             for course_events in day:
@@ -134,10 +134,10 @@ class Timetable:
                     total_empty_timeslots = (event.timeslot - prev_event.timeslot) / Timeslot.TIMEFRAME
 
                     if total_empty_timeslots == 1:
-                        # 1 empty timeslot in-between two timeslots is 1 malus point
+                        # 1 empty timeslot in-between two timeslots is 1 malus point.
                         score += 1
                     elif total_empty_timeslots == 2:
-                        # 2 empty timeslot in-between two timeslots is 3 malus point
+                        # 2 empty timeslot in-between two timeslots is 3 malus point.
                         score += 3
 
 
