@@ -52,8 +52,6 @@ class Timetable:
         self.courses = load_courses()
         self.students = load_students()
 
-        self.largest_room = self.get_largest_room()
-
         self.register_students_to_courses()
 
     def __iter__(self) -> Generator:
@@ -67,24 +65,6 @@ class Timetable:
         for course in self.courses:
             students = [s for s in self.students if course.name in s.enrolled_courses]
             course.register_students(students)
-
-    def get_largest_room(self) -> Room:
-        """
-        Find the room that has the most capacity.
-        """
-        largest_room = self.rooms[0]
-
-        for room in self.rooms:
-            if room.capacity > largest_room.capacity:
-                largest_room = room
-
-        return largest_room
-
-    def is_largest_room(self, room: Room) -> bool:
-        """
-        Check if the room is the largest room.
-        """
-        return room.location_id == self.largest_room.location_id
 
     def add_event(self, event: Event) -> None:
         """
