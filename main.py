@@ -103,14 +103,14 @@ def main():
             algorithm.run()
             print_algorithm_info(algorithm)
 
-        if args.show_plot:
-            algorithm.timetable.show_plot()
-
         if algorithm.timetable.is_valid():
             if args.export == 'csv':
                 algorithm.timetable.export_csv()
             elif args.export == 'ics':
                 algorithm.timetable.export_ics()
+
+        if args.show_plot:
+            algorithm.timetable.show_plot()
 
 
 if __name__ == '__main__':
