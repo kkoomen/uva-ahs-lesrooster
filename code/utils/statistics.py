@@ -49,14 +49,14 @@ def print_algorithm_average_statistics(algorithm: Algorithm,
     avg_retries = int(avg_retries / iterations)
     avg_malus_score = int(avg_malus_score / iterations)
 
-    logger.info(f'Average info over {iterations} iterations for algorithm: {algorithm.__class__.__name__}')
-    logger.info(f'\tMin. retries: {min_retries}')
-    logger.info(f'\tMax. retries: {max_retries}')
-    logger.info(f'\tAvg. retries: {avg_retries}')
-    logger.info(f'\tMin. malus score: {min_malus_score}')
-    logger.info(f'\tMax. malus score: {max_malus_score}')
-    logger.info(f'\tAvg malus score: {avg_malus_score}')
-    logger.info(f'\tSolutions: {total_solutions}/{iterations}')
+    logger.info(f'Average info over {iterations} iterations for algorithm "{algorithm.__class__.__name__}":')
+    logger.info(f'\t- Min. retries: {min_retries}')
+    logger.info(f'\t- Max. retries: {max_retries}')
+    logger.info(f'\t- Avg. retries: {avg_retries}')
+    logger.info(f'\t- Min. malus score: {min_malus_score}')
+    logger.info(f'\t- Max. malus score: {max_malus_score}')
+    logger.info(f'\t- Avg malus score: {avg_malus_score}')
+    logger.info(f'\t- Solutions: {total_solutions}/{iterations}')
 
 
 def print_algorithm_info(algorithm: Algorithm):
@@ -64,7 +64,7 @@ def print_algorithm_info(algorithm: Algorithm):
     Print statistics for an algorithm that has been executed.
     """
     logger.info('Timetable info:')
-    logger.info(f'\tValid: {algorithm.timetable.is_valid()}')
-    logger.info(f'\tTotal timeslots: {algorithm.timetable.get_total_timeslots()}')
-    logger.info(f'\tMalus score: {algorithm.timetable.calculate_malus_score()}')
-    logger.info(f'\tViolations amount: {len(algorithm.timetable.get_violations())}')
+    logger.info(f'\t- Valid: {algorithm.timetable.is_valid()}')
+    logger.info(f'\t- Total timeslots: {algorithm.timetable.get_total_timeslots()}')
+    logger.info(f'\t- Malus score: {algorithm.timetable.calculate_malus_score()}')
+    logger.info(f'\t- Violations amount: {len(algorithm.timetable.get_violations())}')
