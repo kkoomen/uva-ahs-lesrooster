@@ -11,12 +11,15 @@ project.
 - `python3 -m venv env`
 - `./env/bin/activate`
 - `pip3 install -r requirements.txt`
-- `./main.py --help`
 
-Example usages:
-- `./main.py -a randomizer -i 10`: runs `Randomizer` algorithm 10 times
-- `./main.py -a randomizer -e csv`: runs `Randomizer` algorithm once and export the results to `csv`
-- `./main.py -a randomizer -e ics -p`: runs `Randomizer` algorithm once, export the results to `ics` and plot the data with matplotlib.
+Gebruik maken van het programma kan op de volgende manieren:
+- `./main.py -a randomizer -i 10`: run `Randomizer` algoritmen 10 keer
+- `./main.py -a randomizer -e csv`: run `Randomizer` algoritmen één keer en
+  exporteert het resultaat naar `csv`
+- `./main.py -a randomizer -e ics -p`: run `Randomizer` algoritmen één keer,
+  exporteer het resultaat naar `ics` en plot de data met `matplotlib`
+
+Voor alle mogelijke opties, zie `./main.py --help`
 
 # Proces logboek
 
@@ -29,14 +32,14 @@ resultaten beschrijf na elke fase te hebben afgerond.
 
 ```
 .
-├── main.py             # main file to run
-├── data                # contains all data files
-├── code                # the main codebase
-│   ├── algorithms      # contains different algorithms
-│   ├── entities        # contains all entity classes
-│   └── utils           # utility and helper functions
-├── out                 # any generated output file will be put here
-└── docs                # contains the documented process of this project
+├── main.py             # hoofdbestand
+├── data                # bevat alle (csv) data bestanden
+├── code                # de codebase zelf
+│   ├── algorithms      # bevat diverse algoritme implementaties
+│   ├── entities        # bevat alle entiteiten
+│   └── utils           # utility en helper functions
+├── out                 # alle ics/csv exports komen hier terecht
+└── docs                # bevat het gedocumenteerde proces van dit hele project
 ```
 
 # Tests
