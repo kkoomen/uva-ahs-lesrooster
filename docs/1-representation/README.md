@@ -27,3 +27,5 @@ de eerste versie eruit ziet (2432 regels, hier de eerste paar):
 
 :bulb: Mogelijk zal ik in een latere versie CSV files maken waar in een
 _personal timetable_ voor elke gebruiker wordt gegenereerd.
+
+:point_right: [Klik hier om naar fase 2 te gaan](../2-baseline/README.md)
