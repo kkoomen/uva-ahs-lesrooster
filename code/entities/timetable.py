@@ -109,8 +109,8 @@ class Timetable:
 
     def calculate_malus_score(self) -> int:
         """
-        Calculates the malus score for the timetable. A perfect score is 0,
-        anything higher is worse.
+        Calculates the malus score for the timetable.
+        The perfect score is 0, anything higher is worse.
         """
         score = 0
 
@@ -208,7 +208,7 @@ class Timetable:
         Go through each day of the week and check per course if that day
         contains two events for a course with 3 or more empty timeslots
         in-between. Mark the two events (1 before and after the 3 empty slots)
-        as violations, as this is strictly prohibited.
+        as violations, as this is strictly not allowed.
 
         NOTE: 1 or 2 empty timeslots is allowed, but adds a malus point, which
         is less severe than having 3 or more.
@@ -311,6 +311,7 @@ class Timetable:
         e = ics.Event()
         e.name = event.title
         e.location = event.room.location_id
+        e.description = f'Enrolled students: {len(event.students)}'
 
         today_date = current_week_dates[event.weekday - 1]
         start_time = format(event.timeslot, '02')
@@ -323,6 +324,11 @@ class Timetable:
     def export_ics(self, filename: str = 'timetable.ics') -> None:
         """
         Export the timetable to ics format for this week.
+
+        Since the timetable contains 5 days, every export will be for the
+        current week. If you're doing an export on Saturday, then you will get
+        an export still for that week. This is easy and convenient when
+        importing into any calendar application.
         """
         # Create the ICS calendar file that contains all events.
         total_events = 0
@@ -337,6 +343,7 @@ class Timetable:
         filepath = os.path.join(OUT_DIR, filename)
         with open(filepath, 'w') as file:
             file.write(calendar.serialize())
+
         self.logger.info(f'Successfully saved timetable with {total_events} events as {filepath}')
 
         # Create separate ICS calendar files for each course and its events.
@@ -354,6 +361,7 @@ class Timetable:
             filepath = os.path.join(OUT_DIR, f'{course_name}_{filename}')
             with open(filepath, 'w') as file:
                 file.write(calendar.serialize())
+
             self.logger.info(f'Successfully saved timetable for course {course_name_raw} with {total_events} events as {filepath}')
 
     def show_plot(self) -> None:

@@ -2,10 +2,11 @@
 
 Deze repository bevat een implementatie voor de
 [Lectures & Lesrooster](https://ah.proglab.nl/cases/lectures-en-lesroosters)
-case voor de UvA en het gedocumenteerde proces die is bijgehouden tijdens dit
+case voor de UvA en het gedocumenteerde proces dat is bijgehouden tijdens dit
 project.
 
 # Installatie
+
 - `git clone https://github.com/kkoomen/uva-ahs-lesrooster && cd uva-ahs-lesrooster`
 - `python3 -m venv env`
 - `./env/bin/activate`

@@ -12,9 +12,12 @@ class Timeslot:
     - Each timeslot can contain each room at most once.
     - Each timeslot can contain an event of a certain course at most once.
     - Only the largest room can be scheduled in the 17-19 timeframe.
+    - Three (or more) empty timeslots in-between two other timeslots per coures is not allowed.
 
     Malus points:
     - The 17:00 - 19:00 timeslot adds 5 malus points.
+    - Each empty timeslot in-between two other timeslots per coures adds 1 malus point.
+    - Two empty timeslots in-between two other timeslots per course adds 3 malus points.
     - Every course conflict that each student has adds 1 malus point.
     """
 
