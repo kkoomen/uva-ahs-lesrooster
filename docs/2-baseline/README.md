@@ -68,7 +68,7 @@ zeer goed te werken. Ik zag ook in de logs dat het aantal violations ook sterk
 naar beneden bleef gaan op deze manier en dat was een zeer interessante
 ontdekking.
 
-Na veel combinaties te hebben getest, ben ik er achter gekomen dat de volgende
+Na veel combinaties te hebben getest, ben ik er achter gekomen dat het volgende
 erg goed werkt:
 - elke violated activiteiten *altijd* aanpassen
 - 10% kans dat activiteiten worden omgewisseld
