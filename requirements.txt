@@ -1,2 +1,3 @@
-matplotlib
-tzlocal
+matplotlib>=3.6.2
+tzlocal>=4.2
+ics>=0.7.2
