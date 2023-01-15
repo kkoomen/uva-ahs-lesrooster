@@ -161,7 +161,7 @@ class Timetable:
                         course_events[event.course.id] = []
                     course_events[event.course.id].append(event)
 
-        return course_events.values()
+        return list(course_events.values())
 
     def get_events_by_course_per_day(self) -> list[list[list[Event]]]:
         """
@@ -398,5 +398,7 @@ class Timetable:
                     plt.text(i, j, events[j][i], ha='center', va='center',
                              color='r', fontweight='bold', fontsize='x-large')
 
-        plt.gca().set_title('Timetable')
+        malus_score = self.calculate_malus_score()
+        plt.gca().set_title(f'Timetable (malus score: {malus_score})')
+        self.logger.info('Plotting timetable...')
         plt.show()
