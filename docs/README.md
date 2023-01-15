@@ -1,4 +1,4 @@
-# Process logboek
+# Proces logboek
 
 Dit is mijn proces logboek waarin ik kort elke fase die ik doorlopen heb
 beschrijf, voornamelijk de activiteiten die ik gedaan heb met ook nog wat extra
