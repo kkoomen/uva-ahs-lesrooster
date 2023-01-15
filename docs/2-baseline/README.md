@@ -5,7 +5,7 @@ gelinkt is met elkaar op basis van de opdracht.
 
 De onderstaande lijst toont de activiteiten die ik tijdens de **baseline** fase
 respectievelijk heb gedaan:
-- randomizer class maken
+- Randomizer class maken
 - constraints bedenken
 - datastructuur aangepast, want ik merkte dat het niet werkte op lange termijn
   (nieuwe structuur staat mij toe om code meer gescheiden te houden en om
@@ -15,13 +15,13 @@ respectievelijk heb gedaan:
   gelijk te maken, want dan is er nog ruimte om studenten over te plaatsen)
 - De activiteiten inplannen in een zaal die groot genoeg is in capaciteit voor
   de activiteit
-- Event swapping logica implementeren
+- Logica implementeren voor het omwisselen van activiteiten
 - Tussensloten minimaliseren logica implementeren
 - ICS export
 
 Nadat ik het aantal studenten heb opgesplitst op basis van de werkcollege en
 practicum capaciteit moest het 129 tijdsloten verdelen binnen 145 beschikbare
-tijdsloten. Zonder groepen kon de randomizer elke keer een oplossing genereren
+tijdsloten. Zonder groepen kon de Randomizer elke keer een oplossing genereren
 met minder dan 10 retries, nu kost het al 44 retries gemiddeld over 100
 gegenereerde oplossingen.
 
@@ -44,7 +44,7 @@ ook voor practicums). Dit gaf al een aanzienlijk beter resultaat.
 Vervolgens heb ik geprobeerd om elke violation (activiteit) om te wisselen met
 een random ander activiteit dat geen violation is. Dit werkte verbazingwekkend
 goed. Heel af en toe raakte het in een infinite loop, dus ik heb een extra check
-toegevoegd dat de randomizer stopt na 2000 retries.
+toegevoegd dat de Randomizer stopt na 2000 retries.
 
 Uiteindelijk heb ik nog rekening gehouden met tussensloten. Als er 1 of 2
 tussensloten zitten tussen twee vakken, dan geeft dit puur maluspunten. Als er 3
