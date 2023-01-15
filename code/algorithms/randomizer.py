@@ -56,9 +56,9 @@ class Randomizer(Algorithm):
         Creates random events based on the courses data.
         """
         for course in self.timetable.courses:
-            for _ in range(course.lectures_amount):
+            for i in range(course.lectures_amount):
                 room = random.choice([r for r in self.timetable.rooms if r.capacity >= course.enrolment])
-                event = self.create_random_event(f'{course.name} hoorcollege', 'hc', course, room)
+                event = self.create_random_event(f'{course.name} hoorcollege {i + 1}', 'hc', course, room)
                 event.assign_students(course.enrolled_students)
                 self.timetable.add_event(event)
 
