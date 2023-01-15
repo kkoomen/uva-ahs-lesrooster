@@ -29,7 +29,7 @@ resultaten beschrijf na elke fase te hebben afgerond.
 
 ```
 .
-├── main.py             # main file to be run
+├── main.py             # main file to run
 ├── data                # contains all data files
 ├── code                # the main codebase
 │   ├── algorithms      # contains different algorithms
