@@ -53,38 +53,40 @@ beide vakken gemarkeerd als violations. Dit is hetgeen dat het aantal acties
 doet vergroten waardoor ik mijn logica wat moest aanpassen om überhaupt nog
 mogelijke oplossingen te kunnen genereren.
 
-Helaas was de combinatie van activiteiten aanpassen + activiteiten omwisselen +
-studenten wisselen niet optimaal. Toen bedacht ik mij dat ik bepaalde dingen
+Helaas was de combinatie van activiteiten verplaatsen + activiteiten omwisselen
++ studenten wisselen niet optimaal. Toen bedacht ik mij dat ik bepaalde dingen
 alleen kan laten uitvoeren met een bepaalde kans. Ik kwam er al snel achter dat
 het wisselen van activiteiten het aantal violations soms zelfs hoger had
 gemaakt, maar het wisselen van studenten haalde het weer aanzienlijk naar
 beneden.
 
-Ik heb veel opties geprobeerd door het percentage aan te passen, door kansen
-*in* kansen te berekenen en zo geprobeerd te achterhalen wat positieve of
-negatieve invloed had op het aantal violations. Uiteindelijk bleek de 10% kans
-studenten verwisselen binnen de 10% kans van het omwisselen van activiteiten
-zeer goed te werken. Ik zag ook in de logs dat het aantal violations ook sterk
-naar beneden bleef gaan op deze manier en dat was een zeer interessante
-ontdekking.
+Ik heb veel opties geprobeerd door het percentage aan te passen en zo geprobeerd
+te achterhalen wat positieve of negatieve invloed had op het aantal violations.
+Uiteindelijk bleek de 1% kans studenten verwisselen met een 10% kans voor het
+omwisselen van activiteiten zeer goed te werken. Ik zag ook in de logs dat het
+aantal violations ook sterk naar beneden bleef gaan op deze manier en dat was
+een zeer interessante ontdekking, met name de 1% kans voor het verwisselen van
+studenten had erg veel invloed. De 1% kans klinkt alsof het weinig uitmaakt,
+maar elke andere waarde met of zonder aanpassing van andere percentages maakt
+het alleen maar slechter. De 1% kans maakt écht een verschil hier. Het reduceert
+het aantal retries met honderdtallen.
 
 Na veel combinaties te hebben getest, ben ik er achter gekomen dat het volgende
 erg goed werkt:
-- elke violated activiteiten *altijd* aanpassen
-- 10% kans dat activiteiten worden omgewisseld
-    - 10% kans dat studenten verwisseld worden (binnen de kans van het omwisselen van activiteiten)
+- elke violated activiteit verplaatsen naar een ander tijdslot dan de huidige
+- 10% kans dat de elke violation met een andere activiteit (dat geen violation
+  is) wordt omgewisseld
+- 1% kans dat studenten verwisseld worden
 
-Binnen 1000 iteraties met bovenstaande logica zijn dit de uiteindelijke resultaten:
-- Min. retries: 90
-- Max. retries: 5000
-- Avg. retries: 2489
-- Min. malus score: 30
-- Max. malus score: 106
-- Avg malus score: 60
-- Solutions: 828/1000
-
-Ik moest wel het aantal retries toegestaan verhogen naar 5000, maar hierdoor kan
-er bijna altijd een oplossing worden gegenereerd.
+Binnen 5000 iteraties met bovenstaande logica zijn dit de uiteindelijke
+resultaten:
+- Min. retries: 33
+- Max. retries: 3480
+- Avg. retries: 262
+- Min. malus score: 41
+- Max. malus score: 180
+- Avg malus score: 82
+- Solutions: 5000/5000
 
 NOTE: Op dit moment bereken ik alleen de malus score op basis van de opdracht,
 maar ik doe er nog niks mee. Ik kan dit later gebruiken om n-aantal oplossingen

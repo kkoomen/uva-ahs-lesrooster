@@ -144,7 +144,6 @@ class Timeslot:
         violations = []
 
         violations += self.get_timeslot_17_violations()
-        violations += self.get_overlapping_student_courses_events()
         violations += self.get_duplicate_course_events()
         violations += self.get_double_booked_events()
 
