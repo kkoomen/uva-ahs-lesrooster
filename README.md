@@ -14,9 +14,9 @@ project.
 - `./main.py --help`
 
 Example usages:
-- `./main.py -a randomizer -i 10`: runs `Randomizer` algorithms 10 times
-- `./main.py -a randomizer -e csv`: runs `Randomizer` once and export the results to `csv`
-- `./main.py -a randomizer -e ics -p`: runs `Randomizer` once, export the results to `ics` and plot the data with matplotlib.
+- `./main.py -a randomizer -i 10`: runs `Randomizer` algorithm 10 times
+- `./main.py -a randomizer -e csv`: runs `Randomizer` algorithm once and export the results to `csv`
+- `./main.py -a randomizer -e ics -p`: runs `Randomizer` algorithm once, export the results to `ics` and plot the data with matplotlib.
 
 # Proces logboek
 
