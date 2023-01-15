@@ -1,11 +1,11 @@
 from collections.abc import Generator
 import csv
+from datetime import datetime, timedelta
 import logging
 import os
-from datetime import datetime, timedelta
+import re
 
 from code.entities.event import Event
-from code.entities.room import Room
 from code.entities.timeslot import Timeslot
 from code.utils.constants import OUT_DIR
 from code.utils.data import load_courses, load_rooms, load_students
@@ -13,7 +13,6 @@ from code.utils.enums import Weekdays
 from code.utils.helpers import get_utc_offset, remove_duplicates
 import ics
 import matplotlib.pyplot as plt
-import re
 
 
 class Timetable:
