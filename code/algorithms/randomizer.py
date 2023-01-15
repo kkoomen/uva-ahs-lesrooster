@@ -177,6 +177,7 @@ class Randomizer(Algorithm):
         self.assign_random_events()
         violations = self.timetable.get_violations()
 
+        max_retries = 5000
         found_solution = True
         retries = 0
         while len(violations) > 0:
@@ -186,17 +187,20 @@ class Randomizer(Algorithm):
 
             # Sometimes it might run into an infinite loop, so if the retries is
             # above a certain threshold, we stop trying.
-            if retries >= 5000:
+            if retries >= max_retries:
                 found_solution = False
                 break
 
             violations = self.reassign_events(violations)
             if random.random() < 0.1:
                 self.swap_events(violations)
-                if random.random() < 0.1:
-                    self.swap_students()
+            if random.random() < 0.01:
+                self.swap_students()
             violations = self.timetable.get_violations()
 
-        self.logger.info(f'[DONE] Successfully created random timetable (retries:{retries})')
+        if found_solution:
+            self.logger.info(f'[DONE] Successfully created random timetable (retries:{retries})')
+        else:
+            self.logger.info(f'[DONE] Failed to create random timetable, exceeded max retries (retries:{retries})')
 
         return found_solution, retries
