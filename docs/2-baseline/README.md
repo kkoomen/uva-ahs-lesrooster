@@ -103,11 +103,12 @@ ook nog per vak een `ics` (voor debugging erg handig!)
 Hieronder heb ik wat screenshots van hoe de `ics` bestanden er in Apple Calendar
 uitzien.
 
-Hier heb ik 3 `ics` bestanden van 3 verschillende vakken geïmporteerd.
+Hier heb ik 3 `ics` bestanden van 3 verschillende vakken geïmporteerd. Hier is
+te zien dat het aantal tussensloten ook vaak maar 1 is, wat erg positief is.
 
 ![ics partial](./ics-partial.png)
 
-en hieronder nog een screenshot van alle 29 vakken en hun planningen samen,
-gewoon omdat het kan.
+Hieronder nog een screenshot van alle 29 vakken en hun planningen samen, gewoon
+omdat het kan.
 
 ![ics full](./ics-full.png)
