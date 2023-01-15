@@ -28,14 +28,14 @@ gegenereerde oplossingen.
 Vervolgens heb ik ook nog de activiteiten ingepland in een zaal waar de
 capaciteit groot genoeg is voor die activiteit. Nadat ik dit had geïmplementeerd
 kwam de Randomizer soms in een oneindige loop terecht met nog een aantal
-evenementen die het niet kon inplannen binnen een bepaalde aantal iteraties. Dit
-liep op tot wel 100.000+ iteraties en nog steeds ging het fout. Dit komt omdat
-bij het aanpassen van een violated activiteit worden de studenten niet
-verwisseld naar mogelijk andere activiteiten indien mogelijk. Tenslotte hebben
+activiteiten die het niet kon inplannen binnen een bepaalde aantal iteraties.
+Dit liep op tot wel 100.000+ iteraties en nog steeds ging het fout. Dit komt
+omdat bij het aanpassen van een violated activiteit worden de studenten niet
+verwisseld naar andere activiteiten indien mogelijk. Tenslotte hebben
 werkcolleges en practicums de mogelijkheid om meerdere groepen te hebben o.b.v.
 het aantal inschrijvingen en de capaciteit per werkgroep of practicum.
 
-Ik had eerst studenten omgewisseld binnen de violated activiteiten, maar dit gaf
+Ik had eerst studenten verwisseld binnen de violated activiteiten, maar dit gaf
 geen oplossing, want misschien heeft 1 vak 3 groepen aan werkcolleges, maar als
 er maar 1 groep gemarkeerd wordt als violated, dan verwissel ik het alleen met
 zichzelf. Ik moet dus de studenten wisselen binnen alle drie de werkcolleges (en
@@ -47,11 +47,11 @@ goed. Heel af en toe raakte het in een infinite loop, dus ik heb een extra check
 toegevoegd dat de Randomizer stopt na 2000 retries.
 
 Uiteindelijk heb ik nog rekening gehouden met tussensloten. Als er 1 of 2
-tussensloten zitten tussen twee vakken, dan geeft dit puur maluspunten. Als er 3
-(of meer) tussensloten zitten tussen twee vakken, dan worden beide vakken
-gemarkeerd als violations.  Dit is hetgeen dat het aantal acties doet vergroten
-waardoor ik mijn logica wat moest aanpassen om überhaupt nog mogelijke
-oplossingen te kunnen genereren.
+tussensloten zitten tussen twee activiteiten, dan geeft dit puur maluspunten.
+Als er 3 (of meer) tussensloten zitten tussen twee activiteiten, dan worden
+beide vakken gemarkeerd als violations. Dit is hetgeen dat het aantal acties
+doet vergroten waardoor ik mijn logica wat moest aanpassen om überhaupt nog
+mogelijke oplossingen te kunnen genereren.
 
 Helaas was de combinatie van activiteiten aanpassen + activiteiten omwisselen +
 studenten wisselen niet optimaal. Toen bedacht ik mij dat ik bepaalde dingen
