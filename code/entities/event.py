@@ -18,7 +18,7 @@ class Event:
                  course: Course,
                  room: Room,
                  weekday: int,
-                 students: Union[None, list[Student]] = None) -> None:
+                 students: Union[None, list[Student]]=None) -> None:
         self.id = make_id()
         self.title = title
         self.type = event_type

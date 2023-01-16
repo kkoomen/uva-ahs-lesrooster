@@ -65,7 +65,7 @@ def parse_arguments() -> argparse.Namespace:
                         help='Hide any output produced by the logger for stdout.')
 
     parser.add_argument('-a', '--algorithm',
-                        choices=['randomizer'],
+                        choices=['random'],
                         help='Run any of the algorithms of choice.')
 
     parser.add_argument('-i', '--iterations',
@@ -93,12 +93,14 @@ def main():
     setup_logging(level=args.log_level, quiet=args.quiet)
 
     algorithm = None
-    if args.algorithm == 'randomizer':
+    if args.algorithm == 'random':
         algorithm = Randomizer()
 
     if isinstance(algorithm, Algorithm):
         if args.iterations > 1:
-            print_algorithm_average_statistics(algorithm, iterations=args.iterations)
+            print_algorithm_average_statistics(algorithm,
+                                               iterations=args.iterations,
+                                               show_plot=args.show_plot)
         else:
             algorithm.run()
             print_algorithm_info(algorithm)

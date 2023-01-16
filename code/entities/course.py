@@ -18,7 +18,7 @@ class Course:
                  practicals_amount: int,
                  practical_capacity: int,
                  enrolment: int,
-                 enrolled_students: Union[None, list[Student]] = None) -> None:
+                 enrolled_students: Union[None, list[Student]]=None) -> None:
         self.id = make_id()
         self.name = name
         self.lectures_amount = lectures_amount

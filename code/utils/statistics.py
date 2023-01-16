@@ -1,15 +1,18 @@
 import logging
 
 from code.algorithms.base import Algorithm
+import matplotlib.pyplot as plt
 
 logger = logging.getLogger('global')
 
 
 def print_algorithm_average_statistics(algorithm: Algorithm,
-                                                  iterations: int):
+                                       iterations: int,
+                                       show_plot=False):
     """
     Runs a particular algorithm n-times and prints average statistics.
     """
+    retries_list = []
     total_solutions = 0
 
     min_retries = None
@@ -23,6 +26,7 @@ def print_algorithm_average_statistics(algorithm: Algorithm,
     for _ in range(iterations):
         found_solution, retries = algorithm.run()
         malus_score = algorithm.timetable.calculate_malus_score()
+        retries_list.append(retries)
 
         if found_solution:
             total_solutions += 1
@@ -58,6 +62,9 @@ def print_algorithm_average_statistics(algorithm: Algorithm,
     logger.info(f'\t- Avg malus score: {avg_malus_score}')
     logger.info(f'\t- Solutions: {total_solutions}/{iterations}')
 
+    if show_plot:
+        plot_iteration_retries(retries_list)
+
 
 def print_algorithm_info(algorithm: Algorithm):
     """
@@ -68,3 +75,24 @@ def print_algorithm_info(algorithm: Algorithm):
     logger.info(f'\t- Total timeslots: {algorithm.timetable.get_total_timeslots()}')
     logger.info(f'\t- Malus score: {algorithm.timetable.calculate_malus_score()}')
     logger.info(f'\t- Violations amount: {len(algorithm.timetable.get_violations())}')
+
+def plot_iteration_retries(retries: list[int]) -> None:
+    """
+    Plot the list of retries in a line-graph.
+    """
+    iterations = len(retries)
+
+    plt.title(f'Timetable (iterations = {iterations})')
+    plt.legend()
+
+    plt.xlabel('# of iterations')
+    plt.ylabel('# of retries')
+
+    plt.plot(range(1, iterations + 1), retries, label='retries')
+
+    average_retries = int(sum(retries) / len(retries))
+    plt.axhline(y=average_retries,
+                color='red',
+                linestyle='--',
+                label=f'avg retries ({average_retries})')
+    plt.show()
