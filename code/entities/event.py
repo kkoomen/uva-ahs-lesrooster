@@ -1,4 +1,3 @@
-import random
 from typing import Union
 
 from code.entities.course import Course

@@ -5,7 +5,6 @@ import random
 from code.algorithms.base import Algorithm
 from code.entities.course import Course
 from code.entities.event import Event
-from code.entities.room import Room
 from code.entities.timeslot import Timeslot
 from code.entities.timetable import Timetable
 from code.utils.enums import Weekdays
@@ -46,7 +45,7 @@ class Randomizer(Algorithm):
         """
         for course in self.timetable.courses:
             for i in range(course.lectures_amount):
-                event = self.create_random_event(f'{course.name} hoorcollege {i + 1}', 'hc', course)
+                event = self.create_random_event(f'{course.name} hoorcollege', 'hc', course)
                 event.assign_students(course.enrolled_students)
                 self.timetable.add_event(event)
 
@@ -56,7 +55,7 @@ class Randomizer(Algorithm):
                 group_capacity = math.ceil(course.enrolment / total_groups)
                 student_groups = split_list_random(course.enrolled_students, group_capacity)
                 for i in range(total_groups):
-                    event = self.create_random_event(f'{course.name} werkcollege {i + 1}', 'wc', course)
+                    event = self.create_random_event(f'{course.name} werkcollege', 'wc', course)
                     event.assign_students(student_groups[i])
                     self.timetable.add_event(event)
 
@@ -66,7 +65,7 @@ class Randomizer(Algorithm):
                 group_capacity = math.ceil(course.enrolment / total_groups)
                 student_groups = split_list_random(course.enrolled_students, group_capacity)
                 for i in range(total_groups):
-                    event = self.create_random_event(f'{course.name} practicum {i + 1}', 'pr', course)
+                    event = self.create_random_event(f'{course.name} practicum', 'pr', course)
                     event.assign_students(student_groups[i])
                     self.timetable.add_event(event)
 
@@ -171,8 +170,8 @@ class Randomizer(Algorithm):
 
             self.logger.debug(f'[RETRY #{retries}] Found {len(violations)} violations, going to reassign them...')
 
-            # Sometimes it might run into an infinite loop, so if the retries is
-            # above a certain threshold, we stop trying.
+            # Sometimes it might run into an infinite loop, so stop trying if
+            # the retries is above a certain threshold.
             if retries >= max_retries:
                 found_solution = False
                 break
@@ -182,6 +181,7 @@ class Randomizer(Algorithm):
                 self.swap_events(violations)
             if random.random() < 0.01:
                 self.swap_students()
+
             violations = self.timetable.get_violations()
 
         if found_solution:

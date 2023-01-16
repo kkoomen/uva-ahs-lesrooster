@@ -12,12 +12,12 @@ class Timeslot:
     - Each timeslot can contain each room at most once.
     - Each timeslot can contain an event of a certain course at most once.
     - Only the largest room can be scheduled in the 17-19 timeframe.
-    - Three (or more) empty timeslots in-between two other timeslots per coures is not allowed.
+    - Three (or more) empty timeslots in-between two other timeslots per student is not allowed.
 
     Malus points:
     - The 17:00 - 19:00 timeslot adds 5 malus points.
-    - Each empty timeslot in-between two other timeslots per coures adds 1 malus point.
-    - Two empty timeslots in-between two other timeslots per course adds 3 malus points.
+    - Each empty timeslot in-between two other timeslots per student adds 1 malus point.
+    - Two empty timeslots in-between two other timeslots per student adds 3 malus points.
     - Every course conflict that each student has adds 1 malus point.
     - Every student that does not fit into the booked room adds 1 malus point.
     """
@@ -88,6 +88,9 @@ class Timeslot:
         return double_booked_events
 
     def get_timeslot_17_violations(self) -> list[Event]:
+        """
+        Find the events that are booked at 17:00 but shouldn't.
+        """
         violations = []
 
         # Timeslot 17 (17:00 - 19:00) can contain only one booking and can only

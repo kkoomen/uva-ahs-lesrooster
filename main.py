@@ -41,9 +41,9 @@ def setup_logging(level='info', quiet=False) -> None:
 
     # Immediately log as an indication that the program has initialized.
     global_logger = logging.getLogger('global')
-    global_logger.info('='*80)
+    global_logger.info('='*45)
     global_logger.info(f'Program started at {str(datetime.now())}')
-    global_logger.info('='*80)
+    global_logger.info('='*45)
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -103,14 +103,14 @@ def main():
             algorithm.run()
             print_algorithm_info(algorithm)
 
-        if algorithm.timetable.is_valid():
             if args.export == 'csv':
                 algorithm.timetable.export_csv()
+
             elif args.export == 'ics':
                 algorithm.timetable.export_ics()
 
-        if args.show_plot:
-            algorithm.timetable.show_plot()
+            if args.show_plot:
+                algorithm.timetable.show_plot()
 
 
 if __name__ == '__main__':

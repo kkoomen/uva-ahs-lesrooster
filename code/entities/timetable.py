@@ -15,6 +15,9 @@ import ics
 import matplotlib.pyplot as plt
 
 
+TimetableList = list[dict[int, Timeslot]]
+
+
 class Timetable:
     """
     A single timetable can contain events that can be added or removed.
@@ -46,7 +49,7 @@ class Timetable:
     def __init__(self) -> None:
         self.logger = logging.getLogger(__name__)
 
-        self.timetable: list[dict[int, Timeslot]] = [{}, {}, {}, {}, {}]
+        self.timetable: TimetableList = self.new_timetable()
         self.rooms = load_rooms()
         self.courses = load_courses()
         self.students = load_students()
@@ -106,6 +109,29 @@ class Timetable:
 
         return total
 
+    def calculate_empty_timeslots_malus_score(self) -> int:
+        """
+        Calculate malus score for the empty timeslots per student timetable.
+        """
+        score = 0
+
+        student_timetables = self.get_student_timetables()
+        for timetable in student_timetables.values():
+            for day in timetable:
+                timeslots = list(day.values())
+                for index, timeslot in enumerate(timeslots):
+                    if index == 0:
+                        continue
+
+                    prev_timeslot = timeslots[index - 1]
+                    total_empty_timeslots = (timeslot.value - prev_timeslot.value) / Timeslot.TIMEFRAME
+                    if total_empty_timeslots == 1:
+                        score += 1
+                    elif total_empty_timeslots == 2:
+                        score += 3
+
+        return score
+
     def calculate_malus_score(self) -> int:
         """
         Calculates the malus score for the timetable.
@@ -118,26 +144,7 @@ class Timetable:
             for timeslot in day.values():
                 score += timeslot.calculate_malus_score()
 
-        # Get events by course for each day.
-        course_events_timetable = self.get_events_by_course_per_day()
-        for day in course_events_timetable:
-            for course_events in day:
-                for index, event in enumerate(course_events):
-                    # We also want to check the previous index, so index must be > 0.
-                    if index == 0:
-                        continue
-
-                    # Check if the amount of empty timeslots in between the
-                    # current and previous timeslot.
-                    prev_event = course_events[index - 1]
-                    total_empty_timeslots = (event.timeslot - prev_event.timeslot) / Timeslot.TIMEFRAME
-
-                    if total_empty_timeslots == 1:
-                        # 1 empty timeslot in-between two timeslots is 1 malus point.
-                        score += 1
-                    elif total_empty_timeslots == 2:
-                        # 2 empty timeslot in-between two timeslots is 3 malus point.
-                        score += 3
+        score += self.calculate_empty_timeslots_malus_score()
 
         return score
 
@@ -163,71 +170,78 @@ class Timetable:
 
         return list(course_events.values())
 
-    def get_events_by_course_per_day(self) -> list[list[list[Event]]]:
+    def get_student_timetables(self) -> dict[str, TimetableList]:
         """
-        Group all events by course for each day in the timetable.
+        Group all events by student is where each key is the student is and the
+        value is a personal timetable list.
 
         Example structure that will be returned:
-        [
-            [ // monday
-                [ // course 1
-                    Event(), Event(),
-                ],
-                ...
-                [ // course n
-                    Event(), Event(),
-                ],
-            ],
-            ...
-            [ // friday
-                [ // course 1
-                    Event(), Event(),
-                ],
-                ...
+        {
+            <student_id>: [
+                { // monday
+                    9: Timeslot(events:[Event(), Event()]),
+                    11: Timeslot(events:[Event(), Event()]),
+                },
+                { // tuesday },
+                { // wednesday },
+                { // thursday },
+                { // friday
+                    9: Timeslot(events:[Event(), Event()]),
+                    11: Timeslot(events:[Event(), Event()]),
+                }
             ]
-        ]
+        }
         """
-        timetable = []
+        student_timetables = {}
 
-        for day in self.timetable:
-            course_events: dict[str, list[Event]] = {}
-
-            for timeslot in day.values():
+        # Group all events per student id.
+        for day_index, day in enumerate(self.timetable):
+            for (hour, timeslot) in day.items():
                 for event in timeslot:
-                    if event.course.id not in course_events:
-                        course_events[event.course.id] = []
-                    course_events[event.course.id].append(event)
+                    for student in event.students:
+                        if student.student_number not in student_timetables:
+                            student_timetables[student.student_number] = self.new_timetable()
+                        if hour not in student_timetables[student.student_number][day_index]:
+                            student_timetables[student.student_number][day_index][hour] = Timeslot(hour)
+                        if event not in student_timetables[student.student_number][day_index][hour]:
+                            student_timetables[student.student_number][day_index][hour].add_event(event)
 
-            timetable.append(list(course_events.values()))
+        # Sort all the dictionaries by key for each day per student.
+        for student_number, timetable in student_timetables.items():
+            for index, day in enumerate(timetable):
+                student_timetables[student_number][index] = dict(sorted(timetable[index].items()))
 
-        return timetable
+        return student_timetables
 
     def get_empty_timeslot_violations(self) -> list[Event]:
         """
-        Go through each day of the week and check per course if that day
-        contains two events for a course with 3 or more empty timeslots
-        in-between. Mark the two events (1 before and after the 3 empty slots)
-        as violations, as this is strictly not allowed.
+        Go through each day of the week and check per student if that day
+        contains two events with 3 or more empty timeslots in-between. Mark the
+        two events (1 before and after the 3 empty slots) as violations, as this
+        is strictly not allowed.
 
         NOTE: 1 or 2 empty timeslots is allowed, but adds a malus point, which
         is less severe than having 3 or more.
         """
         violations = []
 
-        course_events_timetable = self.get_events_by_course_per_day()
-        for day in course_events_timetable:
-            for course_events in day:
-                for index, event in enumerate(course_events):
-                    # We also want to check the previous index, so index must be > 0.
+        student_timetables = self.get_student_timetables()
+        for timetable in student_timetables.values():
+            for day in timetable:
+                timeslots = list(day.values())
+                for index, timeslot in enumerate(timeslots):
                     if index == 0:
                         continue
 
-                    # Check if the amount of empty timeslots in between the
-                    # current and previous timeslot.
-                    prev_event = course_events[index - 1]
-                    total_empty_timeslots = (event.timeslot - prev_event.timeslot) / Timeslot.TIMEFRAME
+                    # The only time we can have 3 timeslots in-between two
+                    # events is when the first timeslot is at 9:00 and second is
+                    # at 17:00. As tested, only mark the 17:00 timeslot as a
+                    # violation rather than both of them, as this increases the
+                    # amount of retries a lot.
+                    prev_timeslot = timeslots[index - 1]
+                    total_empty_timeslots = (timeslot.value - prev_timeslot.value) / Timeslot.TIMEFRAME
                     if total_empty_timeslots >= 3:
-                        violations += [prev_event, event]
+                        violations += timeslot.events
 
         return remove_duplicates(violations)
 
@@ -247,11 +261,14 @@ class Timetable:
 
         return remove_duplicates(violations)
 
+    def new_timetable(self) -> TimetableList:
+        return [{}, {}, {}, {}, {}]
+
     def clear(self) -> None:
         """
         Remove all data from the timetable.
         """
-        self.timetable = [{}, {}, {}, {}, {}]
+        self.timetable = self.new_timetable()
 
     def export_csv(self, filename: str = 'timetable.csv') -> None:
         """
@@ -320,6 +337,44 @@ class Timetable:
 
         return e
 
+    def get_events_by_course_per_day(self) -> list[list[list[Event]]]:
+        """
+        Group all events by course for each day in the timetable.
+        Example structure that will be returned:
+        [
+            [ // monday
+                [ // course 1
+                    Event(), Event(),
+                ],
+                ...
+                [ // course n
+                    Event(), Event(),
+                ],
+            ],
+            ...
+            [ // friday
+                [ // course 1
+                    Event(), Event(),
+                ],
+                ...
+            ]
+        ]
+        """
+        timetable = []
+
+        for day in self.timetable:
+            course_events: dict[str, list[Event]] = {}
+
+            for timeslot in day.values():
+                for event in timeslot:
+                    if event.course.id not in course_events:
+                        course_events[event.course.id] = []
+                    course_events[event.course.id].append(event)
+
+            timetable.append(list(course_events.values()))
+
+        return timetable
+
     def export_ics(self, filename: str = 'timetable.ics') -> None:
         """
         Export the timetable to ics format for this week.
@@ -329,23 +384,53 @@ class Timetable:
         an export still for that week. This is easy and convenient when
         importing into any calendar application.
         """
+        ICS_OUT_DIR = os.path.join(OUT_DIR, 'ics')
+        COURSES_OUT_DIR = os.path.join(ICS_OUT_DIR, 'courses')
+        STUDENTS_OUT_DIR = os.path.join(ICS_OUT_DIR, 'students')
+
+        for d in [ICS_OUT_DIR, COURSES_OUT_DIR, STUDENTS_OUT_DIR]:
+            if not os.path.isdir(d):
+                os.mkdir(d)
+
         # Create the ICS calendar file that contains all events.
+        #  =====================================================
         total_events = 0
         calendar = ics.Calendar()
-        course_events_timetable = self.get_events_by_course_per_day()
-        for day in course_events_timetable:
-            for course_events in day:
-                for event in course_events:
+        for day in self.timetable:
+            for timeslot in day.values():
+                for event in timeslot:
                     total_events += 1
                     calendar.events.add(self.create_ics_event(event))
 
-        filepath = os.path.join(OUT_DIR, filename)
+        filepath = os.path.join(ICS_OUT_DIR, filename)
         with open(filepath, 'w') as file:
             file.write(calendar.serialize())
+            file.close()
 
         self.logger.info(f'Successfully saved timetable with {total_events} events as {filepath}')
 
+        # Create separate ICS calendar files for each student.
+        # ===================================================
+        student_timetables = self.get_student_timetables()
+        for student_number, timetable in student_timetables.items():
+            total_events = 0
+            calendar = ics.Calendar()
+            for day in timetable:
+                for timeslot in day.values():
+                    for event in timeslot:
+                        total_events += 1
+                        calendar.events.add(self.create_ics_event(event))
+
+            filepath = os.path.join(STUDENTS_OUT_DIR, f'{student_number}_{filename}')
+            with open(filepath, 'w') as file:
+                file.write(calendar.serialize())
+                file.close()
+
+            self.logger.info(f'Successfully saved timetable for student #{student_number} with {total_events} events as {filepath}')
+
+
         # Create separate ICS calendar files for each course and its events.
+        # =================================================================
         course_events = self.get_events_by_course()
         for events in course_events:
             total_events = 0
@@ -357,9 +442,10 @@ class Timetable:
 
             course_name_raw = events[0].course.name
             course_name = re.sub(r'[^a-zA-Z0-9]+', '_', course_name_raw.lower())
-            filepath = os.path.join(OUT_DIR, f'{course_name}_{filename}')
+            filepath = os.path.join(COURSES_OUT_DIR, f'{course_name}_{filename}')
             with open(filepath, 'w') as file:
                 file.write(calendar.serialize())
+                file.close()
 
             self.logger.info(f'Successfully saved timetable for course {course_name_raw} with {total_events} events as {filepath}')
 
