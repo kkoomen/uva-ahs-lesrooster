@@ -110,11 +110,11 @@ class Randomizer(Algorithm):
             self.timetable.add_event(event)
             self.timetable.add_event(other_event)
 
-    def rotate_students(self):
+    def permute_students(self):
         """
-        Rotate students within the scheduled events inside a course. Seminars
+        Permute students within the scheduled events inside a course. Seminars
         and practicals may contain 2 or more groups the students will be divided
-        over. Students will be rotated within these groups.
+        over. Students will be permuted within these groups.
         """
         # The key will be a course name with the event type, i.e. 'Database wc'.
         # The value is a list of scheduled events for that course type.
@@ -141,7 +141,7 @@ class Randomizer(Algorithm):
                     course_events[key].append(event)
 
         for events in course_events.values():
-            # Only rotate among the events if there are 2 or more.
+            # Only permute among the events if there are 2 or more.
             if len(events) >= 2:
                 # Gather all students
                 students = [student for event in events for student in event.students]
@@ -179,7 +179,7 @@ class Randomizer(Algorithm):
             if random.random() < 0.1:
                 self.swap_events(violations)
             if random.random() < 0.01:
-                self.rotate_students()
+                self.permute_students()
 
             violations = self.timetable.get_violations()
 
