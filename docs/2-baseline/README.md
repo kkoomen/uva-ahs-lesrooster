@@ -18,6 +18,7 @@ respectievelijk heb gedaan:
 - Logica implementeren voor het omwisselen van activiteiten
 - Tussensloten minimaliseren logica implementeren
 - ICS export
+- data plotten
 
 Nadat ik het aantal studenten heb opgesplitst op basis van de werkcollege en
 practicum capaciteit moest het 129 tijdsloten verdelen binnen 145 beschikbare
@@ -47,11 +48,15 @@ goed. Heel af en toe raakte het in een infinite loop, dus ik heb een extra check
 toegevoegd dat de Randomizer stopt na 2000 retries.
 
 Uiteindelijk heb ik nog rekening gehouden met tussensloten. Als er 1 of 2
-tussensloten zitten tussen twee activiteiten, dan geeft dit puur maluspunten.
-Als er 3 (of meer) tussensloten zitten tussen twee activiteiten, dan worden
-beide vakken gemarkeerd als violations. Dit is hetgeen dat het aantal acties
-doet vergroten waardoor ik mijn logica wat moest aanpassen om überhaupt nog
-mogelijke oplossingen te kunnen genereren.
+tussensloten zitten tussen twee activiteiten per student, dan geeft dit puur en
+alleen maluspunten. Als er 3 (of meer) tussensloten zitten tussen twee
+activiteiten, dan wordt de laatste gemarkeerd als violation, want de enige
+situatie waarin er 3 tijdsloten zijn is als het tijdslot vóór de tussensloten
+9:00 is en het tijdslot ná de tussensloten 17:00 is. Omdat we toch 5 malus
+punten krijgen voor het boeken in het 17:00 tijdslot markeren we alleen deze als
+een violation.  Dit is hetgeen dat het aantal acties doet vergroten waardoor ik
+mijn logica wat moest aanpassen om überhaupt nog mogelijke oplossingen te kunnen
+genereren.
 
 Helaas was de combinatie van activiteiten verplaatsen, activiteiten omwisselen
 en studenten wisselen niet optimaal. Toen bedacht ik mij dat ik bepaalde dingen
@@ -61,7 +66,16 @@ gemaakt, maar het wisselen van studenten haalde het weer aanzienlijk naar
 beneden.
 
 Ik heb veel opties geprobeerd door het percentage aan te passen en zo geprobeerd
-te achterhalen wat positieve of negatieve invloed had op het aantal violations.
+te achterhalen wat positieve of negatieve invloed heeft op het aantal
+violations.
+
+Na veel combinaties te hebben getest, ben ik er achter gekomen dat het volgende
+erg goed werkt:
+- elke violated activiteit verplaatsen naar een ander tijdslot dan de huidige
+- 10% kans dat de elke violation met een andere activiteit (dat geen violation
+  is) wordt omgewisseld
+- 1% kans dat studenten verwisseld worden
+
 Uiteindelijk bleek de 1% kans studenten verwisselen met een 10% kans voor het
 omwisselen van activiteiten zeer goed te werken. Ik zag ook in de logs dat het
 aantal violations ook sterk naar beneden bleef gaan op deze manier en dat was
@@ -71,24 +85,16 @@ maar elke andere waarde met of zonder aanpassing van andere percentages maakt
 het alleen maar slechter. De 1% kans maakt écht een verschil hier. Het reduceert
 het aantal retries met honderdtallen.
 
-Na veel combinaties te hebben getest, ben ik er achter gekomen dat het volgende
-erg goed werkt:
+Binnen 1000 iteraties met bovenstaande logica zijn dit de uiteindelijke resultaten:
+- Min. retries: 37
+- Max. retries: 975
+- Avg. retries: 220
+- Min. malus score: 173
+- Max. malus score: 2697
+- Avg malus score: 331
+- Solutions: 1000/1000
 
-- elke violated activiteit verplaatsen naar een ander tijdslot dan de huidige
-- 10% kans dat de elke violation met een andere activiteit (dat geen violation
-  is) wordt omgewisseld
-- 1% kans dat studenten verwisseld worden
-
-Binnen 5000 iteraties met bovenstaande logica zijn dit de uiteindelijke
-resultaten:
-
-- Min. retries: 33
-- Max. retries: 3480
-- Avg. retries: 262
-- Min. malus score: 41
-- Max. malus score: 180
-- Avg malus score: 82
-- Solutions: 5000/5000
+![dataplot with 1000 iterations](./plot.png)
 
 NOTE: Op dit moment bereken ik alleen de malus score op basis van de opdracht,
 maar ik doe er nog niks mee. Ik kan dit later gebruiken om n-aantal oplossingen
@@ -101,18 +107,23 @@ maximaal 1 activiteit plaats vindt in het laatste tijdslot van 17:00 - 19:00.
 ![heatmap](./heatmap.png)
 
 Uiteindelijk heb ik geïmplementeerd dat ik de timetable naar `ics` bestanden kan
-exporteren. Er wordt een `ics` bestand met alle activiteiten weggeschreven en
-ook nog per vak een `ics` (voor debugging erg handig!)
+exporteren. Er worden drie verschillende categorieën geëxporteerd:
+- `out/ics/timetable.csv` bevat de hele timetable voor een hele week
+- `out/ics/courses/` bevat een timetable export voor elk vak
+- `out/ics/students/` bevat een timetable export voor elke student
 
 Hieronder heb ik wat screenshots van hoe de `ics` bestanden er in Apple Calendar
 uitzien.
 
-Hier heb ik 3 `ics` bestanden van 3 verschillende vakken geïmporteerd. Hier is
-te zien dat het aantal tussensloten ook vaak maar 1 is, wat erg positief is.
+Het rooster van één van de studenten:
 
-![ics partial](./ics-partial.png)
+![personal timetable for one student](./ics-student.png)
 
-Hieronder nog een screenshot van alle 29 vakken en hun planningen samen, gewoon
+Het rooster van één van de vakken:
+
+![timetable for a single course](./ics-course.png)
+
+Hieronder nog een screenshot van alle 29 vakken en hun roosters samen, gewoon
 omdat het kan.
 
 ![ics full](./ics-full.png)
