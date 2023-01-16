@@ -19,6 +19,7 @@ class Timeslot:
     - Each empty timeslot in-between two other timeslots per coures adds 1 malus point.
     - Two empty timeslots in-between two other timeslots per course adds 3 malus points.
     - Every course conflict that each student has adds 1 malus point.
+    - Every student that does not fit into the booked room adds 1 malus point.
     """
 
     OPTIONS = [9, 11, 13, 15, 17]
@@ -104,6 +105,19 @@ class Timeslot:
 
         return violations
 
+    def calculate_room_overfitting_malus_score(self) -> int:
+        """
+        Calculate a malus score that checks per room how much students do not
+        into the room anymore. Each student too much adds one malus point.
+        """
+        score = 0
+
+        for event in self.events:
+            if len(event.students) > event.room.capacity:
+                score += len(event.students) - event.room.capacity
+
+        return score
+
     def calculate_malus_score(self) -> int:
         """
         Calculates the malus score for this particular timeslot.
@@ -114,13 +128,17 @@ class Timeslot:
         if self.value == 17:
             points += 5
 
+        # Add one malus punt for each overlapping course each student has.
         points += len(self.get_overlapping_student_courses_events())
+
+        # Add one malus point for each student that does not fit into each room.
+        points += self.calculate_room_overfitting_malus_score()
 
         return points
 
     def get_overlapping_student_courses_events(self) -> list[Event]:
         """
-        Find the overlapping events in this timeslot for each student.
+        Find the events that overlap in this timeslot for each student.
         """
         overlapping_events = []
 

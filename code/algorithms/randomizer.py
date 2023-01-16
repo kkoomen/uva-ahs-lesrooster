@@ -22,12 +22,12 @@ class Randomizer(Algorithm):
         self.timetable = Timetable()
         self.logger = logging.getLogger(__name__)
 
-    def create_random_event(self, title: str, event_type: str, course: Course,
-                            room: Room) -> Event:
+    def create_random_event(self, title: str, event_type: str, course: Course) -> Event:
         """
         Create an event with random timeslot, room and weekday.
         """
         timeslot = random.choice(Timeslot.OPTIONS)
+        room = random.choice(self.timetable.rooms)
         weekday = random.choice([weekday.value for weekday in Weekdays])
         return Event(title, event_type, timeslot, course, room, weekday)
 
@@ -37,18 +37,7 @@ class Randomizer(Algorithm):
         """
         timeslot = random.choice([n for n in Timeslot.OPTIONS if n != event.timeslot])
         weekday = random.choice([weekday.value for weekday in Weekdays])
-
-        if event.type == 'hc':
-            room = random.choice([r for r in self.timetable.rooms if r.capacity >= event.course.enrolment])
-        elif event.type == 'wc':
-            total_groups = math.ceil(event.course.enrolment / event.course.seminar_capacity)
-            group_capacity = math.ceil(event.course.enrolment / total_groups)
-            room = random.choice([r for r in self.timetable.rooms if r.capacity >= group_capacity])
-        else: # practicals
-            total_groups = math.ceil(event.course.enrolment / event.course.practical_capacity)
-            group_capacity = math.ceil(event.course.enrolment / total_groups)
-            room = random.choice([r for r in self.timetable.rooms if r.capacity >= group_capacity])
-
+        room = random.choice(self.timetable.rooms)
         return Event(event.title, event.type, timeslot, event.course, room, weekday, event.students)
 
     def assign_random_events(self) -> None:
@@ -57,8 +46,7 @@ class Randomizer(Algorithm):
         """
         for course in self.timetable.courses:
             for i in range(course.lectures_amount):
-                room = random.choice([r for r in self.timetable.rooms if r.capacity >= course.enrolment])
-                event = self.create_random_event(f'{course.name} hoorcollege {i + 1}', 'hc', course, room)
+                event = self.create_random_event(f'{course.name} hoorcollege {i + 1}', 'hc', course)
                 event.assign_students(course.enrolled_students)
                 self.timetable.add_event(event)
 
@@ -68,8 +56,7 @@ class Randomizer(Algorithm):
                 group_capacity = math.ceil(course.enrolment / total_groups)
                 student_groups = split_list_random(course.enrolled_students, group_capacity)
                 for i in range(total_groups):
-                    room = random.choice([r for r in self.timetable.rooms if r.capacity >= group_capacity])
-                    event = self.create_random_event(f'{course.name} werkcollege {i + 1}', 'wc', course, room)
+                    event = self.create_random_event(f'{course.name} werkcollege {i + 1}', 'wc', course)
                     event.assign_students(student_groups[i])
                     self.timetable.add_event(event)
 
@@ -79,8 +66,7 @@ class Randomizer(Algorithm):
                 group_capacity = math.ceil(course.enrolment / total_groups)
                 student_groups = split_list_random(course.enrolled_students, group_capacity)
                 for i in range(total_groups):
-                    room = random.choice([r for r in self.timetable.rooms if r.capacity >= group_capacity])
-                    event = self.create_random_event(f'{course.name} practicum {i + 1}', 'pr', course, room)
+                    event = self.create_random_event(f'{course.name} practicum {i + 1}', 'pr', course)
                     event.assign_students(student_groups[i])
                     self.timetable.add_event(event)
 
