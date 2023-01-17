@@ -18,7 +18,7 @@ respectievelijk heb gedaan:
 - Logica implementeren voor het omwisselen van activiteiten
 - Tussensloten minimaliseren logica implementeren
 - ICS export
-- data plotten
+- random walk met data plots
 
 Nadat ik het aantal studenten heb opgesplitst op basis van de werkcollege en
 practicum capaciteit moest het 129 tijdsloten verdelen binnen 145 beschikbare
@@ -28,9 +28,9 @@ gegenereerde oplossingen.
 
 Vervolgens heb ik ook nog de activiteiten ingepland in een zaal waar de
 capaciteit groot genoeg is voor die activiteit. Nadat ik dit had geïmplementeerd
-kwam de Randomizer soms in een oneindige loop terecht met nog een aantal
+kwam de Randomizer soms in een infinite loop terecht met nog een aantal
 activiteiten die het niet kon inplannen binnen een bepaalde aantal iteraties.
-Dit liep op tot wel 100.000+ iteraties en nog steeds ging het fout. Dit komt
+Dit liep op tot wel 100.000+ iteraties en nog steeds ging het door. Dit komt
 omdat bij het aanpassen van een violated activiteit worden de studenten niet
 verwisseld naar andere activiteiten indien mogelijk. Tenslotte hebben
 werkcolleges en practicums de mogelijkheid om meerdere groepen te hebben o.b.v.
@@ -45,7 +45,8 @@ ook voor practicums). Dit gaf al een aanzienlijk beter resultaat.
 Vervolgens heb ik geprobeerd om elke violation (activiteit) om te wisselen met
 een random ander activiteit dat geen violation is. Dit werkte verbazingwekkend
 goed. Heel af en toe raakte het in een infinite loop, dus ik heb een extra check
-toegevoegd dat de Randomizer stopt na 2000 retries.
+toegevoegd dat de Randomizer stopt na n-aantal retries en dan wordt dit
+gemarkeerd als *geen oplossing*.
 
 Uiteindelijk heb ik nog rekening gehouden met tussensloten. Als er 1 of 2
 tussensloten zitten tussen twee activiteiten per student, dan geeft dit puur en
@@ -58,34 +59,42 @@ een violation.  Dit is hetgeen dat het aantal acties doet vergroten waardoor ik
 mijn logica wat moest aanpassen om überhaupt nog mogelijke oplossingen te kunnen
 genereren.
 
-Helaas was de combinatie van activiteiten verplaatsen, activiteiten omwisselen
-en studenten wisselen niet optimaal. Toen bedacht ik mij dat ik bepaalde dingen
-alleen kan laten uitvoeren met een bepaalde kans. Ik kwam er al snel achter dat
-het wisselen van activiteiten het aantal violations soms zelfs hoger had
-gemaakt, maar het wisselen van studenten haalde het weer aanzienlijk naar
-beneden.
+Helaas was de combinatie van activiteiten verplaatsen, twee random activiteiten
+omwisselen en studenten wisselen niet voldoende om tot een oplossing te komen.
+Sterker nog, deze combinatie kan geen oplossing genereren omdat het aantal
+violations altijd rondom een bepaalde waarde bleef zweven maar nooit precies 0
+wordt. Toen bedacht ik mij dat ik bepaalde dingen alleen kan laten uitvoeren met
+een bepaalde kans. Ik kwam er al snel achter dat het wisselen van twee
+activiteiten het aantal violations soms zelfs hoger had gemaakt, maar het
+wisselen van studenten haalde het weer aanzienlijk naar beneden.
 
 Ik heb veel opties geprobeerd door het percentage aan te passen en zo geprobeerd
 te achterhalen wat positieve of negatieve invloed heeft op het aantal
 violations.
 
-Na veel combinaties te hebben getest, ben ik er achter gekomen dat het volgende
-erg goed werkt:
+Na veel combinaties zelfstandig te hebben getest ben ik er achter gekomen dat
+het volgende erg goed werkt:
+
 - elke violated activiteit verplaatsen naar een ander tijdslot dan de huidige
+  (waarbij de andere activiteit *niet* violated is)
 - 10% kans dat de elke violation met een andere activiteit (dat geen violation
   is) wordt omgewisseld
 - 1% kans dat studenten verwisseld worden
 
-Uiteindelijk bleek de 1% kans studenten verwisselen met een 10% kans voor het
-omwisselen van activiteiten zeer goed te werken. Ik zag ook in de logs dat het
-aantal violations ook sterk naar beneden bleef gaan op deze manier en dat was
-een zeer interessante ontdekking, met name de 1% kans voor het verwisselen van
-studenten had erg veel invloed. De 1% kans klinkt alsof het weinig uitmaakt,
-maar elke andere waarde met of zonder aanpassing van andere percentages maakt
-het alleen maar slechter. De 1% kans maakt écht een verschil hier. Het reduceert
-het aantal retries met honderdtallen.
+Hierdoor wordt er altijd een oplossing gegenereerd en zal het algortime nooit
+oneindig door gaan.
 
-Binnen 1000 iteraties met bovenstaande logica zijn dit de uiteindelijke resultaten:
+Uiteindelijk bleek de 1% kans studenten verwisselen met een 10% kans voor het
+omwisselen van activiteiten zeer goed te werken om het aantal retries te
+minimaliseren, met name de 1% kans voor het verwisselen van studenten had erg
+veel invloed. De 1% kans klinkt alsof het weinig uitmaakt, maar elke andere
+waarde met of zonder aanpassing van andere percentages maakt het alleen maar
+slechter n.a.v. mijn eigen (gelimiteerde) experimenten. De 1% kans maakt écht
+een verschil hier. Het reduceert het aantal retries met honderdtallen.
+
+Binnen 1000 iteraties met bovenstaande logica zijn dit de uiteindelijke
+resultaten:
+
 - Min. retries: 37
 - Max. retries: 975
 - Avg. retries: 220
@@ -94,11 +103,9 @@ Binnen 1000 iteraties met bovenstaande logica zijn dit de uiteindelijke resultat
 - Avg malus score: 331
 - Solutions: 1000/1000
 
-![dataplot with 1000 iterations](./plot.png)
+![dataplot with 1000 iterations](./retries-plot.png)
 
-NOTE: Op dit moment bereken ik alleen de malus score op basis van de opdracht,
-maar ik doe er nog niks mee. Ik kan dit later gebruiken om n-aantal oplossingen
-te genereren en dan diegene pakken met de laagste malus score.
+## ICS Export
 
 Hieronder nog een screenshot van een oplossing in de baseline versie. In de
 afbeelding is te zien dat tijdsloten meer naar boven worden gehaald en dat er
@@ -127,3 +134,23 @@ Hieronder nog een screenshot van alle 29 vakken en hun roosters samen, gewoon
 omdat het kan.
 
 ![ics full](./ics-full.png)
+
+## Random walk
+
+Vervolgens heb ik een *random walk* geïmplementeerd die 1 oplossing genereert en
+vervolgens n-aantal keer de volgende data verzamelt:
+- twee random ingeplande met elkaar activiteiten omwisselen
+- studenten in een groep verwisselen
+- twee random activiteiten omwisselen én studenten verwisselen
+
+Hier heb ik niet gekeken naar het aantal retries, maar naar het aantal
+maluspunten om te zien hoe het aantal maluspunten wordt beïnvloed door deze
+aanpassingen.
+
+Zoals in de onderstaande grafieken te zien is heeft het wisselen van studenten
+(students permuting) redelijk slechte invloed op de malus score. Het omwisselen
+van twee random activiteiten (event swapping) heeft daarentegen een positieve
+invloed in het begin, maar na ±500 iteraties heeft het niet zo heel veel nut
+meer en zweeft het om een bepaalde malus score heen en weer.
+
+![data plot with 10K iterations showing malus points influence](./malus-score-plot.png)
