@@ -15,7 +15,8 @@ import ics
 import matplotlib.pyplot as plt
 
 
-TimetableList = list[dict[int, Timeslot]]
+TimetableDay = dict[int, Timeslot]
+TimetableList = list[TimetableDay]
 
 
 class Timetable:
@@ -57,8 +58,17 @@ class Timetable:
         self.register_students_to_courses()
 
     def __iter__(self) -> Generator:
+        """
+        Allow to iterate over the timetable events.
+        """
         for day in self.timetable:
             yield day
+
+    def __getitem__(self, index: int) -> TimetableDay:
+        """
+        Get an timetable day by index.
+        """
+        return self.timetable[index]
 
     def register_students_to_courses(self):
         """

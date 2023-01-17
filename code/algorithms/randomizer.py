@@ -1,3 +1,4 @@
+import copy
 import logging
 import math
 import random
@@ -9,6 +10,7 @@ from code.entities.timeslot import Timeslot
 from code.entities.timetable import Timetable
 from code.utils.enums import Weekdays
 from code.utils.helpers import split_list_random
+import matplotlib.pyplot as plt
 
 
 class Randomizer(Algorithm):
@@ -152,6 +154,101 @@ class Randomizer(Algorithm):
                 # Assign the students to the events
                 for i, event in enumerate(events):
                     event.assign_students(student_groups[i])
+
+    def get_random_event(self) -> Event:
+        """
+        Return a random event from the timetable.
+        """
+        random_day_index = random.randrange(len(Weekdays))
+        day = self.timetable[random_day_index]
+        timeslots = [timeslot for timeslot in day.values() if len(timeslot.events) > 0]
+        while len(timeslots) == 0:
+            random_day_index = random.randrange(len(Weekdays))
+            day = self.timetable[random_day_index]
+            timeslots = [timeslot for timeslot in day.values() if len(timeslot.events) > 0]
+
+        random_timeslot = random.choice(timeslots)
+        return random.choice(random_timeslot.events)
+
+    def plot_random_walk(self, iterations: int) -> None:
+        """
+        Create a single solution and then for n-iterations start doing single
+        changes that have influence on the hard constraints to see how the malus
+        score will react to these changes.
+
+        In case of the timetable, the following adjustments will be done:
+        - swap two random events
+        - permute students within a course
+        """
+        malus_scores = [
+            {
+                'label': 'Event swapping',
+                'scores': [],
+            },
+            {
+                'label': 'Students permuting',
+                'scores': [],
+            },
+            {
+                'label': 'Event swapping + students permuting',
+                'scores': [],
+            },
+        ]
+
+        is_solution = self.run()
+        if not is_solution:
+            self.logger.error('Failed to create solution for random walk')
+
+        timetable_state = copy.deepcopy(self.timetable)
+
+        # Swap two random events.
+        # ======================
+        for _ in range(iterations):
+            random_event = self.get_random_event()
+            self.swap_events([random_event])
+            malus_score = self.timetable.calculate_malus_score()
+            malus_scores[0]['scores'].append(malus_score)
+
+        self.logger.info(f'[RANDOM WALK] Finished {iterations} iterations for event swapping')
+
+        # Permute students.
+        # ================
+        self.timetable = timetable_state
+        timetable_state = copy.deepcopy(self.timetable)
+        for _ in range(iterations):
+            self.permute_students()
+            malus_score = self.timetable.calculate_malus_score()
+            malus_scores[1]['scores'].append(malus_score)
+
+        self.logger.info(f'[RANDOM WALK] Finished {iterations} iterations for student permuting')
+
+        # Swap two random events and permute students.
+        # ============================================
+        self.timetable = timetable_state
+        timetable_state = copy.deepcopy(self.timetable)
+        for _ in range(iterations):
+            random_event = self.get_random_event()
+            self.swap_events([random_event])
+            self.permute_students()
+            malus_score = self.timetable.calculate_malus_score()
+            malus_scores[2]['scores'].append(malus_score)
+
+        self.logger.info(f'[RANDOM WALK] Finished {iterations} iterations event swapping + student permuting')
+
+        # Plot the results
+        fig, ax = plt.subplots(len(malus_scores), 1)
+        fig.suptitle(f'Timetable (iterations = {iterations})')
+        fig.supxlabel('iterations')
+        fig.supylabel('malus points')
+        fig.tight_layout(pad=0.75)
+
+        for index, test_run in enumerate(malus_scores):
+            subplot = ax[index]
+            subplot.set_yticks([min(test_run['scores']), max(test_run['scores'])])
+            subplot.set_title(test_run['label'])
+            subplot.plot(range(1, iterations + 1), test_run['scores'])
+
+        plt.show()
 
     def run(self) -> tuple[bool, int]:
         """

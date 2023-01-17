@@ -3,7 +3,7 @@ import logging
 from code.algorithms.base import Algorithm
 import matplotlib.pyplot as plt
 
-logger = logging.getLogger('global')
+logger = logging.getLogger(__name__)
 
 
 def print_algorithm_average_statistics(algorithm: Algorithm,
@@ -23,7 +23,8 @@ def print_algorithm_average_statistics(algorithm: Algorithm,
     max_malus_score = None
     avg_malus_score = 0
 
-    for _ in range(iterations):
+    for i in range(iterations):
+        logger.info(f'Starting iteration #{i + 1}')
         found_solution, retries = algorithm.run()
         malus_score = algorithm.timetable.calculate_malus_score()
         retries_list.append(retries)

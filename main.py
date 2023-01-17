@@ -58,15 +58,19 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument('-l', '--log-level',
                         choices=['debug', 'info', 'warning', 'error', 'critical'],
                         default='info',
-                        help='Set the log level for stdout as well as the logfile.')
+                        help='Set the log level for stdout as well as the logfile')
 
     parser.add_argument('-q', '--quiet',
                         action='store_true',
-                        help='Hide any output produced by the logger for stdout.')
+                        help='Hide any output produced by the logger for stdout')
 
     parser.add_argument('-a', '--algorithm',
                         choices=['random'],
-                        help='Run any of the algorithms of choice.')
+                        help='Run any of the algorithms of choice')
+
+    parser.add_argument('-w', '--random-walk',
+                        action='store_true',
+                        help='Do a random walk and plot the results')
 
     parser.add_argument('-i', '--iterations',
                         type=int,
@@ -79,7 +83,7 @@ def parse_arguments() -> argparse.Namespace:
 
     parser.add_argument('-p', '--show-plot',
                         action='store_true',
-                        help='Plot data from the selected algorithm (if implemented).')
+                        help='Plot data from the selected algorithm (if implemented)')
 
     return parser.parse_args()
 
@@ -97,7 +101,9 @@ def main():
         algorithm = Randomizer()
 
     if isinstance(algorithm, Algorithm):
-        if args.iterations > 1:
+        if args.random_walk:
+            algorithm.plot_random_walk(args.iterations)
+        elif args.iterations > 1:
             print_algorithm_average_statistics(algorithm,
                                                iterations=args.iterations,
                                                show_plot=args.show_plot)
