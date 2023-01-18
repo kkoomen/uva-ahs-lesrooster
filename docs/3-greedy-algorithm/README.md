@@ -2,8 +2,9 @@
 
 Na een implementatie te hebben afgerond voor een random algoritme, is het nu
 tijd om een greedy implementatie te doen. Ik heb er voor gekozen om een
-constructief greedy algoritme te implementeren, omdat voor mijn gevoel dit voor
-de meest hand liggende keuze is.
+constructief greedy algoritme te implementeren, omdat het hier bij een
+lesrooster handiger is om alle mogelijke opties af te gaan en dan te zien welke
+de minste maluspunten heeft.
 
 De pseudo code voor mijn constructieve algoritme is als volgt:
 -  haal alle activiteiten op die ingepland moeten worden van alle vakken
@@ -11,7 +12,7 @@ De pseudo code voor mijn constructieve algoritme is als volgt:
    vak)
 -  zolang er activiteiten zijn die ingeplant moeten worden:
     - pak de eerste activiteit
-    - vind het beste tijdslot (gesorteerd op aantal violations + maluspunten + tijdslot + dag vd week)
+    - vind het beste tijdslot (oplopend gesorteerd op aantal violations + maluspunten + tijdslot + dag vd week)
     - plaats de activiteit in de eerste de beste oplossing
 
 Ook bedacht ik mij dat het logischer zou zijn om van links naar rechts in te
