@@ -7,19 +7,6 @@ from code.utils.helpers import remove_duplicates
 class Timeslot:
     """
     Timeslots are used inside the Timetable class and contain scheduled events.
-
-    Constraints:
-    - Each timeslot can contain each room at most once.
-    - Each timeslot can contain an event of a certain course at most once.
-    - Only the largest room can be scheduled in the 17-19 timeframe.
-    - Three (or more) empty timeslots in-between two other timeslots per student is not allowed.
-
-    Malus points:
-    - The 17:00 - 19:00 timeslot adds 5 malus points.
-    - Each empty timeslot in-between two other timeslots per student adds 1 malus point.
-    - Two empty timeslots in-between two other timeslots per student adds 3 malus points.
-    - Every course conflict that each student has adds 1 malus point.
-    - Every student that does not fit into the booked room adds 1 malus point.
     """
 
     OPTIONS = [9, 11, 13, 15, 17]
@@ -57,28 +44,62 @@ class Timeslot:
         for event in self.events:
             yield event
 
-    def get_duplicate_course_events(self) -> list[Event]:
+    def get_course_violations(self) -> list[Event]:
         """
-        Find duplicate events for a specific course in a certain timeslot.
+        Find violations in this timeslot per course type.
+
+        Per timeslot, we allow per course to only have 1 lecture (as two
+        lectures of the same course is not allowed) or several seminars or
+        several practicums, but these can't be mixed together.
         """
-        duplicated_events = []
-        visited_courses = []
+        violations = []
+
+        # Structure:
+        # {
+        #     <course 1>: {
+        #         'hc': [Event(), Event()],
+        #         'wc': [Event(), Event(), Event()],
+        #     },
+        #     <course 2>: {
+        #         'hc': [Event(), Event()],
+        #         'wc': [Event(), Event(), Event()],
+        #     },
+        # }
+        course_types: dict[str, dict[EventType, list[Event]]] = {}
 
         for event in self.events:
-            if event.course in visited_courses:
-                duplicated_events.append(event)
-            else:
-               visited_courses.append(event.course)
+            if event.course.id not in course_types:
+                course_types[event.course.id] = {}
+            if event.type not in course_types[event.course.id]:
+                course_types[event.course.id][event.type] = []
+            course_types[event.course.id][event.type].append(event)
 
-        return duplicated_events
+        for event_types in course_types.values():
+            if len(event_types) == 1 and EventType.LECTURE in event_types:
+                # Only allow 1 lecture, mark the other lectures as violations.
+                violations += event_types[EventType.LECTURE][1:]
+            elif len(event_types) >= 2:
+                # Only allow 1 lecture, mark the other lectures as violations.
+                first_key = list(event_types.keys())[0]
+                if first_key == EventType.LECTURE:
+                    violations += event_types[EventType.LECTURE][1:]
 
-    def get_double_booked_events(self) -> list[Event]:
+                # Mark the other course types as violations
+                for key in event_types:
+                    if key != first_key:
+                        violations += event_types[key]
+
+        return violations
+
+    def get_double_booked_violations(self) -> list[Event]:
         """
         Find the events that are booked in the same room.
         """
         double_booked_events = []
         visited_room_ids = []
 
+        # Allow the first event we come across to be booked in a room and any
+        # other event booked in the same room will be marked as a violation.
         for event in self.events:
             if event.room.location_id in visited_room_ids:
                 double_booked_events.append(event)
@@ -165,7 +186,7 @@ class Timeslot:
         violations = []
 
         violations += self.get_timeslot_17_violations()
-        violations += self.get_duplicate_course_events()
-        violations += self.get_double_booked_events()
+        violations += self.get_course_violations()
+        violations += self.get_double_booked_violations()
 
         return remove_duplicates(violations)

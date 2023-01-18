@@ -42,6 +42,24 @@ resultaten beschrijf na elke fase te hebben afgerond.
 └── docs                # bevat het gedocumenteerde proces van dit hele project
 ```
 
+# Constraints
+
+Hard constraints:
+
+- In elk tijdslot mag elke zaal maximaal 1 keer geboekt worden
+- Alleen de zaal met de grootste capaciteit mag geboekt worden van 17:00 - 19:00
+- 3 of meer tussensloten per student is niet toegestaan
+- (extra) Elk tijdslot mag per vak maar 1 activiteit type hebben (maximaal 1
+  hoorcollege OF 1 of meer werkcolleges/practicums van dit vak)
+
+Soft constraints (malus points):
+
+- Elke activiteit ingeboekt in het 17:00 - 19:00 tijdslot geeft 5 maluspunten.
+- 1 tussenslot tussen twee andere activiteiten per student geeft 1 maluspunt.
+- 2 tussensloten tussen twee andere activiteiten per student geeft 3 maluspunten.
+- Elk vak conflict per student per tijdslot geeft 1 maluspunt.
+- Elke student die niet meer in een zaal past geeft 1 maluspunt.
+
 # Tests
 
 TODO

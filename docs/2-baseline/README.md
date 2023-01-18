@@ -95,23 +95,23 @@ een verschil hier. Het reduceert het aantal retries met honderdtallen.
 Binnen 1000 iteraties met bovenstaande logica zijn dit de uiteindelijke
 resultaten:
 
-- Min. retries: 37
-- Max. retries: 975
-- Avg. retries: 220
-- Min. malus score: 173
-- Max. malus score: 2697
-- Avg malus score: 331
+- Min. retries: 20
+- Max. retries: 1321
+- Avg. retries: 188
+- Min. malus score: 170
+- Max. malus score: 484
+- Avg malus score: 318
 - Solutions: 1000/1000
 
 ![dataplot with 1000 iterations](./retries-plot.png)
-
-## ICS Export
 
 Hieronder nog een screenshot van een oplossing in de baseline versie. In de
 afbeelding is te zien dat tijdsloten meer naar boven worden gehaald en dat er
 maximaal 1 activiteit plaats vindt in het laatste tijdslot van 17:00 - 19:00.
 
 ![heatmap](./heatmap.png)
+
+## ICS Export
 
 Uiteindelijk heb ik geïmplementeerd dat ik de timetable naar `ics` bestanden kan
 exporteren. Er worden drie verschillende categorieën geëxporteerd:
