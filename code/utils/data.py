@@ -20,7 +20,7 @@ def load_rooms() -> list[Room]:
             capacity = int(row['Max. capaciteit'])
             room = Room(room_id, capacity)
 
-            if largest_room is None or largest_room.capacity > capacity:
+            if largest_room is None or room.capacity > largest_room.capacity:
                 largest_room = room
 
             rooms.append(room)
