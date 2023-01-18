@@ -24,7 +24,7 @@ def print_algorithm_average_statistics(algorithm: Algorithm,
     avg_malus_score = 0
 
     for i in range(iterations):
-        logger.info(f'Starting iteration #{i + 1}')
+        logger.info(f'Starting iteration {i + 1}/{iterations}')
         found_solution, retries = algorithm.run()
         malus_score = algorithm.timetable.calculate_malus_score()
         retries_list.append(retries)
@@ -83,9 +83,6 @@ def plot_iteration_retries(retries: list[int]) -> None:
     """
     iterations = len(retries)
 
-    plt.title(f'Timetable (iterations = {iterations})')
-    plt.legend()
-
     plt.xlabel('# of iterations')
     plt.ylabel('# of retries')
 
@@ -96,4 +93,7 @@ def plot_iteration_retries(retries: list[int]) -> None:
                 color='red',
                 linestyle='--',
                 label=f'avg retries ({average_retries})')
+
+    plt.title(f'Timetable (iterations = {iterations})')
+    plt.legend()
     plt.show()
