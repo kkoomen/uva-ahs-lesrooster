@@ -75,9 +75,9 @@ def load_students() -> list[Student]:
     with open(data_path('studenten_en_vakken.csv'), 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            last_name, first_name, student_number = row[:3]
+            last_name, first_name, student_id = row[:3]
             enrolled_courses = [course.strip() for course in row[3:8] if course]
-            student = Student(first_name, last_name, student_number, enrolled_courses)
+            student = Student(first_name, last_name, student_id, enrolled_courses)
             students.append(student)
         file.close()
 

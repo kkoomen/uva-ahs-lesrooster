@@ -217,17 +217,17 @@ class Timetable:
             for (hour, timeslot) in day.items():
                 for event in timeslot:
                     for student in event.students:
-                        if student.student_number not in student_timetables:
-                            student_timetables[student.student_number] = self.new_timetable()
-                        if hour not in student_timetables[student.student_number][day_index]:
-                            student_timetables[student.student_number][day_index][hour] = Timeslot(hour)
-                        if event not in student_timetables[student.student_number][day_index][hour]:
-                            student_timetables[student.student_number][day_index][hour].add_event(event)
+                        if student.student_id not in student_timetables:
+                            student_timetables[student.student_id] = self.new_timetable()
+                        if hour not in student_timetables[student.student_id][day_index]:
+                            student_timetables[student.student_id][day_index][hour] = Timeslot(hour)
+                        if event not in student_timetables[student.student_id][day_index][hour]:
+                            student_timetables[student.student_id][day_index][hour].add_event(event)
 
         # Sort all the dictionaries by key for each day per student.
-        for student_number, timetable in student_timetables.items():
+        for student_id, timetable in student_timetables.items():
             for index, day in enumerate(timetable):
-                student_timetables[student_number][index] = dict(sorted(timetable[index].items()))
+                student_timetables[student_id][index] = dict(sorted(timetable[index].items()))
 
         return student_timetables
 
@@ -458,7 +458,7 @@ class Timetable:
         # Create separate ICS calendar files for each student.
         # ===================================================
         student_timetables = self.get_student_timetables()
-        for student_number, timetable in student_timetables.items():
+        for student_id, timetable in student_timetables.items():
             total_events = 0
             calendar = ics.Calendar()
             for day in timetable:
@@ -467,12 +467,12 @@ class Timetable:
                         total_events += 1
                         calendar.events.add(self.create_ics_event(event))
 
-            filepath = os.path.join(STUDENTS_OUT_DIR, f'{student_number}_{filename}')
+            filepath = os.path.join(STUDENTS_OUT_DIR, f'{student_id}_{filename}')
             with open(filepath, 'w') as file:
                 file.write(calendar.serialize())
                 file.close()
 
-            self.logger.info(f'Successfully saved timetable for student #{student_number} with {total_events} events as {filepath}')
+            self.logger.info(f'Successfully saved timetable for student #{student_id} with {total_events} events as {filepath}')
 
 
         # Create separate ICS calendar files for each course and its events.

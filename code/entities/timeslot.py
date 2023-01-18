@@ -125,8 +125,8 @@ class Timeslot:
         student_ids = []
         for event in self.events:
             for student in event.students:
-                if student.student_number not in student_ids:
-                    student_ids.append(student.student_number)
+                if student.student_id not in student_ids:
+                    student_ids.append(student.student_id)
                 elif event not in overlapping_events:
                     overlapping_events.append(event)
 

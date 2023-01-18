@@ -7,15 +7,15 @@ class Student:
     def __init__(self,
                  first_name: str,
                  last_name: str,
-                 student_number: str,
+                 student_id: str,
                  enrolled_courses: list[str]) -> None:
         self.first_name = first_name
         self.last_name = last_name
-        self.student_number = student_number
+        self.student_id = student_id
         self.enrolled_courses = enrolled_courses
 
     def __repr__(self) -> str:
-        return f'{self.__class__.__name__}(first_name:{self.first_name}, last_name:{self.last_name}, student_number:{self.student_number}, enrolled_courses:{self.enrolled_courses})'
+        return f'{self.__class__.__name__}(first_name:{self.first_name}, last_name:{self.last_name}, student_id:{self.student_id}, enrolled_courses:{self.enrolled_courses})'
 
     def __str__(self) -> str:
         return self.get_full_name()
