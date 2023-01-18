@@ -1,4 +1,6 @@
+import math
 from typing import Union
+
 from code.entities.student import Student
 from code.utils.helpers import make_id
 
@@ -32,8 +34,26 @@ class Course:
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(name:{self.name}, enrolled_students:{len(self.enrolled_students)})'
 
+    def __eq__(self, other) -> bool:
+        return self.id == other.id
+
     def register_students(self, students: list[Student]) -> None:
         """
         Register a list of students to this course.
         """
         self.enrolled_students = students
+
+    def calculate_total_events(self) -> int:
+        """
+        Calculate how many events this course will schedule based on lectures,
+        seminars and practicals amount and capacity along with the enrolment.
+        """
+        total = self.lectures_amount
+
+        if self.seminars_amount > 0:
+            total += math.ceil(self.enrolment / self.seminar_capacity)
+
+        if self.practicals_amount > 0:
+            total += math.ceil(self.enrolment / self.practical_capacity)
+
+        return total

@@ -6,6 +6,7 @@ import os
 import re
 
 from code.entities.event import Event
+from code.entities.room import Room
 from code.entities.timeslot import Timeslot
 from code.utils.constants import OUT_DIR
 from code.utils.data import load_courses, load_rooms, load_students
@@ -46,6 +47,7 @@ class Timetable:
     """
 
     MAX_TIMESLOTS_PER_WEEK = 145
+    DAYS_PER_WEEK = 5
 
     def __init__(self) -> None:
         self.logger = logging.getLogger(__name__)
@@ -82,6 +84,9 @@ class Timetable:
         """
         Add a single event to the timetable.
         """
+        assert event.weekday is not None, 'weekday must be set'
+        assert event.timeslot is not None, 'timeslot must be set'
+
         weekday = self.timetable[event.weekday - 1]
 
         if event.timeslot not in weekday:
@@ -93,6 +98,9 @@ class Timetable:
         """
         Remove a single event from the timetable.
         """
+        assert event.weekday is not None, 'weekday must be set'
+        assert event.timeslot is not None, 'timeslot must be set'
+
         self.timetable[event.weekday - 1][event.timeslot].remove_event(event)
 
     def remove_events(self, events: list[Event]) -> None:
@@ -285,6 +293,25 @@ class Timetable:
         """
         self.timetable = self.new_timetable()
 
+    def get_available_timeslot_rooms(self, timeslot: Timeslot) -> list[Room]:
+        """
+        Get all the rooms in a certain timeslot that are not booked yet.
+        """
+        rooms = [room for room in self.rooms]
+
+        if timeslot.value == 17:
+            # If there is already an event, then there are no more options.
+            if len(timeslot.events) == 1:
+                return []
+            else:
+                # If there is no event, then the largest room is an option.
+                return [room for room in rooms if room.is_largest]
+
+        for event in timeslot:
+            rooms.remove(event.room)
+
+        return rooms
+
     def export_csv(self, filename: str = 'timetable.csv') -> None:
         """
         Export the timetable data to a CSV.
@@ -314,7 +341,7 @@ class Timetable:
                             row = [
                                 student.get_full_name(),
                                 event.title,
-                                event.type,
+                                event.type.value,
                                 Weekdays(event.weekday).name,
                                 event.timeslot,
                                 event.room.location_id
@@ -327,6 +354,10 @@ class Timetable:
         self.logger.info(f'Successfully saved timetable with {rows} records as {filepath}')
 
     def create_ics_event(self, event: Event) -> ics.Event:
+        assert event.weekday is not None, 'weekday must be set'
+        assert event.timeslot is not None, 'timeslot must be set'
+        assert event.room is not None, 'room must be set'
+
         now = datetime.now()
         utc_offset = get_utc_offset()
 

@@ -44,16 +44,6 @@ class Timeslot:
         for event in self.events:
             yield event
 
-    def has_course_event(self, course: Course) -> bool:
-        """
-        Check if one of the course events is already scheduled in this timeslot.
-        """
-        for event in self.events:
-            if event.course == course:
-                return True
-
-        return False
-
     def get_double_booked_violations(self) -> list[Event]:
         """
         Find the events that are booked in the same room.

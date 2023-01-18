@@ -10,7 +10,19 @@ class Room:
         self.is_largest = False
 
     def __repr__(self) -> str:
-        return f'{self.__class__.__name__}(location_id:{self.location_id}, capacity:{self.capacity})'
+        return f'{self.__class__.__name__}(location_id:{self.location_id}, capacity:{self.capacity}, is_largest:{self.is_largest})'
+
+    def __str__(self) -> str:
+        return self.location_id
+
+    def __eq__(self, other) -> bool:
+        return self.location_id == other.location_id
+
+    def __lt__(self, other) -> bool:
+        """
+        Implements < operator.
+        """
+        return self.capacity < other.capacity
 
     def __ne__(self, other) -> bool:
         """

@@ -102,3 +102,7 @@ positieve invloed in het begin, maar na ±400 iteraties heeft het niet zo heel
 veel nut meer en zweeft het om een bepaalde malus score heen en weer.
 
 ![data plot with 10K iterations showing malus points influence](./malus-score-plot.png)
+
+---
+
+:point_right: [Klik hier om naar de volgende fase te gaan](../3-greedy-algorithm/README.md)

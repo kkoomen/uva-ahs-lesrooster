@@ -8,7 +8,7 @@ from code.entities.course import Course
 from code.entities.event import Event
 from code.entities.timeslot import Timeslot
 from code.entities.timetable import Timetable
-from code.utils.enums import Weekdays
+from code.utils.enums import EventType, Weekdays
 from code.utils.helpers import split_list_random
 import matplotlib.pyplot as plt
 
@@ -23,23 +23,23 @@ class Randomizer(Algorithm):
         self.timetable = Timetable()
         self.logger = logging.getLogger(__name__)
 
-    def create_random_event(self, title: str, event_type: str, course: Course) -> Event:
+    def create_random_event(self, title: str, event_type: EventType, course: Course) -> Event:
         """
-        Create an event with random timeslot, room and weekday.
+        Create an event with a random timeslot, room and weekday.
         """
         timeslot = random.choice(Timeslot.OPTIONS)
         room = random.choice(self.timetable.rooms)
         weekday = random.choice([weekday.value for weekday in Weekdays])
-        return Event(title, event_type, timeslot, course, room, weekday)
+        return Event(title, event_type, course, weekday, timeslot, room)
 
     def create_similar_event(self, event: Event) -> Event:
         """
-        Clone the current event, but with other data than itself.
+        Clone the current event, but with other data than the it currently has.
         """
         timeslot = random.choice([n for n in Timeslot.OPTIONS if n != event.timeslot])
         weekday = random.choice([weekday.value for weekday in Weekdays])
         room = random.choice(self.timetable.rooms)
-        return Event(event.title, event.type, timeslot, event.course, room, weekday, event.students)
+        return Event(event.title, event.type, event.course, weekday, timeslot, room, event.students)
 
     def assign_random_events(self) -> None:
         """
@@ -47,7 +47,7 @@ class Randomizer(Algorithm):
         """
         for course in self.timetable.courses:
             for i in range(course.lectures_amount):
-                event = self.create_random_event(f'{course.name} hoorcollege', 'hc', course)
+                event = self.create_random_event(f'{course.name} hoorcollege', EventType.LECTURE, course)
                 event.assign_students(course.enrolled_students)
                 self.timetable.add_event(event)
 
@@ -57,7 +57,7 @@ class Randomizer(Algorithm):
                 group_capacity = math.ceil(course.enrolment / total_groups)
                 student_groups = split_list_random(course.enrolled_students, group_capacity)
                 for i in range(total_groups):
-                    event = self.create_random_event(f'{course.name} werkcollege', 'wc', course)
+                    event = self.create_random_event(f'{course.name} werkcollege', EventType.SEMINAR, course)
                     event.assign_students(student_groups[i])
                     self.timetable.add_event(event)
 
@@ -67,7 +67,7 @@ class Randomizer(Algorithm):
                 group_capacity = math.ceil(course.enrolment / total_groups)
                 student_groups = split_list_random(course.enrolled_students, group_capacity)
                 for i in range(total_groups):
-                    event = self.create_random_event(f'{course.name} practicum', 'pr', course)
+                    event = self.create_random_event(f'{course.name} practicum', EventType.PRACTICUM, course)
                     event.assign_students(student_groups[i])
                     self.timetable.add_event(event)
 

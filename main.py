@@ -5,6 +5,7 @@ from datetime import datetime
 import logging
 
 from code.algorithms.base import Algorithm
+from code.algorithms.greedy import Greedy
 from code.algorithms.randomizer import Randomizer
 from code.utils.constants import LOG_DIR
 from code.utils.statistics import (
@@ -59,12 +60,12 @@ def parse_arguments() -> argparse.Namespace:
                         help='Hide any output produced by the logger for stdout')
 
     parser.add_argument('-a', '--algorithm',
-                        choices=['random'],
+                        choices=['random', 'greedy'],
                         help='Run any of the algorithms of choice')
 
     parser.add_argument('-w', '--random-walk',
                         action='store_true',
-                        help='Do a random walk and plot the results')
+                        help='Do a random walk and plot the results (only for random algorithm)')
 
     parser.add_argument('-i', '--iterations',
                         type=int,
@@ -100,6 +101,8 @@ def main():
     algorithm = None
     if args.algorithm == 'random':
         algorithm = Randomizer()
+    elif args.algorithm == 'greedy':
+        algorithm = Greedy()
 
     if isinstance(algorithm, Algorithm):
         if args.random_walk and isinstance(algorithm, Randomizer):

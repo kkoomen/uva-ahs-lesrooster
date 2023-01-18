@@ -3,11 +3,10 @@ This file contains helper functions that are used throughout the project.
 """
 
 import copy
+from datetime import datetime
 import os
 import random
-from itertools import chain
 from tzlocal import get_localzone
-from datetime import datetime
 
 from code.utils.constants import DATA_DIR
 
@@ -17,6 +16,25 @@ def data_path(filename: str) -> str:
     Get the absolute filepath for a certain data file.
     """
     return os.path.join(DATA_DIR, filename)
+
+
+def split_list(items: list, k: int) -> list[list]:
+    """
+    Split a list with items into groups of amount `k`.
+
+    >>> split_list(['a', 'b', 'c', 'd', 'e'], 2)
+    [['a', 'b'], ['c', 'd'], ['e']]
+    """
+    groups = []
+    total_groups = k + 1
+
+    for i in range(total_groups):
+        start = k * i
+        end = start + k
+        group = items[start:end]
+        groups.append(group)
+
+    return groups
 
 
 def split_list_random(items: list, k: int) -> list[list]:
