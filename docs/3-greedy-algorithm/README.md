@@ -31,3 +31,5 @@ ons het beste eerst opkomende tijdslot met de minste maluspunten.
 Hieronder is een versie te zien zonder violations met 120 maluspunten. Dit toont
 aan dat het greedy algoritme het aantal maluspunten flink verminderd ten
 opzichte van het random algortime dat 1200+ maluspunten opleverde.
+
+![heatmap with timetable results](./heatmap.png)
