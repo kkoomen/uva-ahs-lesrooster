@@ -234,13 +234,13 @@ class Randomizer(Algorithm):
         avg_malus_score = int(avg_malus_score / iterations)
 
         self.logger.info(f'Average info over {iterations} iterations for random algorithm:')
-        self.logger.info(f'\t- Min. retries: {min_retries}')
-        self.logger.info(f'\t- Max. retries: {max_retries}')
-        self.logger.info(f'\t- Avg. retries: {avg_retries}')
-        self.logger.info(f'\t- Min. malus score: {min_malus_score}')
-        self.logger.info(f'\t- Max. malus score: {max_malus_score}')
-        self.logger.info(f'\t- Avg malus score: {avg_malus_score}')
-        self.logger.info(f'\t- Solutions: {total_solutions}/{iterations}')
+        self.logger.info(f'  - Min. retries: {min_retries}')
+        self.logger.info(f'  - Max. retries: {max_retries}')
+        self.logger.info(f'  - Avg. retries: {avg_retries}')
+        self.logger.info(f'  - Min. malus score: {min_malus_score}')
+        self.logger.info(f'  - Max. malus score: {max_malus_score}')
+        self.logger.info(f'  - Avg malus score: {avg_malus_score}')
+        self.logger.info(f'  - Solutions: {total_solutions}/{iterations}')
 
         if show_plot:
             self.plot_iteration_retries(retries_list)
