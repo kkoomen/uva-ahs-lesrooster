@@ -9,3 +9,4 @@ loop der tijd verbeterd zijn.
 # Table of Contents
 - [1. Representation](./1-representation/README.md)
 - [2. Baseline](./2-baseline/README.md)
+- [3. Greedy algorithms](./3-greedy-algorithm/README.md)
