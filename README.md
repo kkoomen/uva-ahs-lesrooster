@@ -14,6 +14,8 @@ project.
 
 Gebruik maken van het programma kan op de volgende manieren:
 - `./main.py -a random -i 10`: run `Randomizer` algoritmen 10 keer
+- `./main.py -a random -w -i 1000 -p`: doe een random walk voor `Randomizer` met
+  1000 iteraties en plot het resultaat
 - `./main.py -a random -e csv`: run `Randomizer` algoritmen één keer en
   exporteert het resultaat naar `csv`
 - `./main.py -a random -e ics -p`: run `Randomizer` algoritmen één keer,
@@ -49,8 +51,6 @@ Hard constraints:
 - In elk tijdslot mag elke zaal maximaal 1 keer geboekt worden
 - Alleen de zaal met de grootste capaciteit mag geboekt worden van 17:00 - 19:00
 - 3 of meer tussensloten per student is niet toegestaan
-- (extra) Elk tijdslot mag per vak maar 1 activiteit type hebben (maximaal 1
-  hoorcollege OF 1 of meer werkcolleges/practicums van dit vak)
 
 Soft constraints (malus points):
 

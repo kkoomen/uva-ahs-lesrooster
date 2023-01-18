@@ -71,19 +71,14 @@ class Randomizer(Algorithm):
                     event.assign_students(student_groups[i])
                     self.timetable.add_event(event)
 
-    def reassign_events(self, events: list[Event]):
+    def reassign_events(self, events: list[Event]) -> None:
         """
         Reassign a list of events but with some changes to the values.
         """
-        reassigned_events = []
-
         self.timetable.remove_events(events)
         for event in events:
             new_event = self.create_similar_event(event)
-            reassigned_events.append(new_event)
             self.timetable.add_event(new_event)
-
-        return reassigned_events
 
     def swap_events(self, events: list[Event]) -> None:
         """
@@ -201,9 +196,14 @@ class Randomizer(Algorithm):
 
         timetable_state = copy.deepcopy(self.timetable)
 
+        # Put the current timetable malus score in all the results
+        for item in malus_scores:
+            malus_score = self.timetable.calculate_malus_score()
+            item['scores'].append(malus_score)
+
         # Swap two random events.
         # ======================
-        for _ in range(iterations):
+        for _ in range(iterations - 1):
             random_event = self.get_random_event()
             self.swap_events([random_event])
             malus_score = self.timetable.calculate_malus_score()
@@ -215,7 +215,7 @@ class Randomizer(Algorithm):
         # ================
         self.timetable = timetable_state
         timetable_state = copy.deepcopy(self.timetable)
-        for _ in range(iterations):
+        for _ in range(iterations - 1):
             self.permute_students()
             malus_score = self.timetable.calculate_malus_score()
             malus_scores[1]['scores'].append(malus_score)
@@ -226,7 +226,7 @@ class Randomizer(Algorithm):
         # ============================================
         self.timetable = timetable_state
         timetable_state = copy.deepcopy(self.timetable)
-        for _ in range(iterations):
+        for _ in range(iterations - 1):
             random_event = self.get_random_event()
             self.swap_events([random_event])
             self.permute_students()
@@ -238,8 +238,8 @@ class Randomizer(Algorithm):
         # Plot the results
         fig, ax = plt.subplots(len(malus_scores), 1)
         fig.suptitle(f'Timetable (iterations = {iterations})')
-        fig.supxlabel('iterations')
-        fig.supylabel('malus points')
+        fig.supxlabel('# of iterations')
+        fig.supylabel('# of malus points')
         fig.tight_layout(pad=0.75)
 
         for index, test_run in enumerate(malus_scores):
@@ -258,7 +258,7 @@ class Randomizer(Algorithm):
         self.assign_random_events()
         violations = self.timetable.get_violations()
 
-        max_retries = 5000
+        max_retries = 1000
         found_solution = True
         retries = 0
         while len(violations) > 0:
@@ -272,12 +272,7 @@ class Randomizer(Algorithm):
                 found_solution = False
                 break
 
-            violations = self.reassign_events(violations)
-            if random.random() < 0.1:
-                self.swap_events(violations)
-            if random.random() < 0.01:
-                self.permute_students()
-
+            self.reassign_events(violations)
             violations = self.timetable.get_violations()
 
         if found_solution:

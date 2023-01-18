@@ -44,52 +44,15 @@ class Timeslot:
         for event in self.events:
             yield event
 
-    def get_course_violations(self) -> list[Event]:
+    def has_course_event(self, course: Course) -> bool:
         """
-        Find violations in this timeslot per course type.
-
-        Per timeslot, we allow per course to only have 1 lecture (as two
-        lectures of the same course is not allowed) or several seminars or
-        several practicums, but these can't be mixed together.
+        Check if one of the course events is already scheduled in this timeslot.
         """
-        violations = []
-
-        # Structure:
-        # {
-        #     <course 1>: {
-        #         'hc': [Event(), Event()],
-        #         'wc': [Event(), Event(), Event()],
-        #     },
-        #     <course 2>: {
-        #         'hc': [Event(), Event()],
-        #         'wc': [Event(), Event(), Event()],
-        #     },
-        # }
-        course_types: dict[str, dict[EventType, list[Event]]] = {}
-
         for event in self.events:
-            if event.course.id not in course_types:
-                course_types[event.course.id] = {}
-            if event.type not in course_types[event.course.id]:
-                course_types[event.course.id][event.type] = []
-            course_types[event.course.id][event.type].append(event)
+            if event.course == course:
+                return True
 
-        for event_types in course_types.values():
-            if len(event_types) == 1 and EventType.LECTURE in event_types:
-                # Only allow 1 lecture, mark the other lectures as violations.
-                violations += event_types[EventType.LECTURE][1:]
-            elif len(event_types) >= 2:
-                # Only allow 1 lecture, mark the other lectures as violations.
-                first_key = list(event_types.keys())[0]
-                if first_key == EventType.LECTURE:
-                    violations += event_types[EventType.LECTURE][1:]
-
-                # Mark the other course types as violations
-                for key in event_types:
-                    if key != first_key:
-                        violations += event_types[key]
-
-        return violations
+        return False
 
     def get_double_booked_violations(self) -> list[Event]:
         """
@@ -186,7 +149,6 @@ class Timeslot:
         violations = []
 
         violations += self.get_timeslot_17_violations()
-        violations += self.get_course_violations()
         violations += self.get_double_booked_violations()
 
         return remove_duplicates(violations)

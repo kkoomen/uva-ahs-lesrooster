@@ -134,7 +134,7 @@ class Timetable:
                         continue
 
                     prev_timeslot = timeslots[index - 1]
-                    total_empty_timeslots = (timeslot.value - prev_timeslot.value) / Timeslot.TIMEFRAME
+                    total_empty_timeslots = self.get_total_empty_timeslots(timeslot, prev_timeslot)
                     if total_empty_timeslots == 1:
                         score += 1
                     elif total_empty_timeslots == 2:
@@ -223,6 +223,12 @@ class Timetable:
 
         return student_timetables
 
+    def get_total_empty_timeslots(self, timeslot: Timeslot, prev_timeslot: Timeslot) -> int:
+        """
+        Get the total amount of empty timeslots beween two timeslots.
+        """
+        return int((abs(timeslot.value - prev_timeslot.value) - Timeslot.TIMEFRAME) / Timeslot.TIMEFRAME)
+
     def get_empty_timeslot_violations(self) -> list[Event]:
         """
         Go through each day of the week and check per student if that day
@@ -249,8 +255,7 @@ class Timetable:
                     # violation rather than both of them, as this increases the
                     # amount of retries a lot.
                     prev_timeslot = timeslots[index - 1]
-                    total_empty_timeslots = (timeslot.value - prev_timeslot.value) / Timeslot.TIMEFRAME
-                    if total_empty_timeslots >= 3:
+                    if self.get_total_empty_timeslots(timeslot, prev_timeslot) >= 3:
                         violations += timeslot.events
 
         return remove_duplicates(violations)
@@ -266,7 +271,7 @@ class Timetable:
             for timeslot in day.values():
                 violations += timeslot.get_violations()
 
-        # Get all violations that contain 3 or more empty timeslots per course.
+        # Get all violations that contain 3 or more empty timeslots per student.
         violations += self.get_empty_timeslot_violations()
 
         return remove_duplicates(violations)
