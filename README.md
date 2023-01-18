@@ -1,5 +1,4 @@
 # Lesrooster
-
 Deze repository bevat een implementatie voor de
 [Lectures & Lesrooster](https://ah.proglab.nl/cases/lectures-en-lesroosters)
 case voor de UvA en het gedocumenteerde proces dat is bijgehouden tijdens dit
@@ -12,16 +11,35 @@ project.
 - `./env/bin/activate`
 - `pip3 install -r requirements.txt`
 
-Gebruik maken van het programma kan op de volgende manieren:
-- `./main.py -a random -i 10`: run `Randomizer` algoritmen 10 keer
-- `./main.py -a random -w -i 1000 -p`: doe een random walk voor `Randomizer` met
-  1000 iteraties en plot het resultaat
-- `./main.py -a random -e csv`: run `Randomizer` algoritmen één keer en
-  exporteert het resultaat naar `csv`
-- `./main.py -a random -e ics -p`: run `Randomizer` algoritmen één keer,
-  exporteer het resultaat naar `ics` en plot de data met `matplotlib`
+# Gebruik
+
+De algemene structuur is: `./main.py -a <algorithm> [OPTIONS]`
+
+Waarbij `OPTIONS` zowel globale als algoritme specifieke opties bevat.
+
+- globale opties voor elk algoritme:
+  - `-l, --log-level debug|info|warning|error|critical`
+  - `-q, --quiet` toon geen stdout
+  - `-e, --export ics|csv` exporteert timetable naar `ics` of `csv` formaat
+  - `--plot-heatmap` plot de timetable heatmap
+- `random` algoritme opties:
+  - `--random-walk` doe een random walk
+  - `--iterations` aantal iteraties dat het algoritme moet runnen
 
 Voor alle mogelijke opties, zie `./main.py --help`
+
+### Voorbeelden
+
+Random algoritme: <br/>
+- `./main.py -a random -i 10`: run 10 keer
+- `./main.py -a random --random-walk -i 1000 --show-heatmap`
+- `./main.py -a random -e csv`
+- `./main.py -a random -e ics --show-heatmap`
+
+Greedy algoritme: <br/>
+- `./main.py -a greedy `
+- `./main.py -a greedy --show-heatmap`
+- `./main.py -a greedy -e ics --show-heatmap`
 
 # Proces logboek
 

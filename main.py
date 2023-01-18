@@ -8,10 +8,7 @@ from code.algorithms.base import Algorithm
 from code.algorithms.greedy import Greedy
 from code.algorithms.randomizer import Randomizer
 from code.utils.constants import LOG_DIR
-from code.utils.statistics import (
-    print_algorithm_average_statistics,
-    print_algorithm_info,
-)
+from code.utils.statistics import print_algorithm_info
 
 
 def setup_logging(level='info', quiet=False) -> None:
@@ -63,22 +60,23 @@ def parse_arguments() -> argparse.Namespace:
                         choices=['random', 'greedy'],
                         help='Run any of the algorithms of choice')
 
-    parser.add_argument('-w', '--random-walk',
-                        action='store_true',
-                        help='Do a random walk and plot the results (only for random algorithm)')
-
-    parser.add_argument('-i', '--iterations',
-                        type=int,
-                        default=1,
-                        help='How many times the algorithm should run')
-
     parser.add_argument('-e', '--export',
                         choices=['csv', 'ics'],
                         help='Export the timetable data to one of the available choices (NOTE: This only works if the amount of iterations is exactly 1)')
 
-    parser.add_argument('-p', '--show-plot',
+    parser.add_argument('--plot-heatmap',
                         action='store_true',
-                        help='Plot data from the selected algorithm (if implemented)')
+                        help='Plot the timetable heatmap')
+
+    # -- RANDOM ALGORITHM ARGUMENTS --------------------------------------------
+    parser.add_argument('--random-walk',
+                        action='store_true',
+                        help='Do a random walk and plot the results (random algorithm only)')
+
+    parser.add_argument('-i', '--iterations',
+                        type=int,
+                        default=1,
+                        help='How many times the algorithm should run (random algorithm only)')
 
     return parser.parse_args()
 
@@ -105,24 +103,25 @@ def main():
         algorithm = Greedy()
 
     if isinstance(algorithm, Algorithm):
-        if args.random_walk and isinstance(algorithm, Randomizer):
-            algorithm.plot_random_walk(args.iterations)
-        elif args.iterations > 1:
-            print_algorithm_average_statistics(algorithm,
-                                               iterations=args.iterations,
-                                               show_plot=args.show_plot)
+        if isinstance(algorithm, Randomizer) and args.iterations > 1:
+            if args.random_walk:
+                algorithm.plot_random_walk(args.iterations)
+                return
+            elif args.iterations > 1:
+                algorithm.print_average_statistics(args.iterations)
+                return
         else:
             algorithm.run()
             print_algorithm_info(algorithm)
 
-            if args.export == 'csv':
-                algorithm.timetable.export_csv()
+        if args.export == 'csv':
+            algorithm.timetable.export_csv()
 
-            elif args.export == 'ics':
-                algorithm.timetable.export_ics()
+        elif args.export == 'ics':
+            algorithm.timetable.export_ics()
 
-            if args.show_plot:
-                algorithm.timetable.show_plot()
+        if args.plot_heatmap:
+            algorithm.timetable.show_plot()
 
 
 if __name__ == '__main__':
