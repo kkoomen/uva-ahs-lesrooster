@@ -281,8 +281,8 @@ class Randomizer(Algorithm):
             violations = self.timetable.get_violations()
 
         if found_solution:
-            self.logger.info(f'[DONE] Successfully created random timetable (retries:{retries})')
+            self.logger.info(f'Successfully created random timetable (retries:{retries})')
         else:
-            self.logger.info(f'[DONE] Failed to create random timetable, exceeded max retries (retries:{retries})')
+            self.logger.info(f'Failed to create random timetable, exceeded max retries (retries:{retries})')
 
         return found_solution, retries

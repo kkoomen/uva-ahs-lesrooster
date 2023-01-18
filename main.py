@@ -39,12 +39,6 @@ def setup_logging(level='info', quiet=False) -> None:
 
         logging.getLogger('').addHandler(console)
 
-    # Immediately log as an indication that the program has initialized.
-    global_logger = logging.getLogger('global')
-    global_logger.info('='*45)
-    global_logger.info(f'Program started at {str(datetime.now())}')
-    global_logger.info('='*45)
-
 
 def parse_arguments() -> argparse.Namespace:
     """
@@ -93,15 +87,22 @@ def main():
     The main function that will be executed first in this file.
     """
     args = parse_arguments()
-
     setup_logging(level=args.log_level, quiet=args.quiet)
+
+    # Immediately log as an indication that the program has initialized.
+    global_logger = logging.getLogger('global')
+    global_logger.info('='*45)
+    global_logger.info(f'Program started at {str(datetime.now())}')
+    global_logger.info('='*45)
+
+    global_logger.info(f'Selected algorithm: {args.algorithm}')
 
     algorithm = None
     if args.algorithm == 'random':
         algorithm = Randomizer()
 
     if isinstance(algorithm, Algorithm):
-        if args.random_walk:
+        if args.random_walk and isinstance(algorithm, Randomizer):
             algorithm.plot_random_walk(args.iterations)
         elif args.iterations > 1:
             print_algorithm_average_statistics(algorithm,
