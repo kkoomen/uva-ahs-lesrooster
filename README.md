@@ -31,7 +31,7 @@ Voor alle mogelijke opties, zie `./main.py --help`
 ### Voorbeelden
 
 Random algoritme: <br/>
-- `./main.py -a random -i 10`: run 10 keer
+- `./main.py -a random -i 10`
 - `./main.py -a random --random-walk -i 1000 --show-heatmap`
 - `./main.py -a random -e csv`
 - `./main.py -a random -e ics --show-heatmap`
