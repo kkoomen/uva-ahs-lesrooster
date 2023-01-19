@@ -42,10 +42,10 @@ class Course:
         """
         Get the capacity for a specific type.
         """
-        if event_type.SEMINAR:
+        if event_type == EventType.SEMINAR:
             return self.seminar_capacity
 
-        if event_type.PRACTICUM:
+        if event_type == EventType.PRACTICUM:
             return self.practical_capacity
 
         return self.enrolment
