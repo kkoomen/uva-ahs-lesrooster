@@ -36,7 +36,6 @@ class Greedy(Algorithm):
             for _ in range(course.lectures_amount):
                 event = Event(f'{course.name} hoorcollege', EventType.LECTURE, course)
                 event.assign_students(course.enrolled_students)
-                event.set_capacity(course.enrolment)
                 events.append(event)
 
             for _ in range(course.seminars_amount):
@@ -47,7 +46,6 @@ class Greedy(Algorithm):
                 for i in range(total_groups):
                     event = Event(f'{course.name} werkcollege', EventType.SEMINAR, course)
                     event.assign_students(student_groups[i])
-                    event.set_capacity(group_capacity)
                     events.append(event)
 
             for _ in range(course.practicals_amount):
@@ -58,7 +56,6 @@ class Greedy(Algorithm):
                 for i in range(total_groups):
                     event = Event(f'{course.name} practicum', EventType.PRACTICUM, course)
                     event.assign_students(student_groups[i])
-                    event.set_capacity(group_capacity)
                     events.append(event)
         return events
 
@@ -75,8 +72,6 @@ class Greedy(Algorithm):
         timetable = copy.deepcopy(self.timetable)
         event = copy.deepcopy(event)
         possibilities: list[dict[str, Any]] = []
-
-        assert event.capacity is not None, "event capacity shouldn't be None"
 
         # Place the event in each single timeslot and calculate the malus score
         # for that whole timetable state.
@@ -98,7 +93,7 @@ class Greedy(Algorithm):
                     available_rooms = timetable.rooms
 
                 # Remove the removes that are too small for this event.
-                suitable_rooms = sorted([room for room in available_rooms if room.capacity >= event.capacity])
+                suitable_rooms = sorted([room for room in available_rooms if room.capacity >= event.get_capacity()])
 
                 # Continue if there is no available room in this timeslot.
                 if len(suitable_rooms) == 0:

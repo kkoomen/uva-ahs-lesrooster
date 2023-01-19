@@ -19,8 +19,7 @@ class Event:
                  weekday: Union[None, int]=None,
                  timeslot: Union[None, int]=None,
                  room: Union[None, Room]=None,
-                 students: Union[None, list[Student]]=None,
-                 capacity: Union[None, int] = None) -> None:
+                 students: Union[None, list[Student]]=None) -> None:
         self.id = make_id()
         self.title = title
         self.type = event_type
@@ -29,7 +28,6 @@ class Event:
         self.timeslot = timeslot
         self.room = room
         self.students = students if students is not None else []
-        self.capacity = capacity
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(title:{self.title}, type:{self.type}, timeslot:{self.timeslot}, course:{self.course.name}, room:{self.room}, weekday:{self.weekday})'
@@ -64,14 +62,14 @@ class Event:
         """
         self.weekday = weekday
 
-    def set_capacity(self, capacity: int) -> None:
-        """
-        Set the capacity value for this timeslot.
-        """
-        self.capacity = capacity
-
     def get_formatted_weekday(self) -> str:
         """
         Get the formatted weekday value, i.e. 'mon', 'tue', etc.
         """
         return Weekdays(self.weekday).value
+
+    def get_capacity(self) -> int:
+        """
+        Get the capacity for this event based on the course.
+        """
+        return self.course.get_capacity_for_type(self.type)

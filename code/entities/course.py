@@ -2,6 +2,7 @@ import math
 from typing import Union
 
 from code.entities.student import Student
+from code.utils.enums import EventType
 from code.utils.helpers import make_id
 
 
@@ -36,6 +37,18 @@ class Course:
 
     def __eq__(self, other) -> bool:
         return self.id == other.id
+
+    def get_capacity_for_type(self, event_type: EventType) -> int:
+        """
+        Get the capacity for a specific type.
+        """
+        if event_type.SEMINAR:
+            return self.seminar_capacity
+
+        if event_type.PRACTICUM:
+            return self.practical_capacity
+
+        return self.enrolment
 
     def register_students(self, students: list[Student]) -> None:
         """
