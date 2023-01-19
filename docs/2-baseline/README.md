@@ -100,7 +100,7 @@ permutatie dit flink naar beneden heeft gehaald.
 Het omwisselen van twee random activiteiten (event swapping) geeft meer speling
 in de malus score waarbij het varieert van 900+ tot wel 1400+.
 
-![data plot with 10K iterations showing malus points influence](./malus-score-plot.png)
+![random walk with 10k iterations](./random-walk-plot.png)
 
 ---
 

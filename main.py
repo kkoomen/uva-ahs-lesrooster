@@ -3,6 +3,7 @@
 import argparse
 from datetime import datetime
 import logging
+import matplotlib.pyplot as plt
 
 from code.algorithms.base import Algorithm
 from code.algorithms.greedy import Greedy, RandomGreedy
@@ -23,6 +24,10 @@ def setup_logging(level='info', quiet=False) -> None:
         'error': logging.ERROR,
         'critical': logging.critical,
     }
+
+    # Set matplotlib log level, because by default it is set to 'debug' which
+    # adds a lot of stuff we don't want to we see.
+    plt.set_loglevel('error')
 
     handlers = []
 

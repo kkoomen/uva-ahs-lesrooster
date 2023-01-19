@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-
-
 import copy
 import logging
 import random
@@ -58,13 +55,14 @@ class HillClimber(Greedy):
         Plot the malus scores during the hill climber process.
         """
         plt.xlabel('# of iterations')
-        plt.ylabel('# of malus points')
+        plt.ylabel('# of violations with malus points')
 
         x = [stat['iteration'] for stat in self.statistics]
-        y = [stat['malus_score'] for stat in self.statistics]
+        y = [stat['violations'] + stat['malus_score'] for stat in self.statistics]
         plt.plot(x, y)
 
-        plt.title(f'Hill climber')
+        parent_class_name = self.__class__.__bases__[0].__name__
+        plt.title(f'Hill climber based on {parent_class_name} solution')
         plt.show()
 
     def swap_two_random_events(self) -> None:
@@ -76,6 +74,23 @@ class HillClimber(Greedy):
         other_event = events.pop(random.randrange(len(events)))
         super().swap_two_events(event, other_event)
 
+    def mutate_state(self) -> None:
+        """
+        Mutate the timetable with some random actions.
+
+        The actions are as follows:
+        - 40% chance to move a single event
+        - 50% chance to swap two random events
+        - 10% to permute students
+        """
+        n = random.random()
+        if n < 0.4:
+            self.move_random_event()
+        elif 0.4 <= n < 0.9:
+            self.swap_two_random_events()
+        else:
+            self.permute_students()
+
     def run(self, iterations=1) -> None:
         """
         Run the hill climber until there are no more improvements.
@@ -84,7 +99,7 @@ class HillClimber(Greedy):
         self.generate_state()
 
         # Stop if there is no improvement anymore after this amount of times.
-        no_improvement_limit = 500
+        no_improvement_limit = 200
 
         violations = len(self.timetable.get_violations())
         malus_score = self.timetable.calculate_malus_score()
@@ -101,47 +116,41 @@ class HillClimber(Greedy):
             if i % 100 == 0:
                 self.logger.debug(f'Starting iteration {i}/{iterations}')
 
-            # 40% chance to move a single event
-            # 50% chance to swap two random events
-            # 10% to permute students
-            n = random.random()
-            if n < 0.4:
-                self.move_random_event()
-            elif 0.4 <= n < 0.9:
-                self.swap_two_random_events()
-            else:
-                self.permute_students()
+            self.mutate_state()
 
-            # Violations should be checked as they are more important.
             violations = len(self.timetable.get_violations())
             malus_score = self.timetable.calculate_malus_score()
             prev_violations = len(prev_state.get_violations())
             prev_malus_score = prev_state.calculate_malus_score()
 
+            # If it is a better solution or at least equally as good
             is_better_solution = (
-                violations <= prev_violations and \
-                malus_score <= prev_malus_score
+                violations < prev_violations or \
+                violations == prev_violations and malus_score <= prev_malus_score
             )
 
-            if is_better_solution:
-                self.statistics.append({
-                    'iteration': i + 1,
-                    'malus_score': malus_score,
-                })
-                no_improvement_counter = 0
-            else:
-                no_improvement_counter += 1
-                self.timetable = prev_state
-
+            # This is needed simply for logging.
             is_different_state = (
                 violations != prev_violations or \
                 violations == prev_violations and malus_score != prev_malus_score
             )
 
-            if is_better_solution and is_different_state:
-                self.logger.info(f'Found better state with {violations} violations and {malus_score} malus score')
-            elif is_better_solution:
-                self.logger.debug(f'Found similar state with {violations} violations and {malus_score} malus score')
+            if is_better_solution:
+                if is_different_state:
+                    no_improvement_counter = 0
+                    self.logger.info(f'Found better state with {violations} violations and {malus_score} malus score')
+                else:
+                    self.logger.debug(f'Found similar state with {violations} violations and {malus_score} malus score')
+
+                self.statistics.append({
+                    'iteration': i + 1,
+                    'violations': violations,
+                    'malus_score': malus_score,
+                })
+            else:
+                # It's a worse solution, reverse changes.
+                no_improvement_counter += 1
+                self.timetable = prev_state
 
             prev_state = copy.deepcopy(self.timetable)
 

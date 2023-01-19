@@ -59,3 +59,7 @@ per test:
 
 Het lijkt erop dat hoe meer random erbij komt, hoe slechter de score wordt. Op
 zich logisch, omdat het greedy algoritme over het algemeen de beste keuze pakt.
+
+---
+
+:point_right: [Klik hier om naar de volgende fase te gaan](../4-hillclimber/README.md)
