@@ -2,6 +2,7 @@ import copy
 import logging
 import math
 import random
+import matplotlib.pyplot as plt
 
 from code.algorithms.base import Algorithm
 from code.entities.course import Course
@@ -10,7 +11,6 @@ from code.entities.timeslot import Timeslot
 from code.entities.timetable import Timetable
 from code.utils.enums import EventType, Weekdays
 from code.utils.helpers import split_list_random
-import matplotlib.pyplot as plt
 
 
 class Randomizer(Algorithm):
@@ -22,6 +22,7 @@ class Randomizer(Algorithm):
     def __init__(self) -> None:
         self.timetable = Timetable()
         self.logger = logging.getLogger(__name__)
+        self.statistics = []
 
     def create_random_event(self, title: str, event_type: EventType, course: Course) -> Event:
         """
@@ -174,11 +175,11 @@ class Randomizer(Algorithm):
         random_timeslot = random.choice(timeslots)
         return random.choice(random_timeslot.events)
 
-
-    def plot_iteration_retries(self, retries: list[int]) -> None:
+    def plot_statistics(self) -> None:
         """
         Plot the list of retries in a line-graph.
         """
+        retries = [stat['retries'] for stat in self.statistics]
         iterations = len(retries)
 
         plt.xlabel('# of iterations')
@@ -195,63 +196,6 @@ class Randomizer(Algorithm):
         plt.title(f'Timetable (iterations = {iterations})')
         plt.legend()
         plt.show()
-
-    def print_average_statistics(self, iterations: int) -> None:
-        """
-        Runs a particular algorithm n-times and prints average statistics.
-        """
-        retries_list = []
-        total_solutions = 0
-
-        min_retries = None
-        max_retries = None
-        avg_retries = 0
-
-        min_malus_score = None
-        max_malus_score = None
-        avg_malus_score = 0
-
-        for i in range(iterations):
-            self.logger.info(f'Starting iteration {i + 1}/{iterations}')
-            found_solution, retries = self.run()
-            malus_score = self.timetable.calculate_malus_score()
-            retries_list.append(retries)
-
-            if found_solution:
-                total_solutions += 1
-
-            # Calculate malus score statistics
-            avg_malus_score += malus_score
-
-            if min_malus_score is None or malus_score < min_malus_score:
-                min_malus_score = malus_score
-
-            if max_malus_score is None or malus_score > max_malus_score:
-                max_malus_score = malus_score
-
-
-            # Calculate retries statistics
-            avg_retries += retries
-
-            if min_retries is None or retries < min_retries:
-                min_retries = retries
-
-            if max_retries is None or retries > max_retries:
-                max_retries = retries
-
-        avg_retries = int(avg_retries / iterations)
-        avg_malus_score = int(avg_malus_score / iterations)
-
-        self.logger.info(f'Average info over {iterations} iterations for {self.__class__.__name__} algorithm:')
-        self.logger.info(f'  - Min. retries: {min_retries}')
-        self.logger.info(f'  - Max. retries: {max_retries}')
-        self.logger.info(f'  - Avg. retries: {avg_retries}')
-        self.logger.info(f'  - Min. malus score: {min_malus_score}')
-        self.logger.info(f'  - Max. malus score: {max_malus_score}')
-        self.logger.info(f'  - Avg malus score: {avg_malus_score}')
-        self.logger.info(f'  - Solutions: {total_solutions}/{iterations}')
-
-        self.plot_iteration_retries(retries_list)
 
     def plot_random_walk(self, iterations: int) -> None:
         """
@@ -278,9 +222,8 @@ class Randomizer(Algorithm):
             },
         ]
 
-        is_solution = self.run()
-        if not is_solution:
-            self.logger.error('Failed to create solution for random walk')
+        self.run()
+        assert self.timetable.is_solution(), 'timetable must contain a solution for a random walk'
 
         timetable_state = copy.deepcopy(self.timetable)
 
@@ -338,37 +281,39 @@ class Randomizer(Algorithm):
 
         plt.show()
 
-    def plot_statistics(self) -> None:
-        pass
-
-    def run(self) -> tuple[bool, int]:
+    def run(self, iterations=1) -> None:
         """
         Assign random events until the timetable is valid.
         """
-        self.timetable.clear()
-        self.assign_random_events()
-        violations = self.timetable.get_violations()
-
-        max_retries = 1000
-        found_solution = True
-        retries = 0
-        while len(violations) > 0:
-            retries += 1
-
-            self.logger.debug(f'[RETRY #{retries}] Found {len(violations)} violations, going to reassign them...')
-
-            # Sometimes it might run into an infinite loop, so stop trying if
-            # the retries is above a certain threshold.
-            if retries >= max_retries:
-                found_solution = False
-                break
-
-            self.reassign_events(violations)
+        for i in range(iterations):
+            self.timetable.clear()
+            self.assign_random_events()
             violations = self.timetable.get_violations()
 
-        if found_solution:
-            self.logger.info(f'Successfully created random timetable (retries:{retries})')
-        else:
-            self.logger.info(f'Failed to create random timetable, exceeded max retries (retries:{retries})')
+            max_retries = 1000
+            found_solution = True
+            retries = 0
+            while len(violations) > 0:
+                retries += 1
 
-        return found_solution, retries
+                self.logger.debug(f'[RETRY #{retries}] Found {len(violations)} violations, going to reassign them...')
+
+                # Sometimes it might run into an infinite loop, so stop trying if
+                # the retries is above a certain threshold.
+                if retries >= max_retries:
+                    found_solution = False
+                    break
+
+                self.reassign_events(violations)
+                violations = self.timetable.get_violations()
+
+            if found_solution:
+                self.logger.info(f'Successfully created random timetable (retries:{retries})')
+            else:
+                self.logger.info(f'Failed to create random timetable, exceeded max retries (retries:{retries})')
+
+
+            self.statistics.append({
+                'iteration': i + 1,
+                'retries': retries,
+            })

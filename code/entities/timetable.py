@@ -179,7 +179,7 @@ class Timetable:
 
         return score
 
-    def is_valid(self) -> bool:
+    def is_solution(self) -> bool:
         """
         Check if the timetable structure is valid by checking constraints.
         """

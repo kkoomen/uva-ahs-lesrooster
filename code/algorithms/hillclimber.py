@@ -5,6 +5,7 @@ import copy
 import logging
 import random
 from code.algorithms.greedy import Greedy
+import matplotlib.pyplot as plt
 
 from code.entities.course import Course
 from code.entities.event import Event
@@ -23,9 +24,7 @@ class HillClimber(Greedy):
     def __init__(self) -> None:
         self.timetable = Timetable()
         self.logger = logging.getLogger(__name__)
-
-    def print_average_statistics(self, iterations: int) -> None:
-        self.logger.info('TODO: implement print_average_statistics()')
+        self.statistics = []
 
     def swap_two_random_events(self) -> None:
         """
@@ -58,7 +57,6 @@ class HillClimber(Greedy):
 
         self.timetable.add_event(new_event)
         self.timetable.add_event(other_event)
-
 
     def permute_students(self):
         """
@@ -144,14 +142,22 @@ class HillClimber(Greedy):
         """
         Plot the malus scores during the hill climber process.
         """
-        pass
+        plt.xlabel('# of iterations')
+        plt.ylabel('# of malus points')
 
-    def run(self) -> None:
+        x = [stat['iteration'] for stat in self.statistics]
+        y = [stat['malus_score'] for stat in self.statistics]
+        plt.plot(x, y)
+
+        plt.title(f'Hill climber')
+        plt.show()
+
+    def run(self, iterations=1) -> None:
+        """
+        Run the hill climber until there are no more improvements.
+        """
         self.timetable.clear()
         self.generate_state()
-
-        # Total iterations to do.
-        iterations = 5000
 
         # Stop if there is no improvement anymore after this amount of times.
         no_improvement_limit = 500
@@ -171,7 +177,7 @@ class HillClimber(Greedy):
             if i % 100 == 0:
                 self.logger.debug(f'Starting iteration {i}/{iterations}')
 
-            # 40% chance to change a single event
+            # 40% chance to move a single event
             # 50% chance to swap two random events
             # 10% to permute students
             n = random.random()
@@ -194,6 +200,10 @@ class HillClimber(Greedy):
             )
 
             if is_better_solution:
+                self.statistics.append({
+                    'iteration': i + 1,
+                    'malus_score': malus_score,
+                })
                 no_improvement_counter = 0
             else:
                 no_improvement_counter += 1

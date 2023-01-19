@@ -65,6 +65,10 @@ def parse_arguments() -> argparse.Namespace:
                         choices=['csv', 'ics'],
                         help='Export the timetable data to one of the available choices (NOTE: This only works if the amount of iterations is exactly 1)')
 
+    parser.add_argument('--plot-stats',
+                        action='store_true',
+                        help='Plot the statistics after the algorithm has finished running')
+
     parser.add_argument('--plot-heatmap',
                         action='store_true',
                         help='Plot the timetable heatmap')
@@ -107,25 +111,25 @@ def main():
     elif args.algorithm == 'hillclimber':
         algorithm = HillClimber()
 
-    if isinstance(algorithm, Algorithm):
-        if isinstance(algorithm, Randomizer) and args.iterations > 1:
-            if args.random_walk:
-                algorithm.plot_random_walk(args.iterations)
-                return
-        elif args.iterations > 1:
-            algorithm.print_average_statistics(args.iterations)
-            return
-        else:
-            algorithm.run()
-            print_algorithm_info(algorithm)
+    assert isinstance(algorithm, Algorithm), 'algorithm must be an instance of Algorithm'
 
-        if args.export == 'csv':
-            algorithm.timetable.export_csv()
-        elif args.export == 'ics':
-            algorithm.timetable.export_ics()
+    if isinstance(algorithm, Randomizer) and args.iterations > 1 and args.random_walk:
+        algorithm.plot_random_walk(args.iterations)
+        return
 
-        if args.plot_heatmap:
-            algorithm.timetable.show_plot()
+    algorithm.run(args.iterations)
+    print_algorithm_info(algorithm)
+
+    if args.export == 'csv':
+        algorithm.timetable.export_csv()
+    elif args.export == 'ics':
+        algorithm.timetable.export_ics()
+
+    if args.plot_stats:
+        algorithm.plot_statistics()
+
+    if args.plot_heatmap:
+        algorithm.timetable.show_plot()
 
 
 if __name__ == '__main__':

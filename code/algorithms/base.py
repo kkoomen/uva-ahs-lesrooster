@@ -6,17 +6,18 @@ from code.entities.timetable import Timetable
 
 class Algorithm(abc.ABC):
     timetable: Timetable
+    statistics: list[Any]
 
     @abc.abstractmethod
-    def print_average_statistics(self, iterations: int) -> None:
+    def plot_statistics(self) -> None:
         """
-        Run for `iterations` amount of times and print average statistics.
+        Plot statistics that were gathered when the algorithm ran.
         """
         pass
 
     @abc.abstractmethod
-    def run(self) -> Any:
+    def run(self, iterations: int) -> None:
         """
-        Run the algorithm until a valid solution is found.
+        Run the algorithm for n-iteraations until a valid solution is found.
         """
         pass

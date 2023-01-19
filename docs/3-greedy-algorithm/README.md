@@ -35,6 +35,11 @@ opzichte van het random algortime dat 1200+ maluspunten opleverde.
 
 ![heatmap with timetable results](./heatmap.png)
 
+Hieronder nog een grafiek van hoe greedy alle 129 activiteiten inplant in een
+heel rooster en hoe de maluspunten lopen.
+
+![line graph showing 129 events being scheduled](./stats.png)
+
 # Random Greedy
 
 Na het implementeren van een greedy algoritme heb ik ook een *random  greedy*

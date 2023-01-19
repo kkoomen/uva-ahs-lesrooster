@@ -15,16 +15,24 @@ project.
 
 De algemene structuur is: `./main.py -a <algorithm> [OPTIONS]`
 
-Waarbij `OPTIONS` zowel globale als algoritme specifieke opties bevat.
+Waarbij `algorithm` één van de volgende waardes kan zijn:
+
+- `random`
+- `greedy`
+- `random-greedy`
+- `hillclimber`
+
+`OPTIONS` kan zowel globale als algoritme specifieke opties kan bevatten.
 
 - globale opties voor elk algoritme:
   - `-l, --log-level debug|info|warning|error|critical`
   - `-q, --quiet` toon geen stdout
   - `-e, --export ics|csv` exporteert timetable naar `ics` of `csv` formaat
-  - `--plot-heatmap` plot de timetable heatmap
   - `--iterations` aantal iteraties dat het algoritme moet runnen
+  - `--plot-heatmap` plot de timetable heatmap
+  - `--plot-stats` plot statistieken nadat het algoritme klaar is
 - `random` algoritme opties:
-  - `--random-walk` doe een random walk
+  - `--random-walk` doe een random walk en plot de resultaten
 
 Voor alle mogelijke opties, zie `./main.py --help`
 
@@ -37,7 +45,8 @@ Random algoritme: <br/>
 - `./main.py -a random -e ics --show-heatmap`
 
 Greedy algoritme: <br/>
-- `./main.py -a greedy `
+- `./main.py -a greedy`
+- `./main.py -a random-greedy --plot-stats`
 - `./main.py -a greedy --show-heatmap`
 - `./main.py -a greedy -e ics --show-heatmap`
 

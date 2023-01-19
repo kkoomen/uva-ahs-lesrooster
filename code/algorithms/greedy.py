@@ -3,6 +3,7 @@ import logging
 import math
 import random
 from typing import Any
+import matplotlib.pyplot as plt
 
 from code.algorithms.base import Algorithm
 from code.entities.event import Event
@@ -22,6 +23,22 @@ class Greedy(Algorithm):
     def __init__(self):
         self.timetable = Timetable()
         self.logger = logging.getLogger(__name__)
+        self.statistics = []
+
+    def plot_statistics(self) -> None:
+        """
+        Plot the malus scores that we gathered when the algortihm ran.
+        """
+        plt.xlabel('# of events')
+        plt.ylabel('# of malus points')
+
+        scores = [stat['malus_score'] for stat in self.statistics]
+        total_events = len(scores)
+        plt.plot(range(1, total_events + 1), scores)
+
+        plt.title(self.__class__.__name__)
+        plt.show()
+
 
     def get_unscheduled_events(self) -> list[Event]:
         """
@@ -65,36 +82,6 @@ class Greedy(Algorithm):
                     events.append(event)
 
         return events
-
-    def print_average_statistics(self, iterations: int) -> None:
-        """
-        Run for `iterations` amount of times and print average statistics.
-        """
-        min_malus_score = None
-        max_malus_score = None
-        avg_malus_score = 0
-
-        for i in range(iterations):
-            self.logger.info(f'Starting iteration {i + 1}/{iterations}')
-            self.run()
-            malus_score = self.timetable.calculate_malus_score()
-
-            # Calculate malus score statistics
-            avg_malus_score += malus_score
-
-            if min_malus_score is None or malus_score < min_malus_score:
-                min_malus_score = malus_score
-
-            if max_malus_score is None or malus_score > max_malus_score:
-                max_malus_score = malus_score
-
-        avg_malus_score = int(avg_malus_score / iterations)
-
-        self.logger.info(f'Average info over {iterations} iterations for {self.__class__.__name__} algorithm:')
-        self.logger.info(f'  - Min. malus score: {min_malus_score}')
-        self.logger.info(f'  - Max. malus score: {max_malus_score}')
-        self.logger.info(f'  - Avg malus score: {avg_malus_score}')
-
 
     def get_possibilities(self, event: Event) -> list[dict[str, Any]]:
         """
@@ -176,7 +163,7 @@ class Greedy(Algorithm):
         """
         return events.pop(0)
 
-    def run(self):
+    def run(self, iterations=1) -> None:
         """
         Run the algorithm until a solution is found.
         """
@@ -200,6 +187,9 @@ class Greedy(Algorithm):
             self.timetable.add_event(event)
 
             self.logger.debug(f'Scheduled event "{event.title}" at {event.get_formatted_weekday()}, timeslot {event.timeslot} in room {event.room}')
+            self.statistics.append({
+                'malus_score': possibility['malus_score']
+            })
 
         self.logger.info(f'Successfully created timetable')
 
