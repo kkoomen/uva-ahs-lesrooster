@@ -101,12 +101,16 @@ class Randomizer(Algorithm):
         self.timetable.remove_event(event)
         self.timetable.remove_event(other_event)
 
-        event.set_weekday(other_event.weekday)
-        event.set_timeslot(other_event.timeslot)
+        new_event = copy.deepcopy(event)
+        new_event.set_room(other_event.room)
+        new_event.set_weekday(other_event.weekday)
+        new_event.set_timeslot(other_event.timeslot)
+
+        other_event.set_room(event.room)
         other_event.set_weekday(event.weekday)
         other_event.set_timeslot(event.timeslot)
 
-        self.timetable.add_event(event)
+        self.timetable.add_event(new_event)
         self.timetable.add_event(other_event)
 
     def permute_students(self):
