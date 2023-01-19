@@ -24,19 +24,21 @@ def setup_logging(level='info', quiet=False) -> None:
         'critical': logging.critical,
     }
 
+    handlers = []
+
     today_date = str(datetime.now().date())
-    logging.basicConfig(filename=f'{LOG_DIR}/{today_date}.txt',
-                        level=levels[level])
+    handlers.append(logging.FileHandler(f'{LOG_DIR}/{today_date}.txt'))
 
     # Add a stream handler if the quiet flag is not set.
     if not quiet:
-        console = logging.StreamHandler()
-        console.setLevel(levels[level])
+        handlers.append(logging.StreamHandler())
 
+    for handler in handlers:
+        handler.setLevel(levels[level])
         formatter = logging.Formatter('[%(asctime)s] [%(name)s] [%(levelname)s] %(message)s')
-        console.setFormatter(formatter)
+        handler.setFormatter(formatter)
 
-        logging.getLogger('').addHandler(console)
+    logging.basicConfig(level=levels[level], handlers=handlers)
 
 
 def parse_arguments() -> argparse.Namespace:
