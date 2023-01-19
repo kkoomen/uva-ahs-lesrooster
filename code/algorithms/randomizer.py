@@ -88,31 +88,9 @@ class Randomizer(Algorithm):
         """
         Swap a given event with another random event.
         """
-        # Gather all other timetable events.
-        other_events = []
-        for day in self.timetable:
-            for timeslot in day.values():
-                for e in timeslot:
-                    if e is not event:
-                        other_events.append(e)
-
-        # Swap the given event with another random event.
+        other_events = [e for e in self.timetable.get_events() if e is not event]
         other_event = random.choice(other_events)
-
-        self.timetable.remove_event(event)
-        self.timetable.remove_event(other_event)
-
-        new_event = copy.deepcopy(event)
-        new_event.set_room(other_event.room)
-        new_event.set_weekday(other_event.weekday)
-        new_event.set_timeslot(other_event.timeslot)
-
-        other_event.set_room(event.room)
-        other_event.set_weekday(event.weekday)
-        other_event.set_timeslot(event.timeslot)
-
-        self.timetable.add_event(new_event)
-        self.timetable.add_event(other_event)
+        super().swap_two_events(event, other_event)
 
     def permute_students(self):
         """

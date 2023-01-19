@@ -26,93 +26,6 @@ class HillClimber(Greedy):
         self.logger = logging.getLogger(__name__)
         self.statistics = []
 
-    def swap_two_random_events(self) -> None:
-        """
-        Take two random events and swap them.
-        """
-        events = self.timetable.get_events()
-
-        event = events.pop(random.randrange(len(events)))
-        other_event = events.pop(random.randrange(len(events)))
-
-        assert event.room is not None, 'event must have a room'
-        assert event.weekday is not None, 'event must have a weekday'
-        assert event.timeslot is not None, 'event must have a timeslot'
-
-        assert other_event.room is not None, 'other event must have a room'
-        assert other_event.weekday is not None, 'other event must have a weekday'
-        assert other_event.timeslot is not None, 'other event must have a timeslot'
-
-        self.timetable.remove_event(event)
-        self.timetable.remove_event(other_event)
-
-        new_event = copy.deepcopy(event)
-        new_event.set_room(other_event.room)
-        new_event.set_weekday(other_event.weekday)
-        new_event.set_timeslot(other_event.timeslot)
-
-        other_event.set_room(event.room)
-        other_event.set_weekday(event.weekday)
-        other_event.set_timeslot(event.timeslot)
-
-        self.timetable.add_event(new_event)
-        self.timetable.add_event(other_event)
-
-    def permute_students(self):
-        """
-        Permute students within the scheduled events inside a course. Seminars
-        and practicals may contain 2 or more groups the students will be divided
-        over. Students will be permuted within these groups.
-
-        NOTE: Permuting for lectures doesn't make a difference, since it is
-        mandatory that all students attend this.
-        """
-        # The key will be a course name with the event type, i.e. 'Database wc'.
-        # The value is a list of scheduled events for that course type.
-        #
-        # Example:
-        # {
-        #   'Databases hc': [Event()]
-        #   'Databases wc': [Event(), Event(), Event()]
-        #   'Databases pr': [Event(), Event()]
-        #   'Calculus 2 hc': [Event(), Event()]
-        #   'Calculus 2 wc': [Event(), Event()]
-        #   'Calculus 2 pr': [Event()]
-        # }
-        course_events: dict[str, list[Event]] = {}
-
-        for day in self.timetable:
-            for timeslot in day.values():
-                for event in timeslot:
-                    key = f'{event.course.name} {event.type}'
-
-                    if key not in course_events:
-                        course_events[key] = []
-
-                    course_events[key].append(event)
-
-        for events in course_events.values():
-            # Only permute among the events if there are 2 or more.
-            if len(events) >= 2:
-                # Gather all students
-                students = [student for event in events for student in event.students]
-
-                # Divide the students in groups
-                student_groups = split_list_random(students, len(events))
-
-                # Assign the students to the events
-                for i, event in enumerate(events):
-                    event.assign_students(student_groups[i])
-
-    def create_random_event(self, title: str, event_type: EventType, course: Course) -> Event:
-        """
-        Create an event with a random timeslot, room and weekday.
-        """
-        timeslot = random.choice(Timeslot.OPTIONS)
-        room = random.choice(self.timetable.rooms)
-        weekday = random.choice([weekday.value for weekday in Weekdays])
-        return Event(title, event_type, course, weekday, timeslot, room)
-
     def create_similar_event(self, event: Event) -> Event:
         """
         Clone the current event, but with other data than the it currently has.
@@ -151,6 +64,15 @@ class HillClimber(Greedy):
 
         plt.title(f'Hill climber')
         plt.show()
+
+    def swap_two_random_events(self) -> None:
+        """
+        Swap two random events with each other.
+        """
+        events = self.timetable.get_events()
+        event = events.pop(random.randrange(len(events)))
+        other_event = events.pop(random.randrange(len(events)))
+        super().swap_two_events(event, other_event)
 
     def run(self, iterations=1) -> None:
         """
