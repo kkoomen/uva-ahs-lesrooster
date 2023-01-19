@@ -83,32 +83,31 @@ class Randomizer(Algorithm):
             new_event = self.create_similar_event(event)
             self.timetable.add_event(new_event)
 
-    def swap_events(self, events: list[Event]) -> None:
+    def swap_with_random_event(self, event: Event) -> None:
         """
-        Swap each event with any random other event in the timetable.
+        Swap a given event with another random event.
         """
         # Gather all other timetable events.
         other_events = []
         for day in self.timetable:
             for timeslot in day.values():
-                for event in timeslot:
-                    if event not in events:
-                        other_events.append(event)
+                for e in timeslot:
+                    if e is not event:
+                        other_events.append(e)
 
-        # Swap the events with any other random event.
-        for event in events:
-            other_event = random.choice(other_events)
+        # Swap the given event with another random event.
+        other_event = random.choice(other_events)
 
-            self.timetable.remove_event(event)
-            self.timetable.remove_event(other_event)
+        self.timetable.remove_event(event)
+        self.timetable.remove_event(other_event)
 
-            event.set_weekday(other_event.weekday)
-            event.set_timeslot(other_event.timeslot)
-            other_event.set_weekday(event.weekday)
-            other_event.set_timeslot(event.timeslot)
+        event.set_weekday(other_event.weekday)
+        event.set_timeslot(other_event.timeslot)
+        other_event.set_weekday(event.weekday)
+        other_event.set_timeslot(event.timeslot)
 
-            self.timetable.add_event(event)
-            self.timetable.add_event(other_event)
+        self.timetable.add_event(event)
+        self.timetable.add_event(other_event)
 
     def permute_students(self):
         """
@@ -288,7 +287,7 @@ class Randomizer(Algorithm):
         # ======================
         for _ in range(iterations - 1):
             random_event = self.get_random_event()
-            self.swap_events([random_event])
+            self.swap_with_random_event(random_event)
             malus_score = self.timetable.calculate_malus_score()
             malus_scores[0]['scores'].append(malus_score)
 
@@ -311,7 +310,7 @@ class Randomizer(Algorithm):
         timetable_state = copy.deepcopy(self.timetable)
         for _ in range(iterations - 1):
             random_event = self.get_random_event()
-            self.swap_events([random_event])
+            self.swap_with_random_event(random_event)
             self.permute_students()
             malus_score = self.timetable.calculate_malus_score()
             malus_scores[2]['scores'].append(malus_score)
