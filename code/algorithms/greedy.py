@@ -167,6 +167,7 @@ class Greedy(Algorithm):
         """
         Run the algorithm until a solution is found.
         """
+        self.logger.info(f'Starting to create timetable')
         self.timetable.clear()
 
         # Generate events (sort on the amounts of events per course)

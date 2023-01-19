@@ -7,12 +7,10 @@ import random
 from code.algorithms.greedy import Greedy
 import matplotlib.pyplot as plt
 
-from code.entities.course import Course
 from code.entities.event import Event
 from code.entities.timeslot import Timeslot
 from code.entities.timetable import Timetable
-from code.utils.enums import EventType, Weekdays
-from code.utils.helpers import split_list_random
+from code.utils.enums import Weekdays
 
 
 class HillClimber(Greedy):
@@ -50,6 +48,10 @@ class HillClimber(Greedy):
         Run the parent algorithm in order to generate a solution.
         """
         super().run()
+
+        # Since this class extends another class, the other class is also
+        # keeping track of some statistics, so we have to reset it here.
+        self.statistics = []
 
     def plot_statistics(self) -> None:
         """

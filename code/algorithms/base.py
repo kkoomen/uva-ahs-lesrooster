@@ -1,6 +1,5 @@
 import abc
 import copy
-import random
 from typing import Any
 
 from code.entities.event import Event
