@@ -33,11 +33,13 @@ class Greedy(Algorithm):
                          reverse=True)
 
         for course in courses:
+            # Create the lecture events.
             for _ in range(course.lectures_amount):
                 event = Event(f'{course.name} hoorcollege', EventType.LECTURE, course)
                 event.assign_students(course.enrolled_students)
                 events.append(event)
 
+            # Create the seminar events.
             for _ in range(course.seminars_amount):
                 # Create groups based on the seminar capacity and enrolment.
                 total_groups = math.ceil(course.enrolment / course.seminar_capacity)
@@ -48,6 +50,7 @@ class Greedy(Algorithm):
                     event.assign_students(student_groups[i])
                     events.append(event)
 
+            # Create the practical events.
             for _ in range(course.practicals_amount):
                 # Create groups based on the practicals capacity and enrolment.
                 total_groups = math.ceil(course.enrolment / course.practical_capacity)
@@ -57,6 +60,7 @@ class Greedy(Algorithm):
                     event = Event(f'{course.name} practicum', EventType.PRACTICUM, course)
                     event.assign_students(student_groups[i])
                     events.append(event)
+
         return events
 
     def get_best_possibility(self, event: Event) -> dict[str, Any]:

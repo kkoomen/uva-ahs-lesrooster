@@ -46,11 +46,13 @@ class Randomizer(Algorithm):
         Creates random events based on the courses data.
         """
         for course in self.timetable.courses:
+            # Create the lecture events.
             for i in range(course.lectures_amount):
                 event = self.create_random_event(f'{course.name} hoorcollege', EventType.LECTURE, course)
                 event.assign_students(course.enrolled_students)
                 self.timetable.add_event(event)
 
+            # Create the seminar events.
             for _ in range(course.seminars_amount):
                 # Create groups based on the seminar capacity and enrolment.
                 total_groups = math.ceil(course.enrolment / course.seminar_capacity)
@@ -61,6 +63,7 @@ class Randomizer(Algorithm):
                     event.assign_students(student_groups[i])
                     self.timetable.add_event(event)
 
+            # Create the practical events.
             for _ in range(course.practicals_amount):
                 # Create groups based on the practicals capacity and enrolment.
                 total_groups = math.ceil(course.enrolment / course.practical_capacity)
