@@ -72,7 +72,7 @@ def parse_arguments() -> argparse.Namespace:
                         choices=['csv', 'ics'],
                         help='Export the timetable data to one of the available choices (NOTE: This only works if the amount of iterations is exactly 1)')
 
-    parser.add_argument('--plot-stats',
+    parser.add_argument('-s', '--plot-stats',
                         action='store_true',
                         help='Plot the statistics after the algorithm has finished running')
 

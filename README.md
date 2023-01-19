@@ -28,11 +28,11 @@ Waarbij `algorithm` één van de volgende waardes kan zijn:
   - `-l, --log-level debug|info|warning|error|critical`
   - `-q, --quiet` toon geen stdout
   - `-e, --export ics|csv` exporteert timetable naar `ics` of `csv` formaat
-  - `--iterations` aantal iteraties dat het algoritme moet runnen
+  - `-i, --iterations <number>` aantal iteraties dat het algoritme moet runnen
+  - `-s, --plot-stats` plot statistieken nadat het algoritme klaar is
   - `--plot-heatmap` plot de timetable heatmap
-  - `--plot-stats` plot statistieken nadat het algoritme klaar is
 - `random` algoritme opties:
-  - `--random-walk` doe een random walk en plot de resultaten
+  - `--random-walk` doe een random walk en plot de resultaten (moet in combinatie met `-i <number>`)
 
 Voor alle mogelijke opties, zie `./main.py --help`
 
@@ -46,7 +46,7 @@ Random algoritme: <br/>
 
 Greedy algoritme: <br/>
 - `./main.py -a greedy`
-- `./main.py -a random-greedy --plot-stats`
+- `./main.py -a random-greedy -s`
 - `./main.py -a greedy --show-heatmap`
 - `./main.py -a greedy -e ics --show-heatmap`
 
