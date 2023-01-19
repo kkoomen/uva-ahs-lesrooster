@@ -118,6 +118,9 @@ class Randomizer(Algorithm):
         Permute students within the scheduled events inside a course. Seminars
         and practicals may contain 2 or more groups the students will be divided
         over. Students will be permuted within these groups.
+
+        NOTE: Permuting for lectures doesn't make a difference, since it is
+        mandatory that all students attend this.
         """
         # The key will be a course name with the event type, i.e. 'Database wc'.
         # The value is a list of scheduled events for that course type.
@@ -193,7 +196,7 @@ class Randomizer(Algorithm):
         plt.legend()
         plt.show()
 
-    def print_average_statistics(self, iterations: int, show_plot=True) -> None:
+    def print_average_statistics(self, iterations: int) -> None:
         """
         Runs a particular algorithm n-times and prints average statistics.
         """
@@ -248,8 +251,7 @@ class Randomizer(Algorithm):
         self.logger.info(f'  - Avg malus score: {avg_malus_score}')
         self.logger.info(f'  - Solutions: {total_solutions}/{iterations}')
 
-        if show_plot:
-            self.plot_iteration_retries(retries_list)
+        self.plot_iteration_retries(retries_list)
 
     def plot_random_walk(self, iterations: int) -> None:
         """

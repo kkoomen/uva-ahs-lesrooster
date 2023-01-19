@@ -6,6 +6,7 @@ import logging
 
 from code.algorithms.base import Algorithm
 from code.algorithms.greedy import Greedy, RandomGreedy
+from code.algorithms.hillclimber import HillClimber
 from code.algorithms.randomizer import Randomizer
 from code.utils.constants import LOG_DIR
 from code.utils.statistics import print_algorithm_info
@@ -57,7 +58,7 @@ def parse_arguments() -> argparse.Namespace:
                         help='Hide any output produced by the logger for stdout')
 
     parser.add_argument('-a', '--algorithm',
-                        choices=['random', 'greedy', 'random-greedy'],
+                        choices=['random', 'greedy', 'random-greedy', 'hillclimber'],
                         help='Run any of the algorithms of choice')
 
     parser.add_argument('-e', '--export',
@@ -103,6 +104,8 @@ def main():
         algorithm = Greedy()
     elif args.algorithm == 'random-greedy':
         algorithm = RandomGreedy()
+    elif args.algorithm == 'hillclimber':
+        algorithm = HillClimber()
 
     if isinstance(algorithm, Algorithm):
         if isinstance(algorithm, Randomizer) and args.iterations > 1:
@@ -118,7 +121,6 @@ def main():
 
         if args.export == 'csv':
             algorithm.timetable.export_csv()
-
         elif args.export == 'ics':
             algorithm.timetable.export_ics()
 

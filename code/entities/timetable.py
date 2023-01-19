@@ -72,6 +72,19 @@ class Timetable:
         """
         return self.timetable[index]
 
+    def get_events(self) -> list[Event]:
+        """
+        Get a list with all events in this timetable.
+        """
+        events = []
+
+        for day in self.timetable:
+            for timeslot in day.values():
+                for event in timeslot:
+                    events.append(event)
+
+        return events
+
     def register_students_to_courses(self):
         """
         Register all the students to the courses that they signed up for.
