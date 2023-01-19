@@ -236,7 +236,7 @@ class Randomizer(Algorithm):
         avg_retries = int(avg_retries / iterations)
         avg_malus_score = int(avg_malus_score / iterations)
 
-        self.logger.info(f'Average info over {iterations} iterations for random algorithm:')
+        self.logger.info(f'Average info over {iterations} iterations for {self.__class__.__name__} algorithm:')
         self.logger.info(f'  - Min. retries: {min_retries}')
         self.logger.info(f'  - Max. retries: {max_retries}')
         self.logger.info(f'  - Avg. retries: {avg_retries}')

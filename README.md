@@ -22,9 +22,9 @@ Waarbij `OPTIONS` zowel globale als algoritme specifieke opties bevat.
   - `-q, --quiet` toon geen stdout
   - `-e, --export ics|csv` exporteert timetable naar `ics` of `csv` formaat
   - `--plot-heatmap` plot de timetable heatmap
+  - `--iterations` aantal iteraties dat het algoritme moet runnen
 - `random` algoritme opties:
   - `--random-walk` doe een random walk
-  - `--iterations` aantal iteraties dat het algoritme moet runnen
 
 Voor alle mogelijke opties, zie `./main.py --help`
 

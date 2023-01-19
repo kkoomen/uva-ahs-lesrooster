@@ -5,7 +5,7 @@ from datetime import datetime
 import logging
 
 from code.algorithms.base import Algorithm
-from code.algorithms.greedy import Greedy
+from code.algorithms.greedy import Greedy, RandomGreedy
 from code.algorithms.randomizer import Randomizer
 from code.utils.constants import LOG_DIR
 from code.utils.statistics import print_algorithm_info
@@ -57,7 +57,7 @@ def parse_arguments() -> argparse.Namespace:
                         help='Hide any output produced by the logger for stdout')
 
     parser.add_argument('-a', '--algorithm',
-                        choices=['random', 'greedy'],
+                        choices=['random', 'greedy', 'random-greedy'],
                         help='Run any of the algorithms of choice')
 
     parser.add_argument('-e', '--export',
@@ -68,15 +68,15 @@ def parse_arguments() -> argparse.Namespace:
                         action='store_true',
                         help='Plot the timetable heatmap')
 
+    parser.add_argument('-i', '--iterations',
+                        type=int,
+                        default=1,
+                        help='How many times the algorithm should run')
+
     # -- RANDOM ALGORITHM ARGUMENTS --------------------------------------------
     parser.add_argument('--random-walk',
                         action='store_true',
                         help='Do a random walk and plot the results (random algorithm only)')
-
-    parser.add_argument('-i', '--iterations',
-                        type=int,
-                        default=1,
-                        help='How many times the algorithm should run (random algorithm only)')
 
     return parser.parse_args()
 
@@ -101,15 +101,17 @@ def main():
         algorithm = Randomizer()
     elif args.algorithm == 'greedy':
         algorithm = Greedy()
+    elif args.algorithm == 'random-greedy':
+        algorithm = RandomGreedy()
 
     if isinstance(algorithm, Algorithm):
         if isinstance(algorithm, Randomizer) and args.iterations > 1:
             if args.random_walk:
                 algorithm.plot_random_walk(args.iterations)
                 return
-            elif args.iterations > 1:
-                algorithm.print_average_statistics(args.iterations)
-                return
+        elif args.iterations > 1:
+            algorithm.print_average_statistics(args.iterations)
+            return
         else:
             algorithm.run()
             print_algorithm_info(algorithm)

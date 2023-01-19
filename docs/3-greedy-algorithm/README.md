@@ -34,3 +34,23 @@ aan dat het greedy algoritme het aantal maluspunten flink verminderd ten
 opzichte van het random algortime dat 1200+ maluspunten opleverde.
 
 ![heatmap with timetable results](./heatmap.png)
+
+# Random Greedy
+
+Na het implementeren van een greedy algoritme heb ik ook een *random  greedy*
+geïmplementeerd. Een activiteit wordt nu random gekozen uit de lijst van
+mogelijke activiteiten die nog niet ingeroosterd zijn, in plaats van altijd de
+activiteit te nemen die de meeste activiteiten in moet plannen. Ook wordt van
+alle mogelijke tijdslot opties voor een activiteit nu een willekeurig tijdslot
+gekozen. Dit was erg veel spelen met de random waardes, maar tot nu toe krijg ik
+*niet* iets beters dan het greedy algortime zelf.
+
+Hieronder een kort overzicht met wat ik deels geprobeerd heb met 10 iteraties
+per test:
+- 100% greedy met 100% random (avg malus score: 683)
+- 100% greedy met 50% random (avg malus score: 381)
+- 100% greedy met 10% random (avg malus score: 223)
+- 100% greedy met 1% random (avg malus score: 131)
+
+Het lijkt erop dat hoe meer random erbij komt, hoe slechter de score wordt. Op
+zich logisch, omdat het greedy algoritme over het algemeen de beste keuze pakt.

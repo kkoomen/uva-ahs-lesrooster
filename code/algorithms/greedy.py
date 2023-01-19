@@ -1,6 +1,7 @@
 import copy
 import logging
 import math
+import random
 from typing import Any
 
 from code.algorithms.base import Algorithm
@@ -14,6 +15,8 @@ from code.utils.helpers import split_list
 class Greedy(Algorithm):
     """
     Constructive greedy algortihm for timetable scheduling.
+
+    NOTE: This will always find the same state with the same malus score.
     """
 
     def __init__(self):
@@ -63,15 +66,44 @@ class Greedy(Algorithm):
 
         return events
 
-    def get_best_possibility(self, event: Event) -> dict[str, Any]:
+    def print_average_statistics(self, iterations: int) -> None:
         """
-        Get the best possible spot for a given event. This is done by putting
-        the event in each available room in each available timeslot in the whole
-        timetable, then calculate the malus score for that state and then among
-        all these states, choose the first one with the least violations and
-        lowest malus score.
+        Run for `iterations` amount of times and print average statistics.
+        """
+        min_malus_score = None
+        max_malus_score = None
+        avg_malus_score = 0
 
-        :returns: dict with info about the best timeslot option for this event.
+        for i in range(iterations):
+            self.logger.info(f'Starting iteration {i + 1}/{iterations}')
+            self.run()
+            malus_score = self.timetable.calculate_malus_score()
+
+            # Calculate malus score statistics
+            avg_malus_score += malus_score
+
+            if min_malus_score is None or malus_score < min_malus_score:
+                min_malus_score = malus_score
+
+            if max_malus_score is None or malus_score > max_malus_score:
+                max_malus_score = malus_score
+
+        avg_malus_score = int(avg_malus_score / iterations)
+
+        self.logger.info(f'Average info over {iterations} iterations for {self.__class__.__name__} algorithm:')
+        self.logger.info(f'  - Min. malus score: {min_malus_score}')
+        self.logger.info(f'  - Max. malus score: {max_malus_score}')
+        self.logger.info(f'  - Avg malus score: {avg_malus_score}')
+
+
+    def get_possibilities(self, event: Event) -> list[dict[str, Any]]:
+        """
+        Get all the possible states for a certain event.
+
+        This is done by putting the event in each available room in each
+        available timeslot in the whole timetable, then calculate the malus
+        score for that state and then sort all these states based on the one
+        with the least violations and lowest malus score.
         """
         timetable = copy.deepcopy(self.timetable)
         event = copy.deepcopy(event)
@@ -130,9 +162,24 @@ class Greedy(Algorithm):
             )
         )
 
-        return possibilities[0]
+        return possibilities
+
+    def find_timeslot_possibility(self, event: Event) -> dict[str, Any]:
+        """
+        Find a possible timeslot for a given event.
+        """
+        return self.get_possibilities(event).pop(0)
+
+    def get_next_event(self, events: list[Event]) -> Event:
+        """
+        Get the next item in a list of events.
+        """
+        return events.pop(0)
 
     def run(self):
+        """
+        Run the algorithm until a solution is found.
+        """
         self.timetable.clear()
 
         # Generate events (sort on the amounts of events per course)
@@ -141,10 +188,10 @@ class Greedy(Algorithm):
         # While there are events to be scheduled:
         while len(events) > 0:
             # Take the first event
-            event = events.pop(0)
+            event = self.get_next_event(events)
 
             # Get the best possible timeslot option.
-            possibility = self.get_best_possibility(event)
+            possibility = self.find_timeslot_possibility(event)
 
             # Schedule the event in the first available possibility
             event.set_weekday(possibility['weekday'])
@@ -153,3 +200,29 @@ class Greedy(Algorithm):
             self.timetable.add_event(event)
 
             self.logger.debug(f'Scheduled event "{event.title}" at {event.get_formatted_weekday()}, timeslot {event.timeslot} in room {event.room}')
+
+        self.logger.info(f'Successfully created timetable')
+
+class RandomGreedy(Greedy):
+    """
+    Random greedy implementation which takes random events,
+    rather than the best one.
+    """
+
+    def get_next_event(self, events: list[Event]) -> Event:
+        """
+        Get a random item from the events list.
+        """
+        if random.random() < 0.01:
+            return events.pop(random.randrange(len(events)))
+        else:
+            return super().get_next_event(events)
+
+    def find_timeslot_possibility(self, event: Event) -> dict[str, Any]:
+        """
+        Get a random possible timeslot option.
+        """
+        if random.random() < 0.01:
+            return random.choice(self.get_possibilities(event))
+        else:
+            return super().find_timeslot_possibility(event)
