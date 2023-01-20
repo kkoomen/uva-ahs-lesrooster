@@ -46,7 +46,9 @@ class Randomizer(Algorithm):
         """
         Creates random events based on the courses data.
         """
-        for course in self.timetable.courses:
+        courses = copy.deepcopy(self.timetable.courses)
+        for _ in range(len(courses)):
+            course = courses.pop(random.randrange(len(courses)))
             # Create the lecture events.
             for i in range(course.lectures_amount):
                 event = self.create_random_event(f'{course.name} hoorcollege', EventType.LECTURE, course)
