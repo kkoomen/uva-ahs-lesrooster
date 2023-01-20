@@ -1,9 +1,11 @@
 import abc
 import copy
+import random
 from typing import Any
 
 from code.entities.event import Event
 from code.entities.timetable import Timetable
+from code.utils.enums import EventType
 from code.utils.helpers import split_list_random
 
 
@@ -21,57 +23,54 @@ class Algorithm(abc.ABC):
     @abc.abstractmethod
     def run(self, iterations: int) -> None:
         """
-        Run the algorithm for n-iteraations until a valid solution is found.
+        Run the algorithm for n-iterations until a valid solution is found.
         """
         pass
 
-    def permute_students(self):
+    def permute_students_for_random_course(self) -> None:
         """
-        Permute students within the scheduled events inside a course. Seminars
-        and practicals may contain 2 or more groups the students will be divided
-        over. Students will be permuted within these groups.
+        Seminars and practicals may contain 2 or more groups the students will
+        be divided over. Students will be permuted within either the seminar
+        groups or the practicals for a single random course.
+        """
+        course = random.choice(self.timetable.courses)
 
-        NOTE: Permuting for lectures doesn't make a difference, since it is
-        mandatory that all students attend this.
-        """
         # The key will be a course name with the event type, i.e. 'Database wc'.
         # The value is a list of scheduled events for that course type.
         #
         # Example:
         # {
-        #   'Databases hc': [Event()]
         #   'Databases wc': [Event(), Event(), Event()]
         #   'Databases pr': [Event(), Event()]
-        #   'Calculus 2 hc': [Event(), Event()]
-        #   'Calculus 2 wc': [Event(), Event()]
-        #   'Calculus 2 pr': [Event()]
         # }
         course_events: dict[str, list[Event]] = {}
 
         for day in self.timetable:
             for timeslot in day.values():
                 for event in timeslot:
-                    key = f'{event.course.name} {event.type}'
+                    if event.type not in course_events:
+                        course_events[event.type] = []
 
-                    if key not in course_events:
-                        course_events[key] = []
+                    if event.course == course and event.type != EventType.LECTURE:
+                        course_events[event.type].append(event)
 
-                    course_events[key].append(event)
+        # There might be seminars and practicals, so just choose one.
+        selected_type = random.choice(list(course_events.keys()))
+        events = course_events[selected_type]
 
-        for events in course_events.values():
-            # Only permute among the events if there are 2 or more.
-            if len(events) >= 2:
-                # Gather all students
-                students = [student for event in events for student in event.students]
+        # Only permute among the events if there are 2 or more.
+        if len(events) >= 2:
+            # Gather all students.
+            students = [student for event in events for student in event.students]
 
-                # Divide the students in groups
-                student_groups = split_list_random(students, len(events))
+            # Divide the students in groups.
+            student_groups = split_list_random(students, len(events))
 
-                # Assign the students to the events
-                for i, event in enumerate(events):
-                    event.assign_students(student_groups[i])
+            # Assign the students to the events.
+            for i, event in enumerate(events):
+                event.assign_students(student_groups[i])
 
-    def swap_two_events(self, event: Event, other_event: Event) -> None:
+    def swap_two_events(self, event: Event, other_event: Event) -> tuple[Event, Event]:
         """
         Swap two events with each other in the timetable.
         """
@@ -91,9 +90,12 @@ class Algorithm(abc.ABC):
         new_event.set_weekday(other_event.weekday)
         new_event.set_timeslot(other_event.timeslot)
 
-        other_event.set_room(event.room)
-        other_event.set_weekday(event.weekday)
-        other_event.set_timeslot(event.timeslot)
+        other_new_event = copy.deepcopy(other_event)
+        other_new_event.set_room(event.room)
+        other_new_event.set_weekday(event.weekday)
+        other_new_event.set_timeslot(event.timeslot)
 
         self.timetable.add_event(new_event)
-        self.timetable.add_event(other_event)
+        self.timetable.add_event(other_new_event)
+
+        return new_event, other_new_event

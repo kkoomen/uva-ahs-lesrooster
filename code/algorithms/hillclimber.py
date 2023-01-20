@@ -30,16 +30,6 @@ class HillClimber(Greedy):
         room = random.choice(self.timetable.rooms)
         return Event(event.title, event.type, event.course, weekday, timeslot, room, event.students)
 
-    def move_random_event(self) -> None:
-        """
-        Move a single event to another random timeslot.
-        """
-        events = self.timetable.get_events()
-        event = random.choice(events)
-        self.timetable.remove_event(event)
-        similar_event = self.create_similar_event(event)
-        self.timetable.add_event(similar_event)
-
     def generate_state(self) -> None:
         """
         Run the parent algorithm in order to generate a solution.
@@ -65,6 +55,16 @@ class HillClimber(Greedy):
         plt.title(f'Hill climber based on {parent_class_name} solution')
         plt.show()
 
+    def move_random_event(self) -> None:
+        """
+        Move a single event to another random timeslot.
+        """
+        events = self.timetable.get_events()
+        event = random.choice(events)
+        similar_event = self.create_similar_event(event)
+        self.timetable.remove_event(event)
+        self.timetable.add_event(similar_event)
+
     def swap_two_random_events(self) -> None:
         """
         Swap two random events with each other.
@@ -72,7 +72,7 @@ class HillClimber(Greedy):
         events = self.timetable.get_events()
         event = events.pop(random.randrange(len(events)))
         other_event = events.pop(random.randrange(len(events)))
-        super().swap_two_events(event, other_event)
+        self.swap_two_events(event, other_event)
 
     def mutate_state(self) -> None:
         """
@@ -80,16 +80,16 @@ class HillClimber(Greedy):
 
         The actions are as follows:
         - 40% chance to move a single event
-        - 50% chance to swap two random events
-        - 10% to permute students
+        - 40% chance to swap two random events
+        - 20% to permute students within a random course
         """
         n = random.random()
-        if n < 0.4:
+        if n < 0.40:
             self.move_random_event()
-        elif 0.4 <= n < 0.9:
+        elif 0.40 <= n < 0.8:
             self.swap_two_random_events()
         else:
-            self.permute_students()
+            self.permute_students_for_random_course()
 
     def run(self, iterations=1) -> None:
         """
@@ -99,7 +99,7 @@ class HillClimber(Greedy):
         self.generate_state()
 
         # Stop if there is no improvement anymore after this amount of times.
-        no_improvement_limit = 200
+        no_improvement_limit = 500
 
         violations = len(self.timetable.get_violations())
         malus_score = self.timetable.calculate_malus_score()
@@ -118,37 +118,37 @@ class HillClimber(Greedy):
 
             self.mutate_state()
 
-            violations = len(self.timetable.get_violations())
-            malus_score = self.timetable.calculate_malus_score()
             prev_violations = len(prev_state.get_violations())
             prev_malus_score = prev_state.calculate_malus_score()
+            new_violations = len(self.timetable.get_violations())
+            new_malus_score = self.timetable.calculate_malus_score()
 
             # If it is a better solution or at least equally as good
             is_better_solution = (
-                violations < prev_violations or \
-                violations == prev_violations and malus_score <= prev_malus_score
+                new_violations < prev_violations or \
+                new_violations == prev_violations and new_malus_score <= prev_malus_score
             )
 
-            # This is needed simply for logging.
-            is_different_state = (
-                violations != prev_violations or \
-                violations == prev_violations and malus_score != prev_malus_score
+            is_different_score = (
+                new_violations != prev_violations or \
+                new_violations == prev_violations and new_malus_score != prev_malus_score
             )
 
+            # Equally good or even better solution.
             if is_better_solution:
-                if is_different_state:
+                if is_different_score:
                     no_improvement_counter = 0
-                    self.logger.info(f'Found better state with {violations} violations and {malus_score} malus score')
+                    self.logger.info(f'Found better state with {new_violations} violations and {new_malus_score} malus score')
                 else:
-                    self.logger.debug(f'Found similar state with {violations} violations and {malus_score} malus score')
+                    self.logger.debug(f'Found similar state with {new_violations} violations and {new_malus_score} malus score')
 
                 self.statistics.append({
                     'iteration': i + 1,
-                    'violations': violations,
-                    'malus_score': malus_score,
+                    'violations': new_violations,
+                    'malus_score': new_malus_score,
                 })
             else:
-                # It's a worse solution, reverse changes.
+                # Worse solution, reverse changes.
                 no_improvement_counter += 1
                 self.timetable = prev_state
 

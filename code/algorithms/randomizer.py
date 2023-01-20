@@ -90,53 +90,7 @@ class Randomizer(Algorithm):
         """
         other_events = [e for e in self.timetable.get_events() if e is not event]
         other_event = random.choice(other_events)
-        super().swap_two_events(event, other_event)
-
-    def permute_students(self):
-        """
-        Permute students within the scheduled events inside a course. Seminars
-        and practicals may contain 2 or more groups the students will be divided
-        over. Students will be permuted within these groups.
-
-        NOTE: Permuting for lectures doesn't make a difference, since it is
-        mandatory that all students attend this.
-        """
-        # The key will be a course name with the event type, i.e. 'Database wc'.
-        # The value is a list of scheduled events for that course type.
-        #
-        # Example:
-        # {
-        #   'Databases hc': [Event()]
-        #   'Databases wc': [Event(), Event(), Event()]
-        #   'Databases pr': [Event(), Event()]
-        #   'Calculus 2 hc': [Event(), Event()]
-        #   'Calculus 2 wc': [Event(), Event()]
-        #   'Calculus 2 pr': [Event()]
-        # }
-        course_events: dict[str, list[Event]] = {}
-
-        for day in self.timetable:
-            for timeslot in day.values():
-                for event in timeslot:
-                    key = f'{event.course.name} {event.type}'
-
-                    if key not in course_events:
-                        course_events[key] = []
-
-                    course_events[key].append(event)
-
-        for events in course_events.values():
-            # Only permute among the events if there are 2 or more.
-            if len(events) >= 2:
-                # Gather all students
-                students = [student for event in events for student in event.students]
-
-                # Divide the students in groups
-                student_groups = split_list_random(students, len(events))
-
-                # Assign the students to the events
-                for i, event in enumerate(events):
-                    event.assign_students(student_groups[i])
+        self.swap_two_events(event, other_event)
 
     def get_random_event(self) -> Event:
         """
@@ -225,7 +179,7 @@ class Randomizer(Algorithm):
         self.timetable = timetable_state
         timetable_state = copy.deepcopy(self.timetable)
         for _ in range(iterations - 1):
-            self.permute_students()
+            self.permute_students_for_random_course()
             malus_score = self.timetable.calculate_malus_score()
             malus_scores[1]['scores'].append(malus_score)
 
@@ -238,7 +192,7 @@ class Randomizer(Algorithm):
         for _ in range(iterations - 1):
             random_event = self.get_random_event()
             self.swap_with_random_event(random_event)
-            self.permute_students()
+            self.permute_students_for_random_course()
             malus_score = self.timetable.calculate_malus_score()
             malus_scores[2]['scores'].append(malus_score)
 

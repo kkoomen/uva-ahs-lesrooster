@@ -38,6 +38,12 @@ class Event:
         """
         return self.timeslot < other.timeslot
 
+    def __eq__(self, other) -> bool:
+        """
+        Check if two events are of the same class type and have the same id.
+        """
+        return self.__class__ == other.__class__ and self.id == other.id
+
     def assign_students(self, students: list[Student]) -> None:
         """
         Assign new students to the event.
