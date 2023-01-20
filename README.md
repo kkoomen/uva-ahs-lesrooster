@@ -15,7 +15,7 @@ project.
 
 De algemene structuur is: `./main.py -a <algorithm> [OPTIONS]`
 
-Waarbij `algorithm` één van de volgende waardes kan zijn:
+Waarbij `<algorithm>` één van de volgende waardes kan zijn:
 
 - `random`
 - `greedy`
