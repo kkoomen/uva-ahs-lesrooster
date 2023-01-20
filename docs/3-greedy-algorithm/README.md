@@ -42,7 +42,7 @@ kon worden voor het zoveelste event op de x-as.
 
 # Random Greedy
 
-Na het implementeren van een greedy algoritme heb ik ook een *random  greedy*
+Na het implementeren van een greedy algoritme heb ik ook een *random greedy*
 geïmplementeerd. Toen ik keek naar de grafiek van het greedy algoritme, toen
 viel het mij op dat voor de eerste ±22 events de malus score 0 is. Ik bedacht
 mij direct dat ik dit kan gebruiken in het random greedy algoritme, want als we
@@ -62,3 +62,9 @@ uit te voeren. Hieronder een overzicht van een deel wat ik getest heb:
 | 98            | 2             | 100+        |
 
 Helaas zijn al deze opties slechter dan het greedy algoritme met 74 maluspunten.
+Het lijkt erop dat mijn greedy implementatie erg sterk is in het genereren van
+de best mogelijke oplossing.
+
+---
+
+:point_right: [Klik hier om naar de volgende fase te gaan](../4-hillclimber/README.md)
