@@ -2,9 +2,8 @@
 
 Na een implementatie te hebben afgerond voor een random algoritme, is het nu
 tijd om een greedy implementatie te doen. Ik heb er voor gekozen om een
-constructief greedy algoritme te implementeren, omdat het hier bij een
-lesrooster handiger is om alle mogelijke opties af te gaan en dan te zien welke
-de minste maluspunten heeft.
+constructief greedy algoritme te implementeren, omdat voor mijn gevoel dit voor
+de meest hand liggende keuze is.
 
 De pseudo code voor mijn constructieve algoritme is als volgt:
 -  haal alle activiteiten op die ingepland moeten worden van alle vakken
@@ -12,7 +11,7 @@ De pseudo code voor mijn constructieve algoritme is als volgt:
    vak)
 -  zolang er activiteiten zijn die ingeplant moeten worden:
     - pak de eerste activiteit
-    - vind het beste tijdslot (oplopend gesorteerd op aantal violations + maluspunten + tijdslot + dag vd week)
+    - vind het beste tijdslot (gesorteerd op aantal violations + maluspunten + tijdslot + dag vd week)
     - plaats de activiteit in de eerste de beste oplossing
 
 Ook bedacht ik mij dat het logischer zou zijn om van links naar rechts in te
@@ -29,36 +28,40 @@ we al deze mogelijkheden op het laagste aantal violations met laagste aantal
 maluspunten en vervolgens nog op vroegste tijdslot en day van de week. Dit geeft
 ons het beste eerst opkomende tijdslot met de minste maluspunten.
 
-Hieronder is een versie te zien zonder violations met 120 maluspunten. Dit toont
+Hieronder is een versie te zien zonder violations met 205 maluspunten. Dit toont
 aan dat het greedy algoritme het aantal maluspunten flink verminderd ten
 opzichte van het random algortime dat 1200+ maluspunten opleverde.
 
 ![heatmap with timetable results](./heatmap.png)
 
 Hieronder nog een grafiek van hoe greedy alle 129 activiteiten inplant in een
-heel rooster en hoe de maluspunten lopen.
+heel rooster. De y-as toont het aantal maluspunten voor het zoveelste event op
+de x-as.
 
 ![line graph showing 129 events being scheduled](./stats.png)
 
 # Random Greedy
 
 Na het implementeren van een greedy algoritme heb ik ook een *random  greedy*
-geïmplementeerd. Een activiteit wordt nu random gekozen uit de lijst van
-mogelijke activiteiten die nog niet ingeroosterd zijn, in plaats van altijd de
-activiteit te nemen die de meeste activiteiten in moet plannen. Ook wordt van
-alle mogelijke tijdslot opties voor een activiteit nu een willekeurig tijdslot
-gekozen. Dit was erg veel spelen met de random waardes, maar tot nu toe krijg ik
-*niet* iets beters dan het greedy algortime zelf.
+geïmplementeerd. Toen ik keek naar de grafiek van het greedy algoritme, toen
+viel het mij op dat voor de eerste ±22 events de malus score 0 is. Ik bedacht
+mij direct dat ik dit kan gebruiken in het random greedy algoritme, want als we
+meerdere opties hebben die allemaal 0 zijn in malus score dan kunnen we een
+random optie hiervan pakken. Hoewel ik meerdere opties getest heb, blijkt dit
+toch wel de beste optie te zijn die het aantal maluspunten t.o.v. het resultaat
+van greedy bijna halveert.
 
-Hieronder een kort overzicht met wat ik deels geprobeerd heb met 10 iteraties
-per test:
-- 100% greedy met 100% random (avg malus score: 683)
-- 50% greedy met 50% random (avg malus score: 381)
-- 90% greedy met 10% random (avg malus score: 223)
-- 99% greedy met 1% random (avg malus score: 131)
+Hieronder is te zien dat het random greedy algoritme bij de eerste ±38
+activiteiten een malus score van 0 blijft behouden, dat is positiever dan
+greedy. Hoe langer het lager blijft, hoe beter!
 
-Het lijkt erop dat hoe meer random erbij komt, hoe slechter de score wordt. Op
-zich logisch, omdat het greedy algoritme over het algemeen de beste keuze pakt.
+![random greedy graph](./stats-random-greedy.png)
+
+Hieronder is nog een de heatmap te zien waarbij we zien dat de uiteindelijke
+malus score van random greedy 111 was, dat is **46% minder maluspunten** dan
+greedy!
+
+![random greedy heatmap](./heatmap-random-greedy.png)
 
 ---
 

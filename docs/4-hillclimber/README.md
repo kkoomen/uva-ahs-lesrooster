@@ -21,24 +21,29 @@ Zoals te zien is heeft het verwisselen wel wat effect, maar niet veel na een
 bepaald aantal iteraties. Het omwisselen van twee activiteiten geeft meer
 speling in de grafiek, wat dus betekent dat dit veel invloed heeft. Ik heb dus
 bedacht om in de hill climber het volgende te doen:
+
 - 40% kans om een activiteit naar een random ander tijdslot te doen (in mogelijk een andere zaal)
 - 40% kans om twee activiteiten om te wisselen
 - 20% kans om studenten te verwisselen
 
-Bij hill climber beginnen we met "een oplossing". Ik heb zowel de randomizer als
-het greedy algoritme gebruikt algoritme voor mijn initiële oplossing. Omdat mijn
-greedy een betere oplossing geeft (met minder aantal maluspunten) heb ik ervoor
-gekozen om de hill climber toe te passen op een greedy oplossing om zo een nóg
-betere oplossing te genereren.
+Bij hill climber beginnen we met "een oplossing". Ik heb de hill climber getest
+op een oplossing van de randomizer, greedy en random greedy om zo het effect te
+kunnen zien voor een oplossing met een hele hoge malus score (randomizer) of een
+oplossing die al redelijk laag begint zoal de greedy of random greedy.
 
-Hieronder is te zien hoe de hill climber te werk gaat met zowel de randomizer
-als het greedy algoritme. Naar mate het aantal iteraties toe neemt, wordt de som
-van violations en maluspunten minder en minder voor beide versies.
-
-![hill climber based using greedy solution](./hillclimber-greedy.png)
+Hieronder is te zien hoe de hill climber te werk gaat voor alle algoritmen. Naar
+mate het aantal iteraties toe neemt, wordt de som van violations en maluspunten
+minder en minder bij elk algoritme. Bij elk algoritme was het local optimum
+bereikt.
 
 ![hill climber based using randomizer solution](./hillclimber-randomizer.png)
 
-De greedy versie begon met een malus score van 118 en eindigde met 35 en de
-randomizer versie begon met 1274 en eindigde met 51 waarbij beide versies
-uiteindelijk het local optimum hadden bereikt.
+![hill climber based using greedy solution](./hillclimber-greedy.png)
+
+![hill climber based using random greedy solution](./hillclimber-random-greedy.png)
+
+Uit bovenstaande drie resultaten voor deze algoritmen kunnen we concluderen dat
+de hill climber erg effectief is in het minimaliseren van de maluspunten,
+ongeacht hoe hoog je begint. De randomizer begon met 1272 maluspunten, greedy
+met 205 en random greedy met 98 en vervolgens zijn ze allemaal gestopt op 50
+maluspunten of minder.

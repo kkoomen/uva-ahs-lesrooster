@@ -84,7 +84,7 @@ omdat het kan.
 Vervolgens heb ik een *random walk* geïmplementeerd die 1 oplossing genereert en
 vervolgens n-aantal keer de volgende data verzamelt:
 - wissel twee random ingeplande activiteiten met elkaar om
-- studenten verwisselen
+- studenten verwisselen binnen alle activiteiten van één willekeurig vak
 - twee random activiteiten omwisselen én studenten verwisselen
 
 Hier heb ik niet gekeken naar het aantal retries, maar naar het aantal

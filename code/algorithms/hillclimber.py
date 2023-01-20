@@ -1,7 +1,7 @@
 import copy
 import logging
 import random
-from code.algorithms.greedy import Greedy
+from code.algorithms.greedy import RandomGreedy
 import matplotlib.pyplot as plt
 
 from code.entities.event import Event
@@ -10,10 +10,10 @@ from code.entities.timetable import Timetable
 from code.utils.enums import Weekdays
 
 
-class HillClimber(Greedy):
+class HillClimber(RandomGreedy):
     """
     Hill climber algorithm implementation which grabs a random state and accepts
-    it if it better than the previous state.
+    it if it is equally good or better than the previous state.
     """
 
     def __init__(self) -> None:
@@ -51,8 +51,9 @@ class HillClimber(Greedy):
         y = [stat['violations'] + stat['malus_score'] for stat in self.statistics]
         plt.plot(x, y)
 
+        lowest_malus_score = min([stat['malus_score'] for stat in self.statistics])
         parent_class_name = self.__class__.__bases__[0].__name__
-        plt.title(f'Hill climber based on {parent_class_name} solution')
+        plt.title(f'Hill climber based on {parent_class_name} solution (iterations = {max(x)}; malus score = {lowest_malus_score})')
         plt.show()
 
     def move_random_event(self) -> None:

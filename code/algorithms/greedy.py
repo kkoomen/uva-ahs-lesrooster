@@ -30,7 +30,7 @@ class Greedy(Algorithm):
         Plot the malus scores that we gathered when the algortihm ran.
         """
         plt.xlabel('# of events')
-        plt.ylabel('# of malus points')
+        plt.ylabel('# of malus points per chosen timeslot')
 
         scores = [stat['malus_score'] for stat in self.statistics]
         total_events = len(scores)
@@ -200,20 +200,12 @@ class RandomGreedy(Greedy):
     rather than the best one.
     """
 
-    def get_next_event(self, events: list[Event]) -> Event:
-        """
-        Get a random item from the events list.
-        """
-        if random.random() < 0.01:
-            return events.pop(random.randrange(len(events)))
-        else:
-            return super().get_next_event(events)
-
     def find_timeslot_possibility(self, event: Event) -> dict[str, Any]:
         """
         Get a random possible timeslot option.
         """
-        if random.random() < 0.01:
-            return random.choice(self.get_possibilities(event))
+        possibilities = [p for p in self.get_possibilities(event) if p['malus_score'] == 0]
+        if len(possibilities) > 0:
+            return random.choice(possibilities)
         else:
             return super().find_timeslot_possibility(event)

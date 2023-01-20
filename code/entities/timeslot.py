@@ -101,8 +101,9 @@ class Timeslot:
         """
         points = 0
 
-        # The 17:00 - 19:00 timeslot adds 5 malus points.
-        if self.value == 17:
+        # The 17:00 timeslot adds 5 points if the largest room is booked.
+        largest_rooms = [event.room.is_largest for event in self.events]
+        if self.value == 17 and any(largest_rooms):
             points += 5
 
         # Add one malus punt for each overlapping course each student has.
