@@ -2,7 +2,7 @@
 
 In deze fase heb ik een hill climber geïmplementeerd die alleen maar even goede
 of betere oplossingen accepteert. Dit algoritme gaat door tot dat het aantal
-opgegeven iteraties bereikt is, of als er na 200 iteraties geen strict betere
+opgegeven iteraties bereikt is, of als er na 500 iteraties geen strict betere
 oplossing is gevonden.
 
 :exclamation: Het moet hier *strict* beter zijn omdat het anders in een
