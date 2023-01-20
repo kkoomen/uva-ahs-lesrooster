@@ -144,8 +144,8 @@ class Greedy(Algorithm):
             key=lambda possibility: (
                 possibility['total_violations'],
                 possibility['malus_score'],
-                possibility['timeslot'],
                 possibility['weekday'],
+                possibility['timeslot'],
             )
         )
 
@@ -196,8 +196,7 @@ class Greedy(Algorithm):
 
 class RandomGreedy(Greedy):
     """
-    Random greedy implementation which takes random events,
-    rather than the best one.
+    Random greedy implementation which takes random timeslot possibilites.
     """
 
     def find_timeslot_possibility(self, event: Event) -> dict[str, Any]:

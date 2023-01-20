@@ -1,7 +1,7 @@
 import copy
 import logging
 import random
-from code.algorithms.greedy import RandomGreedy
+from code.algorithms.greedy import Greedy
 import matplotlib.pyplot as plt
 
 from code.entities.event import Event
@@ -10,7 +10,7 @@ from code.entities.timetable import Timetable
 from code.utils.enums import Weekdays
 
 
-class HillClimber(RandomGreedy):
+class HillClimber(Greedy):
     """
     Hill climber algorithm implementation which grabs a random state and accepts
     it if it is equally good or better than the previous state.

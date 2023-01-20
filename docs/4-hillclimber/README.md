@@ -27,23 +27,20 @@ bedacht om in de hill climber het volgende te doen:
 - 20% kans om studenten te verwisselen
 
 Bij hill climber beginnen we met "een oplossing". Ik heb de hill climber getest
-op een oplossing van de randomizer, greedy en random greedy om zo het effect te
-kunnen zien voor een oplossing met een hele hoge malus score (randomizer) of een
-oplossing die al redelijk laag begint zoal de greedy of random greedy.
+op een oplossing van de randomizer en greedy om zo het effect te kunnen zien
+voor een oplossing met een hele hoge malus score (randomizer) of een oplossing
+die heel laag begint (greedy).
 
-Hieronder is te zien hoe de hill climber te werk gaat voor alle algoritmen. Naar
-mate het aantal iteraties toe neemt, wordt de som van violations en maluspunten
-minder en minder bij elk algoritme. Bij elk algoritme was het local optimum
-bereikt.
+Hieronder is te zien hoe de hill climber te werk gaat voor alle algoritmen. Bij
+elk algoritme was het local optimum bereikt. Naar mate het aantal iteraties toe
+neemt, wordt de som van violations en maluspunten minder en minder bij elk
+algoritme.
 
 ![hill climber based using randomizer solution](./hillclimber-randomizer.png)
 
 ![hill climber based using greedy solution](./hillclimber-greedy.png)
 
-![hill climber based using random greedy solution](./hillclimber-random-greedy.png)
-
 Uit bovenstaande drie resultaten voor deze algoritmen kunnen we concluderen dat
 de hill climber erg effectief is in het minimaliseren van de maluspunten,
-ongeacht hoe hoog het begint. De randomizer begon met 1272 maluspunten, greedy
-met 205 en random greedy met 98 en vervolgens zijn ze allemaal gestopt op 50
-maluspunten of minder.
+ongeacht hoe hoog het begint. De randomizer begon met 1272 maluspunten en greedy
+met 74. Uiteindelijk zijn ze beide gestopt op 50 maluspunten of minder.

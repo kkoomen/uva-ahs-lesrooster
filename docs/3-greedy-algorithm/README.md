@@ -11,14 +11,14 @@ De pseudo code voor mijn constructieve algoritme is als volgt:
    vak)
 -  zolang er activiteiten zijn die ingeplant moeten worden:
     - pak de eerste activiteit
-    - vind het beste tijdslot (gesorteerd op aantal violations + maluspunten + tijdslot + dag vd week)
+    - vind het beste tijdslot (gesorteerd op aantal violations + maluspunten + dag vd week + tijdslot)
     - plaats de activiteit in de eerste de beste oplossing
 
 Ook bedacht ik mij dat het logischer zou zijn om van links naar rechts in te
 plannen, in plaats van boven naar onder, zodat eerst de tijdsloten van 9 uur
-ingevuld worden voor elke dag, dan 11 uur, dan 15 uur etc. Dit gaf ook een iets
-betere malus score en dit zorgt er ook voor dat het aantal ingeplande 17:00 -
-19:00 tijdsloten minder wordt.
+ingevuld worden voor elke dag, dan 11 uur, dan 15 uur etc, maar helaas gaf dit
+een veel slechter resultaat. Van boven naar onder geeft een malus score van 74
+en van links naar rechts geeft een malus score van 205.
 
 Het greedy algoritme berekent de beste optie voor een activiteit door de deze in
 elk tijdslot in te plannen in de zaal die perfect of groot genoeg is qua
@@ -28,15 +28,15 @@ we al deze mogelijkheden op het laagste aantal violations met laagste aantal
 maluspunten en vervolgens nog op vroegste tijdslot en day van de week. Dit geeft
 ons het beste eerst opkomende tijdslot met de minste maluspunten.
 
-Hieronder is een versie te zien zonder violations met 205 maluspunten. Dit toont
+Hieronder is een versie te zien zonder violations met 74 maluspunten. Dit toont
 aan dat het greedy algoritme het aantal maluspunten flink verminderd ten
 opzichte van het random algortime dat 1200+ maluspunten opleverde.
 
 ![heatmap with timetable results](./heatmap.png)
 
-Hieronder nog een grafiek van hoe greedy alle 129 activiteiten inplant in een
-heel rooster. De y-as toont het aantal maluspunten voor het zoveelste event op
-de x-as.
+Hieronder een grafiek van hoe greedy alle 129 activiteiten inplant in een heel
+rooster. De y-as toont het minst aantal maluspunten dat op dat moment gekozen
+kon worden voor het zoveelste event op de x-as.
 
 ![line graph showing 129 events being scheduled](./stats.png)
 
@@ -47,22 +47,18 @@ geïmplementeerd. Toen ik keek naar de grafiek van het greedy algoritme, toen
 viel het mij op dat voor de eerste ±22 events de malus score 0 is. Ik bedacht
 mij direct dat ik dit kan gebruiken in het random greedy algoritme, want als we
 meerdere opties hebben die allemaal 0 zijn in malus score dan kunnen we een
-random optie hiervan pakken. Hoewel ik meerdere opties getest heb, blijkt dit
-toch wel de beste optie te zijn die het aantal maluspunten t.o.v. het resultaat
-van greedy bijna halveert.
+random optie hiervan pakken. Helaas geeft dit nooit een betere optie dan het
+greedy algoritme zelf. Met deze logica was het minimale altijd maluspunten
+altijd boven de 100.
 
-Hieronder is te zien dat het random greedy algoritme bij de eerste ±38
-activiteiten een malus score van 0 blijft behouden, dat is positiever dan
-greedy. Hoe langer het lager blijft, hoe beter!
+Vervolgens heb ik geprobeerd om met bepaalde kansen soms random en soms greedy
+uit te voeren. Hieronder een overzicht van een deel wat ik getest heb:
 
-![random greedy graph](./stats-random-greedy.png)
+| greedy % kans | random % kans | malus score |
+| ------------- | ------------- | ----------- |
+| 100           | 100           | 600+        |
+| 50            | 50            | 300+        |
+| 90            | 10            | 100+        |
+| 98            | 2             | 100+        |
 
-Hieronder is nog een de heatmap te zien waarbij we zien dat de uiteindelijke
-malus score van random greedy 111 was, dat is **46% minder maluspunten** dan
-greedy!
-
-![random greedy heatmap](./heatmap-random-greedy.png)
-
----
-
-:point_right: [Klik hier om naar de volgende fase te gaan](../4-hillclimber/README.md)
+Helaas zijn al deze opties slechter dan het greedy algoritme met 74 maluspunten.
