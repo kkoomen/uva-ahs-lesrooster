@@ -44,6 +44,6 @@ bereikt.
 
 Uit bovenstaande drie resultaten voor deze algoritmen kunnen we concluderen dat
 de hill climber erg effectief is in het minimaliseren van de maluspunten,
-ongeacht hoe hoog je begint. De randomizer begon met 1272 maluspunten, greedy
+ongeacht hoe hoog het begint. De randomizer begon met 1272 maluspunten, greedy
 met 205 en random greedy met 98 en vervolgens zijn ze allemaal gestopt op 50
 maluspunten of minder.
