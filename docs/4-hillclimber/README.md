@@ -18,9 +18,9 @@ Hieronder nog een keer de grafiek van de random walk als opfrisser:
 ![random walk with 10k iterations](../2-baseline/random-walk-plot.png)
 
 Zoals te zien is heeft het verwisselen wel wat effect, maar niet veel na een
-bepaald aantal iteraties. Het omwisselen van twee activiteiten heeft meer nut
-naar mate het aantal iteraties groter wordt. Ik heb dus bedacht om in de hill
-climber het volgende te doen:
+bepaald aantal iteraties. Het omwisselen van twee activiteiten geeft meer
+speling in de grafiek, wat dus betekent dat dit veel invloed heeft. Ik heb dus
+bedacht om in de hill climber het volgende te doen:
 - 40% kans om een activiteit naar een random ander tijdslot te doen (in mogelijk een andere zaal)
 - 40% kans om twee activiteiten om te wisselen
 - 20% kans om studenten te verwisselen
