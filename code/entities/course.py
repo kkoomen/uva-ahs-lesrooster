@@ -33,10 +33,13 @@ class Course:
         self.enrolled_students = enrolled_students if enrolled_students is not None else []
 
     def __repr__(self) -> str:
-        return f'{self.__class__.__name__}(name:{self.name}, enrolled_students:{len(self.enrolled_students)})'
+        return f'{self.__class__.__name__}(id:{self.id}, name:{self.name}, enrolled_students:{len(self.enrolled_students)})'
 
     def __eq__(self, other) -> bool:
-        return self.id == other.id
+        """
+        Check if two courses are of the same class type and have the same id.
+        """
+        return self.__class__ == other.__class__ and self.id == other.id
 
     def get_capacity_for_type(self, event_type: EventType) -> int:
         """

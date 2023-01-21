@@ -30,13 +30,20 @@ class Event:
         self.students = students if students is not None else []
 
     def __repr__(self) -> str:
-        return f'{self.__class__.__name__}(title:{self.title}, type:{self.type}, timeslot:{self.timeslot}, course:{self.course.name}, room:{self.room}, weekday:{self.weekday})'
+        return f'{self.__class__.__name__}(id:{self.id}, title:{self.title}, type:{self.type}, timeslot:{self.timeslot}, course:{self.course.name}, room:{self.room}, weekday:{self.weekday})'
 
     def __lt__(self, other) -> bool:
         """
         Implement the < operator.
         """
-        return self.timeslot < other.timeslot
+        assert self.room is not None, 'room must not be None'
+        assert other.room is not None, 'other room must not be None'
+
+        return self.weekday < other.weekday or \
+            self.weekday == other.weekday and (
+                self.timeslot < other.timeslot or \
+                self.timeslot == other.timeslot and self.room.capacity < other.room.capacity
+            )
 
     def __eq__(self, other) -> bool:
         """

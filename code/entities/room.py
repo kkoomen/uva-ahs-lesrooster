@@ -16,7 +16,10 @@ class Room:
         return self.location_id
 
     def __eq__(self, other) -> bool:
-        return self.location_id == other.location_id
+        """
+        Check if two rooms are of the same class type and have the same id.
+        """
+        return self.__class__ == other.__class__ and self.location_id == other.location_id
 
     def __lt__(self, other) -> bool:
         """

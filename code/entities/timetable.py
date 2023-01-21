@@ -11,7 +11,7 @@ from code.entities.timeslot import Timeslot
 from code.utils.constants import OUT_DIR
 from code.utils.data import load_courses, load_rooms, load_students
 from code.utils.enums import Weekdays
-from code.utils.helpers import get_utc_offset, remove_duplicates
+from code.utils.helpers import get_utc_offset, make_id, remove_duplicates
 import ics
 import matplotlib.pyplot as plt
 
@@ -59,6 +59,9 @@ class Timetable:
 
         self.register_students_to_courses()
 
+    def __repr__(self) -> str:
+        return f'<{self.__class__.__name__} events:{len(self.get_events())}>'
+
     def __iter__(self) -> Generator:
         """
         Allow to iterate over the timetable events.
@@ -71,6 +74,21 @@ class Timetable:
         Get an timetable day by index.
         """
         return self.timetable[index]
+
+    def __eq__(self, other) -> bool:
+        """
+        Check if two timetables are the same class type and schedule.
+        """
+        if self.__class__ != other.__class__:
+            return False
+
+        events = self.get_events()
+        other_events = other.get_events()
+
+        if len(events) != len(other_events):
+            return False
+
+        return sorted(events) == sorted(other_events)
 
     def get_events(self) -> list[Event]:
         """
