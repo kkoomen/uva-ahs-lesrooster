@@ -3,7 +3,7 @@ from typing import Union
 
 from code.entities.student import Student
 from code.utils.enums import EventType
-from code.utils.helpers import make_id
+from code.utils.helpers import make_id, split_list, split_list_random
 
 
 class Course:
@@ -70,3 +70,26 @@ class Course:
             total += math.ceil(self.enrolment / self.practical_capacity)
 
         return total
+
+    def create_student_groups(self, capacity: int, random=False) -> tuple[list[list[Student]], int]:
+        """
+        Create student groups based on a certain capacity.
+
+        :returns: List with grouped students and total groups created.
+        """
+        total_groups = math.ceil(self.enrolment / capacity)
+        group_capacity = math.ceil(self.enrolment / total_groups)
+        fn = split_list_random if random else split_list
+        return fn(self.enrolled_students, group_capacity), total_groups
+
+    def create_seminar_student_groups(self, random=False) -> tuple[list[list[Student]], int]:
+        """
+        Create student groups based on the seminar capacity.
+        """
+        return self.create_student_groups(self.seminar_capacity, random)
+
+    def create_practical_student_groups(self, random=False) -> tuple[list[list[Student]], int]:
+        """
+        Create student groups based on the practical capacity.
+        """
+        return self.create_student_groups(self.practical_capacity, random)

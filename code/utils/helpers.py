@@ -20,7 +20,7 @@ def data_path(filename: str) -> str:
 
 def split_list(items: list, k: int) -> list[list]:
     """
-    Split a list with items into groups of amount `k`.
+    Split a list with items into groups of size `k`.
 
     >>> split_list(['a', 'b', 'c', 'd', 'e'], 2)
     [['a', 'b'], ['c', 'd'], ['e']]
@@ -39,7 +39,7 @@ def split_list(items: list, k: int) -> list[list]:
 
 def split_list_random(items: list, k: int) -> list[list]:
     """
-    Split a list with items into random groups of amount `k`.
+    Split a list with items into random groups of size `k`.
 
     >>> random.seed(0)
     >>> split_list_random(['a', 'b', 'c', 'd', 'e'], 2)

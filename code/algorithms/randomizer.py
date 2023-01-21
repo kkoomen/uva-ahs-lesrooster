@@ -58,9 +58,7 @@ class Randomizer(Algorithm):
             # Create the seminar events.
             for _ in range(course.seminars_amount):
                 # Create groups based on the seminar capacity and enrolment.
-                total_groups = math.ceil(course.enrolment / course.seminar_capacity)
-                group_capacity = math.ceil(course.enrolment / total_groups)
-                student_groups = split_list_random(course.enrolled_students, group_capacity)
+                student_groups, total_groups = course.create_seminar_student_groups(random=True)
                 for i in range(total_groups):
                     event = self.create_random_event(f'{course.name} werkcollege', EventType.SEMINAR, course)
                     event.assign_students(student_groups[i])
@@ -69,9 +67,7 @@ class Randomizer(Algorithm):
             # Create the practical events.
             for _ in range(course.practicals_amount):
                 # Create groups based on the practicals capacity and enrolment.
-                total_groups = math.ceil(course.enrolment / course.practical_capacity)
-                group_capacity = math.ceil(course.enrolment / total_groups)
-                student_groups = split_list_random(course.enrolled_students, group_capacity)
+                student_groups, total_groups = course.create_practical_student_groups(random=True)
                 for i in range(total_groups):
                     event = self.create_random_event(f'{course.name} practicum', EventType.PRACTICUM, course)
                     event.assign_students(student_groups[i])
