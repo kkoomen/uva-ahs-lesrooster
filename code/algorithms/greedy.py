@@ -71,7 +71,7 @@ class Greedy(Algorithm):
             # Create the practical events.
             for _ in range(course.practicals_amount):
                 # Create groups based on the practicals capacity and enrolment.
-                student_groups, total_groups = course.create_seminar_student_groups()
+                student_groups, total_groups = course.create_practical_student_groups()
                 for i in range(total_groups):
                     event = Event(f'{course.name} practicum', EventType.PRACTICUM, course)
                     event.assign_students(student_groups[i])
