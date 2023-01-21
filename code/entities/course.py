@@ -31,6 +31,7 @@ class Course:
         self.practical_capacity = practical_capacity
         self.enrolment = enrolment
         self.enrolled_students = enrolled_students if enrolled_students is not None else []
+        self.conflicting_courses: list[str] = []
 
     def __repr__(self) -> str:
         return f'{self.__class__.__name__}(id:{self.id}, name:{self.name}, enrolled_students:{len(self.enrolled_students)})'
@@ -96,3 +97,9 @@ class Course:
         Create student groups based on the practical capacity.
         """
         return self.create_student_groups(self.practical_capacity, random)
+
+    def set_conflicting_courses(self, courses: list[str]) -> None:
+        """
+        Set the conflicting courses value.
+        """
+        self.conflicting_courses = courses

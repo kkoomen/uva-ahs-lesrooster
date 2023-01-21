@@ -3,6 +3,7 @@ import logging
 import math
 import random
 from typing import Any
+from code.entities.course import Course
 import matplotlib.pyplot as plt
 
 from code.algorithms.base import Algorithm
@@ -39,6 +40,14 @@ class Greedy(Algorithm):
         plt.title(self.__class__.__name__)
         plt.show()
 
+    def get_courses(self) -> list[Course]:
+        """
+        Get courses based on the amount of events they will schedule where as
+        the course with the most events to be scheduled is the first one.
+        """
+        return sorted(self.timetable.courses,
+                      key=lambda course: course.calculate_total_events(),
+                      reverse=True)
 
     def get_unscheduled_events(self) -> list[Event]:
         """
@@ -46,13 +55,7 @@ class Greedy(Algorithm):
         """
         events = []
 
-        # Sort courses based on the amount of events they will schedule where as
-        # the course with the most events to be scheduled is the first one.
-        courses = sorted(self.timetable.courses,
-                         key=lambda course: course.calculate_total_events(),
-                         reverse=True)
-
-        for course in courses:
+        for course in self.get_courses():
             # Create the lecture events.
             for _ in range(course.lectures_amount):
                 event = Event(f'{course.name} hoorcollege', EventType.LECTURE, course)
@@ -131,7 +134,7 @@ class Greedy(Algorithm):
                     'timeslot': timeslot_value,
                     'room': room,
                     'malus_score': timetable.calculate_malus_score(),
-                    'total_violations': len(timetable.get_violations())
+                    'total_violations': len(timetable.get_violations()),
                 })
                 timetable.remove_event(event)
 
@@ -166,7 +169,7 @@ class Greedy(Algorithm):
         self.logger.info(f'Starting to create timetable')
         self.timetable.clear()
 
-        # Generate events (sort on the amounts of events per course)
+        # Generate events that are to be scheduled.
         events = self.get_unscheduled_events()
 
         # While there are events to be scheduled:
@@ -192,7 +195,7 @@ class Greedy(Algorithm):
 
 class RandomGreedy(Greedy):
     """
-    Random greedy implementation which takes random timeslot possibilites.
+    Random greedy implementation which takes random timeslot possibilities.
     """
 
     def find_timeslot_possibility(self, event: Event) -> dict[str, Any]:
@@ -204,3 +207,32 @@ class RandomGreedy(Greedy):
             return random.choice(possibilities)
         else:
             return super().find_timeslot_possibility(event)
+
+class GreedyLSD(Greedy):
+    """
+    Greedy algorithm with Least Saturation Degree (LSD).
+    """
+
+    def get_courses(self) -> list[Course]:
+        return self.timetable.courses
+
+    def get_next_event(self, events: list[Event]) -> Event:
+        """
+        Group the events by their saturation degree and take a random choice
+        from those with the highest degree, thus scheduling the events with
+        fewer feasible slots as early as possible.
+        """
+        grouped_events = {}
+
+        for event in events:
+            saturation_degree = self.timetable.calculate_saturation_degree_for_unscheduled_event(event)
+
+            if saturation_degree not in grouped_events:
+                grouped_events[saturation_degree] = []
+
+            grouped_events[saturation_degree].append(event)
+
+        highest_degree = min(grouped_events.keys())
+        events_group = sorted(grouped_events[highest_degree], key=lambda event: event.course.calculate_total_events(), reverse=True)
+        event = events_group[0]
+        return events.pop(events.index(event))

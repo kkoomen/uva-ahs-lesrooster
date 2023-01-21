@@ -1,4 +1,5 @@
 from collections.abc import Generator
+from code.entities.course import Course
 
 from code.entities.event import Event
 from code.utils.helpers import remove_duplicates
@@ -143,3 +144,16 @@ class Timeslot:
         violations += self.get_double_booked_violations()
 
         return remove_duplicates(violations)
+
+    def get_saturation_degree_for_course(self, course: Course) -> int:
+        """
+        Get the saturation degree which is the number of course conflicts.
+        """
+        saturation_degree = 0
+
+        scheduled_course_names = [event.course.name for event in self.events]
+        for course_name in scheduled_course_names:
+            if course_name in course.conflicting_courses:
+                saturation_degree += 1
+
+        return saturation_degree

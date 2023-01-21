@@ -1,9 +1,11 @@
 from collections.abc import Generator
 import csv
 from datetime import datetime, timedelta
+import itertools
 import logging
 import os
 import re
+import networkx as nx
 
 from code.entities.event import Event
 from code.entities.room import Room
@@ -11,7 +13,7 @@ from code.entities.timeslot import Timeslot
 from code.utils.constants import OUT_DIR
 from code.utils.data import load_courses, load_rooms, load_students
 from code.utils.enums import Weekdays
-from code.utils.helpers import get_utc_offset, make_id, remove_duplicates
+from code.utils.helpers import get_utc_offset, remove_duplicates
 import ics
 import matplotlib.pyplot as plt
 
@@ -57,7 +59,49 @@ class Timetable:
         self.courses = load_courses()
         self.students = load_students()
 
+        self.set_course_conflicts()
         self.register_students_to_courses()
+
+    def set_course_conflicts(self) -> None:
+        """
+        Create a graph where each vertice represents a course and the edge in
+        between two vertices indicates that there is at least one student
+        enrolled both of these courses, meaning that all neighbors for a node in
+        the graph represent the conflicting courses for a course respectively.
+        """
+        # Create the graph.
+        network = nx.Graph()
+        network.add_nodes_from([course.name for course in self.courses])
+
+        # Get all courses that are overlapping for each student.
+        list_of_overlaps = [student.enrolled_courses for student in self.students]
+
+        # Create each possible combination per overlap and add it as an edge of the graph.
+        for courses in list_of_overlaps:
+            for pair in itertools.combinations(courses, 2):
+                network.add_edge(pair[0], pair[1])
+
+        course_conflicts = {}
+        for course_name in list(network.nodes):
+            course_conflicts[course_name] = list(network[course_name].keys())
+
+        for course in self.courses:
+            course.set_conflicting_courses(course_conflicts[course.name])
+
+    def calculate_saturation_degree_for_unscheduled_event(self, event: Event) -> int:
+        """
+        Calculate a saturation degree which indicates the total amount of
+        timeslot conflicts in the timetable for an unscheduled event.
+        """
+        saturation_degree = 0
+
+        # Iterate over each timeslot in the timetable and calculate the amount
+        # of course conflicts for the given event.
+        for day in self.timetable:
+            for timeslot in day.values():
+                saturation_degree += timeslot.get_saturation_degree_for_course(event.course)
+
+        return saturation_degree
 
     def __repr__(self) -> str:
         return f'<{self.__class__.__name__} events:{len(self.get_events())}>'

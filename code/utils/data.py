@@ -74,6 +74,7 @@ def load_students() -> list[Student]:
 
     with open(data_path('studenten_en_vakken.csv'), 'r') as file:
         reader = csv.reader(file)
+        next(reader, None)  # skip the headers
         for row in reader:
             last_name, first_name, student_id = row[:3]
             enrolled_courses = [course.strip() for course in row[3:8] if course]

@@ -1,9 +1,10 @@
 import copy
 import logging
+import math
 import random
-from code.algorithms.base import Algorithm
+
 from code.algorithms.greedy import Greedy
-from code.algorithms.randomizer import Randomizer
+from code.algorithms.base import Algorithm
 from code.entities.event import Event
 from code.entities.timeslot import Timeslot
 from code.entities.timetable import Timetable
@@ -26,7 +27,7 @@ class TabuSearch(Algorithm):
         """
         Generate a solution using any of the already implemented algorithms.
         """
-        algorithm: Algorithm = Randomizer()
+        algorithm: Algorithm = Greedy()
         algorithm.run()
         return algorithm.timetable
 
@@ -81,6 +82,48 @@ class TabuSearch(Algorithm):
         timetable.add_event(new_event)
         timetable.add_event(other_new_event)
 
+    def reassign_random_student_in_course(self, timetable: Timetable) -> None:
+        """
+        Seminars and practicals may contain 2 or more groups the students will
+        be divided over. Take a random student from one of these groups and place it inside another group.
+        """
+        course = random.choice(timetable.courses)
+
+        # The key will be a course name with the event type, i.e. 'Database wc'.
+        # The value is a list of scheduled events for that course type.
+        #
+        # Example:
+        # {
+        #   'Databases wc': [Event(), Event(), Event()]
+        #   'Databases pr': [Event(), Event()]
+        # }
+        course_events: dict[str, list[Event]] = {}
+
+        for day in timetable:
+            for timeslot in day.values():
+                for event in timeslot:
+                    if event.type not in course_events:
+                        course_events[event.type] = []
+
+                    if event.course == course and event.type != EventType.LECTURE:
+                        course_events[event.type].append(event)
+
+        # There might be seminars and practicals, so just choose one.
+        selected_type = random.choice(list(course_events.keys()))
+        events = course_events[selected_type]
+
+        # Only put a student in another group if there are 2+ events.
+        if len(events) >= 2:
+            # Take a random event.
+            event = events.pop(random.randrange(len(events)))
+            if len(event.students) > 0 and len(event.students) < event.get_capacity():
+                # Take a random student.
+                student = event.students.pop(random.randrange(len(event.students)))
+
+                # Assign student to any of the other events inside this course type.
+                random.choice(events).add_student(student)
+
+
     def permute_students_for_random_course(self, timetable: Timetable) -> None:
         """
         Seminars and practicals may contain 2 or more groups the students will
@@ -131,13 +174,16 @@ class TabuSearch(Algorithm):
         The actions are as follows:
         - 40% chance to move a single event
         - 40% chance to swap two random events
-        - 20% to permute students within a random course
+        - 10% to permute all students in a random course
+        - 10% to a single student in a random course
         """
         n = random.random()
         if n < 0.40:
             self.move_random_event(candidate)
         elif 0.40 <= n < 0.8:
             self.swap_two_random_events(candidate)
+        elif 0.8 <= n < 0.9:
+            self.reassign_random_student_in_course(candidate)
         else:
             self.permute_students_for_random_course(candidate)
 
@@ -157,37 +203,52 @@ class TabuSearch(Algorithm):
         return neighbors
 
     def run(self, iterations: int) -> None:
-        MAX_TABU_LIST_SIZE = 30
-        TENURE = 30
+        max_tabu_list_size = 100
+        tenure = 100
 
         initial_solution: Timetable = self.get_initial_solution()
-        best_solution = copy.deepcopy(initial_solution) # sBest ← s0
-        best_candidate = copy.deepcopy(initial_solution) # bestCandidate ← s0
-        tabu_list: list[list] = [] # tabuList ← []
-        tabu_list.append([initial_solution, TENURE]) # tabuList.push(s0)
+        best_solution = initial_solution
+        best_candidate = initial_solution
+        tabu_list: list[list] = []
+        tabu_list.append([initial_solution, tenure])
 
-        # while (not stoppingCondition())
         for i in range(iterations):
             self.logger.debug(f'iteration #{i + 1}')
-            neighborhood = self.get_neighbors(best_candidate) # sNeighborhood ← getNeighbors(bestCandidate)
-            best_candidate = neighborhood[0] # bestCandidate ← sNeighborhood[0]
-            for candidate in neighborhood: # for (sCandidate in sNeighborhood)
-                if candidate not in tabu_list and candidate.calculate_malus_score() < best_candidate.calculate_malus_score(): # if ( (not tabuList.contains(sCandidate)) and (fitness(sCandidate) > fitness(bestCandidate)) )
-                    best_candidate = candidate # bestCandidate ← sCandidate
-            if best_candidate.calculate_malus_score() < best_solution.calculate_malus_score(): # if (fitness(bestCandidate) > fitness(sBest))
-                self.logger.debug(f'Found new best solution with {best_candidate.calculate_malus_score()} malus score (previous:{best_solution.calculate_malus_score()})')
-                best_solution = best_candidate # sBest ← bestCandidate
-            if best_solution.calculate_malus_score() == 0:
-                self.logger.info('FOUND THE BEST SOLUTION!!!')
+
+            neighborhood = self.get_neighbors(best_candidate)
+            best_candidate = neighborhood[0]
+
+            for candidate in neighborhood:
+                if candidate not in tabu_list and candidate.calculate_malus_score() < best_candidate.calculate_malus_score():
+                    best_candidate = candidate
+
+            best_candidate_score = best_candidate.calculate_malus_score() # 54
+            best_solution_score = best_solution.calculate_malus_score() # 60
+            if best_candidate_score < best_solution_score:
+                self.logger.debug(f'Found new best solution with {best_candidate_score} malus score (previous:{best_solution_score})')
+                best_solution = best_candidate
+            elif math.isclose(best_solution_score, best_candidate_score, rel_tol=0.1): # allow 10% worse
+                self.logger.debug(f'{best_candidate_score} score is still within 10% tolerance of {best_solution_score}')
+                best_solution = best_candidate
+
+            for index, tabu in enumerate(tabu_list):
+                if tabu[0].calculate_malus_score() < best_solution.calculate_malus_score():
+                    best_solution = tabu[0]
+                    tabu_list.pop(index)
+                    break
+
+            if best_solution_score == 0:
+                self.logger.info('🎉  Found the best solution possible, hooray!')
                 break
-            tabu_list.append([best_candidate, TENURE]) # tabuList.push(bestCandidate)
+
             for tabu in tabu_list:
                 tabu[1] -= 1
                 if tabu[1] == 0:
                     tabu_list.remove(tabu)
-            if len(tabu_list) > MAX_TABU_LIST_SIZE: # if (tabuList.size > maxTabuSize)
-                tabu_list.pop(0) # tabuList.removeFirst()
-        # end
-        # return sBest
-        print("best_solution >>>>", best_solution)
+
+            tabu_list.append([best_candidate, tenure])
+
+            if len(tabu_list) > max_tabu_list_size:
+                tabu_list.pop(0)
+
         self.timetable = best_solution

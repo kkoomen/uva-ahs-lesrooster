@@ -51,6 +51,12 @@ class Event:
         """
         return self.__class__ == other.__class__ and self.id == other.id
 
+    def add_student(self, student: Student) -> None:
+        """
+        Assign a single student to the event.
+        """
+        self.students.append(student)
+
     def assign_students(self, students: list[Student]) -> None:
         """
         Assign new students to the event.
