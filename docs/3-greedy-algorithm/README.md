@@ -56,7 +56,7 @@ uit te voeren. Hieronder een overzicht van een deel wat ik getest heb:
 
 | greedy % kans | random % kans | malus score |
 | ------------- | ------------- | ----------- |
-| 100           | 100           | 600+        |
+| 0             | 100           | 600+        |
 | 50            | 50            | 300+        |
 | 90            | 10            | 100+        |
 | 98            | 2             | 100+        |
