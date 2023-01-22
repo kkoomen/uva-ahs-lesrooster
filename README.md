@@ -38,22 +38,19 @@ Voor alle mogelijke opties, zie `./main.py --help`
 
 ### Voorbeelden
 
-#### Algoritmen
-
-Random algoritme: <br/>
+Random algoritme:
 - `./main.py -a random -i 10`
 - `./main.py -a random --random-walk -i 1000 --show-heatmap`
 - `./main.py -a random -e csv`
 - `./main.py -a random -e ics --show-heatmap`
 
-Greedy algoritme: <br/>
+Greedy algoritme:
 - `./main.py -a greedy`
 - `./main.py -a random-greedy -s`
 - `./main.py -a greedy --show-heatmap`
 - `./main.py -a greedy -e ics --show-heatmap`
 
-#### Visualizaties
-
+Visualizaties:
 - `./main.py --visualization course-conflict`
 
 # Proces logboek
