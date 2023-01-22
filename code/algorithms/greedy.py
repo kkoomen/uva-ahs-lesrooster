@@ -198,15 +198,36 @@ class RandomGreedy(Greedy):
     Random greedy implementation which takes random timeslot possibilities.
     """
 
-    def find_timeslot_possibility(self, event: Event) -> dict[str, Any]:
-        """
-        Get a random possible timeslot option.
-        """
-        possibilities = [p for p in self.get_possibilities(event) if p['malus_score'] == 0]
-        if len(possibilities) > 0:
-            return random.choice(possibilities)
+    def __init__(self):
+        super().__init__()
+        self.random_greedy_statistics = []
+        self.probability = 1
+
+    def plot_statistics(self) -> None:
+        plt.xlabel('% random probability')
+        plt.ylabel('# of malus points')
+
+        x = [stat['probability'] for stat in self.random_greedy_statistics]
+        y = [stat['malus_score'] for stat in self.random_greedy_statistics]
+        plt.plot(x, y)
+
+        plt.title(self.__class__.__name__)
+        plt.show()
+
+    def get_next_event(self, events: list[Event]) -> Event:
+        if random.random() < self.probability:
+            return events.pop(random.randrange(len(events)))
         else:
-            return super().find_timeslot_possibility(event)
+            return super().get_next_event(events)
+
+    def run(self, iterations=1) -> None:
+        for prob in range(0, 101, 10):
+            self.probability = prob
+            super().run(iterations)
+            self.random_greedy_statistics.append({
+                'probability': prob,
+                'malus_score': self.timetable.calculate_malus_score()
+            })
 
 class GreedyLSD(Greedy):
     """
@@ -232,7 +253,12 @@ class GreedyLSD(Greedy):
 
             grouped_events[saturation_degree].append(event)
 
+        # Get the highest amount of conflicts.
         highest_degree = max(grouped_events.keys())
-        events_group = sorted(grouped_events[highest_degree], key=lambda event: (event.course.enrolment, event.course.calculate_total_events()), reverse=False)
+
+
+        events_group = sorted(grouped_events[highest_degree],
+                              key=lambda event: (event.course.enrolment, event.course.calculate_total_events()),
+                              reverse=False)
         event = events_group[0]
         return events.pop(events.index(event))
