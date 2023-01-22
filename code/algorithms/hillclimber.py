@@ -2,6 +2,7 @@ import copy
 import logging
 import random
 from code.algorithms.greedy import Greedy
+from code.utils.decorators import timer
 import matplotlib.pyplot as plt
 
 from code.entities.timetable import Timetable
@@ -61,6 +62,7 @@ class HillClimber(Greedy):
         else:
             self.permute_students_for_random_course()
 
+    @timer
     def run(self, iterations=1) -> None:
         """
         Run the hill climber until there are no more improvements.

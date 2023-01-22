@@ -17,6 +17,6 @@ def timer(func):
         result = func(*args, **kwargs)
         end_time = timeit.default_timer()
         exec_time = end_time - start_time
-        logger.debug(f'{func.__name__}() executed in {exec_time:.8f} seconds')
+        logger.debug(f'{func.__qualname__}() executed in {exec_time:.8f} seconds')
         return result
     return wrapper

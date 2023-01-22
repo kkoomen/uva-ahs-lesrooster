@@ -3,6 +3,7 @@ import logging
 import random
 from typing import Any
 from code.entities.course import Course
+from code.utils.decorators import timer
 import matplotlib.pyplot as plt
 
 from code.algorithms.base import Algorithm
@@ -160,6 +161,7 @@ class Greedy(Algorithm):
         """
         return events.pop(0)
 
+    @timer
     def run(self, iterations=1) -> None:
         """
         Run the algorithm until a solution is found.
@@ -230,7 +232,7 @@ class GreedyLSD(Greedy):
 
             grouped_events[saturation_degree].append(event)
 
-        highest_degree = min(grouped_events.keys())
-        events_group = sorted(grouped_events[highest_degree], key=lambda event: event.course.calculate_total_events(), reverse=True)
+        highest_degree = max(grouped_events.keys())
+        events_group = sorted(grouped_events[highest_degree], key=lambda event: (event.course.enrolment, event.course.calculate_total_events()), reverse=False)
         event = events_group[0]
         return events.pop(events.index(event))

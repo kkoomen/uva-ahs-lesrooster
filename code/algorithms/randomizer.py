@@ -1,6 +1,7 @@
 import copy
 import logging
 import random
+from code.utils.decorators import timer
 import matplotlib.pyplot as plt
 
 from code.algorithms.base import Algorithm
@@ -200,6 +201,7 @@ class Randomizer(Algorithm):
 
         plt.show()
 
+    @timer
     def run(self, iterations=1) -> None:
         """
         Assign random events until the timetable is valid.

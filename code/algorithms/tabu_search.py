@@ -1,8 +1,8 @@
 import copy
 import logging
-import math
 import random
 import concurrent.futures
+from code.utils.decorators import timer
 import matplotlib.pyplot as plt
 
 from code.algorithms.greedy import Greedy
@@ -57,8 +57,6 @@ class TabuSearch(Algorithm):
             self.move_random_event(candidate)
         elif 0.40 <= n < 0.8:
             self.swap_two_random_events(candidate)
-        elif 0.8 <= n < 0.9:
-            self.reassign_random_student_in_course(candidate)
         else:
             self.permute_students_for_random_course(candidate)
 
@@ -91,9 +89,10 @@ class TabuSearch(Algorithm):
 
         return neighbors
 
+    @timer
     def run(self, iterations: int) -> None:
-        max_tabu_list_size = 100
-        tenure = 100
+        max_tabu_list_size = 10
+        tenure = 10
 
         initial_solution: Timetable = self.get_initial_solution()
         best_solution = initial_solution
@@ -114,10 +113,7 @@ class TabuSearch(Algorithm):
             best_candidate_score = best_candidate.calculate_malus_score()
             best_solution_score = best_solution.calculate_malus_score()
             if best_candidate_score < best_solution_score:
-                self.logger.debug(f'Found new best solution with {best_candidate_score} malus score (previous:{best_solution_score})')
-                best_solution = best_candidate
-            elif math.isclose(best_solution_score, best_candidate_score, rel_tol=0.1): # allow 10% worse
-                self.logger.debug(f'{best_candidate_score} score is still within 10% tolerance of {best_solution_score}')
+                self.logger.info(f'Found new best solution with {best_candidate_score} malus score (previous:{best_solution_score})')
                 best_solution = best_candidate
 
             for index, tabu in enumerate(tabu_list):

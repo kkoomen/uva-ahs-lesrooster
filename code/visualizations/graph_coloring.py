@@ -42,6 +42,6 @@ def plot_course_conflict_graph():
     color_names = list(mcolors.CSS4_COLORS.keys())[:n_colors]
 
     # Plot the results.
-    plt.figure(figsize=(12,12))
-    nx.draw(network, node_color=color_names, edge_color='gray', with_labels=True)
+    plt.figure(figsize=(20,12))
+    nx.draw(network, node_color=color_names, edge_color='lightgray', with_labels=True)
     plt.show()
