@@ -6,6 +6,8 @@ import logging
 import os
 import re
 import networkx as nx
+import ics
+import matplotlib.pyplot as plt
 
 from code.entities.event import Event
 from code.entities.room import Room
@@ -14,8 +16,6 @@ from code.utils.constants import OUT_DIR
 from code.utils.data import load_courses, load_rooms, load_students
 from code.utils.enums import Weekdays
 from code.utils.helpers import get_utc_offset, remove_duplicates
-import ics
-import matplotlib.pyplot as plt
 
 
 TimetableDay = dict[int, Timeslot]
@@ -66,8 +66,8 @@ class Timetable:
         """
         Create a graph where each vertice represents a course and the edge in
         between two vertices indicates that there is at least one student
-        enrolled both of these courses, meaning that all neighbors for a node in
-        the graph represent the conflicting courses for a course respectively.
+        enrolled in both courses, meaning that all neighbors for a node in the
+        graph represent the conflicting courses for a course respectively.
         """
         # Create the graph.
         network = nx.Graph()
@@ -76,15 +76,17 @@ class Timetable:
         # Get all courses that are overlapping for each student.
         list_of_overlaps = [student.enrolled_courses for student in self.students]
 
-        # Create each possible combination per overlap and add it as an edge of the graph.
+        # Create each possible combination per overlap and add it as an edge.
         for courses in list_of_overlaps:
             for pair in itertools.combinations(courses, 2):
                 network.add_edge(pair[0], pair[1])
 
+        # Gather the data that was generated inside the graph.
         course_conflicts = {}
         for course_name in list(network.nodes):
-            course_conflicts[course_name] = list(network[course_name].keys())
+            course_conflicts[course_name] = sorted(list(network[course_name].keys()))
 
+        # Assign the corresponding conflicting courses to each course.
         for course in self.courses:
             course.set_conflicting_courses(course_conflicts[course.name])
 

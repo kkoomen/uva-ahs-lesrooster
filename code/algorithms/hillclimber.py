@@ -4,10 +4,7 @@ import random
 from code.algorithms.greedy import Greedy
 import matplotlib.pyplot as plt
 
-from code.entities.event import Event
-from code.entities.timeslot import Timeslot
 from code.entities.timetable import Timetable
-from code.utils.enums import Weekdays
 
 
 class HillClimber(Greedy):
@@ -20,15 +17,6 @@ class HillClimber(Greedy):
         self.timetable = Timetable()
         self.logger = logging.getLogger(__name__)
         self.statistics = []
-
-    def create_similar_event(self, event: Event) -> Event:
-        """
-        Clone the current event, but with other data than the it currently has.
-        """
-        timeslot = random.choice([n for n in Timeslot.OPTIONS if n != event.timeslot])
-        weekday = random.choice([weekday.value for weekday in Weekdays])
-        room = random.choice(self.timetable.rooms)
-        return Event(event.title, event.type, event.course, weekday, timeslot, room, event.students)
 
     def generate_state(self) -> None:
         """
@@ -56,25 +44,6 @@ class HillClimber(Greedy):
         plt.title(f'Hill climber based on {parent_class_name} solution (iterations = {max(x)}; malus score = {lowest_malus_score})')
         plt.show()
 
-    def move_random_event(self) -> None:
-        """
-        Move a single event to another random timeslot.
-        """
-        events = self.timetable.get_events()
-        event = random.choice(events)
-        similar_event = self.create_similar_event(event)
-        self.timetable.remove_event(event)
-        self.timetable.add_event(similar_event)
-
-    def swap_two_random_events(self) -> None:
-        """
-        Swap two random events with each other.
-        """
-        events = self.timetable.get_events()
-        event = events.pop(random.randrange(len(events)))
-        other_event = events.pop(random.randrange(len(events)))
-        self.swap_two_events(event, other_event)
-
     def mutate_state(self) -> None:
         """
         Mutate the timetable with some random actions.
@@ -100,7 +69,7 @@ class HillClimber(Greedy):
         self.generate_state()
 
         # Stop if there is no improvement anymore after this amount of times.
-        no_improvement_limit = 500
+        no_improvement_limit = 1000
 
         violations = len(self.timetable.get_violations())
         malus_score = self.timetable.calculate_malus_score()
@@ -115,7 +84,7 @@ class HillClimber(Greedy):
 
             # Log the current iteration every 100 iterations.
             if i % 100 == 0:
-                self.logger.debug(f'Starting iteration {i}/{iterations}')
+                self.logger.info(f'Starting iteration {i}/{iterations}')
 
             self.mutate_state()
 

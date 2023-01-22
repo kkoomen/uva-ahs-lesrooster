@@ -1,6 +1,5 @@
-import copy
+ import copy
 import logging
-import math
 import random
 import matplotlib.pyplot as plt
 
@@ -10,7 +9,6 @@ from code.entities.event import Event
 from code.entities.timeslot import Timeslot
 from code.entities.timetable import Timetable
 from code.utils.enums import EventType, Weekdays
-from code.utils.helpers import split_list_random
 
 
 class Randomizer(Algorithm):
@@ -32,15 +30,6 @@ class Randomizer(Algorithm):
         room = random.choice(self.timetable.rooms)
         weekday = random.choice([weekday.value for weekday in Weekdays])
         return Event(title, event_type, course, weekday, timeslot, room)
-
-    def create_similar_event(self, event: Event) -> Event:
-        """
-        Clone the current event, but with other data than the it currently has.
-        """
-        timeslot = random.choice([n for n in Timeslot.OPTIONS if n != event.timeslot])
-        weekday = random.choice([weekday.value for weekday in Weekdays])
-        room = random.choice(self.timetable.rooms)
-        return Event(event.title, event.type, event.course, weekday, timeslot, room, event.students)
 
     def assign_random_events(self) -> None:
         """

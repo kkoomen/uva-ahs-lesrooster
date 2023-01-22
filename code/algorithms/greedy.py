@@ -1,6 +1,5 @@
 import copy
 import logging
-import math
 import random
 from typing import Any
 from code.entities.course import Course
@@ -11,7 +10,6 @@ from code.entities.event import Event
 from code.entities.timeslot import Timeslot
 from code.entities.timetable import Timetable
 from code.utils.enums import EventType
-from code.utils.helpers import split_list
 
 
 class Greedy(Algorithm):

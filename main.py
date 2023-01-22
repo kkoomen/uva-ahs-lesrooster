@@ -4,6 +4,7 @@ import argparse
 from datetime import datetime
 import logging
 from code.algorithms.tabu_search import TabuSearch
+from code.visualizations.graph_coloring import plot_course_conflict_graph
 import matplotlib.pyplot as plt
 
 from code.algorithms.base import Algorithm
@@ -65,6 +66,10 @@ def parse_arguments() -> argparse.Namespace:
                         action='store_true',
                         help='Hide any output produced by the logger for stdout')
 
+    parser.add_argument('--visualization',
+                        choices=['course-conflict'],
+                        help='Show any of the visualizations of choice (will not run any other code besides this)')
+
     parser.add_argument('-a', '--algorithm',
                         choices=['random', 'greedy', 'random-greedy', 'greedy-lsd', 'hillclimber', 'tabu-search'],
                         help='Run any of the algorithms of choice')
@@ -94,21 +99,12 @@ def parse_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def main():
+def run_algorithm(args: argparse.Namespace):
     """
-    The main function that will be executed first in this file.
+    Run any of the selected algorithms.
+
+    :param args: The parsed command-line arguments.
     """
-    args = parse_arguments()
-    setup_logging(level=args.log_level, quiet=args.quiet)
-
-    # Immediately log as an indication that the program has initialized.
-    global_logger = logging.getLogger('global')
-    global_logger.info('='*45)
-    global_logger.info(f'Program started at {str(datetime.now())}')
-    global_logger.info('='*45)
-
-    global_logger.info(f'Selected algorithm: {args.algorithm}')
-
     algorithm = None
     if args.algorithm == 'random':
         algorithm = Randomizer()
@@ -143,6 +139,30 @@ def main():
     if args.plot_heatmap:
         algorithm.timetable.show_plot()
 
+
+def show_visualization(name: str) -> None:
+    if name == 'course-conflict':
+        plot_course_conflict_graph()
+
+def main():
+    """
+    The main function that will be executed first in this file.
+    """
+    args = parse_arguments()
+    setup_logging(level=args.log_level, quiet=args.quiet)
+
+    # Immediately log as an indication that the program has initialized.
+    logger = logging.getLogger('global')
+    logger.info('='*45)
+    logger.info(f'Program started at {str(datetime.now())}')
+    logger.info('='*45)
+
+    if args.visualization is not None:
+        logger.info(f'Running visualization: {args.visualization}')
+        show_visualization(args.visualization)
+    else:
+        logger.info(f'Selected algorithm: {args.algorithm}')
+        run_algorithm(args)
 
 if __name__ == '__main__':
     main()

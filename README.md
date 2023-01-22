@@ -34,6 +34,9 @@ Waarbij `<algorithm>` één van de volgende waardes kan zijn:
 - `random` algoritme opties:
   - `--random-walk` doe een random walk en plot de resultaten (moet in combinatie met `-i <number>`)
 
+Visualizations:
+- `./main.py --visualization course-conflict`
+
 Voor alle mogelijke opties, zie `./main.py --help`
 
 ### Voorbeelden
