@@ -34,12 +34,11 @@ Waarbij `<algorithm>` één van de volgende waardes kan zijn:
 - `random` algoritme opties:
   - `--random-walk` doe een random walk en plot de resultaten (moet in combinatie met `-i <number>`)
 
-Visualizations:
-- `./main.py --visualization course-conflict`
-
 Voor alle mogelijke opties, zie `./main.py --help`
 
 ### Voorbeelden
+
+#### Algoritmen
 
 Random algoritme: <br/>
 - `./main.py -a random -i 10`
@@ -52,6 +51,10 @@ Greedy algoritme: <br/>
 - `./main.py -a random-greedy -s`
 - `./main.py -a greedy --show-heatmap`
 - `./main.py -a greedy -e ics --show-heatmap`
+
+#### Visualizaties
+
+- `./main.py --visualization course-conflict`
 
 # Proces logboek
 
