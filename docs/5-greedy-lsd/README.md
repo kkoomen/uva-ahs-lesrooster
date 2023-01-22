@@ -86,3 +86,7 @@ dan het greedy algoritme zelf. Het is een enkele keer gelukt dat ik 73
 maluspunten had (1 minder dan greedy) door een random keuze te maken als er
 meerdere opties zijn met dezelfde saturation degree, maar dit kwam heel weinig
 voor.
+
+---
+
+:point_right: [Klik hier om naar de volgende fase te gaan](../6-tabu-search/README.md)

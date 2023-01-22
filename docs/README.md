@@ -10,3 +10,4 @@ proces is verlopen en hoe de resultaten in de loop der tijd veranderd zijn.
 - [3. Greedy algorithms](./3-greedy-algorithm/README.md)
 - [4. Hill climber](./4-hillclimber/README.md)
 - [5. Greedy - Least Saturation Degree](./5-greedy-lsd/README.md)
+- [6. Tabu Search](./6-tabu-search/README.md)
