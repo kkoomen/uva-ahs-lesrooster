@@ -67,7 +67,7 @@ def parse_arguments() -> argparse.Namespace:
                         help='Hide any output produced by the logger for stdout')
 
     parser.add_argument('--visualization',
-                        choices=['course-conflict'],
+                        choices=['course-conflicts'],
                         help='Show any of the visualizations of choice (will not run any other code besides this)')
 
     parser.add_argument('-a', '--algorithm',
@@ -141,7 +141,7 @@ def run_algorithm(args: argparse.Namespace):
 
 
 def show_visualization(name: str) -> None:
-    if name == 'course-conflict':
+    if name == 'course-conflicts':
         plot_course_conflict_graph()
 
 def main():
