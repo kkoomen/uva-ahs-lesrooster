@@ -9,3 +9,4 @@ proces is verlopen en hoe de resultaten in de loop der tijd veranderd zijn.
 - [2. Baseline](./2-baseline/README.md)
 - [3. Greedy algorithms](./3-greedy-algorithm/README.md)
 - [4. Hill climber](./4-hillclimber/README.md)
+- [4. Greedy - Least Saturation Degree](./5-greedy-lsd/README.md)
