@@ -245,6 +245,7 @@ class GreedyLSD(Greedy):
         """
         grouped_events = {}
 
+        # Group all the events by saturation degree.
         for event in events:
             saturation_degree = self.timetable.calculate_saturation_degree_for_unscheduled_event(event)
 
@@ -256,9 +257,10 @@ class GreedyLSD(Greedy):
         # Get the highest amount of conflicts.
         highest_degree = max(grouped_events.keys())
 
-
+        # Sort by the total events a course has to schedule within the group of
+        # events with the highest conflict.
         events_group = sorted(grouped_events[highest_degree],
-                              key=lambda event: (event.course.enrolment, event.course.calculate_total_events()),
-                              reverse=False)
+                              key=lambda event: event.course.calculate_total_events())
+
         event = events_group[0]
         return events.pop(events.index(event))
