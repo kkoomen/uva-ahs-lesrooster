@@ -649,7 +649,10 @@ class Timetable:
 
             for hour, timeslot in day.items():
                 if hour not in debug_info[weekday_name]:
-                    debug_info[weekday_name][hour] = { 'malus_points': {} }
+                    debug_info[weekday_name][hour] = {
+                        'total_events': len(timeslot.events),
+                        'malus_points': {},
+                    }
 
                 malus_points_info = debug_info[weekday_name][hour]['malus_points']
 
