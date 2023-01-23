@@ -46,17 +46,14 @@ class TabuSearch(Algorithm):
         Mutate the timetable with some random actions.
 
         The actions are as follows:
-        - 30% chance to one of the worst events
-        - 30% chance to move a single event
-        - 30% chance to swap two random events
-        - 10% to a single student in a random course
+        - 40% chance to one of the worst events
+        - 40% chance to swap two random events
+        - 20% to a single student in a random course
         """
         n = random.random()
-        if n < 0.3:
+        if n < 0.4:
             self.move_worst_events(candidate)
-        elif 0.3 <= n < 0.6:
-            self.move_random_event(candidate)
-        elif 0.6 <= n < 0.9:
+        elif 0.4 <= n < 0.8:
             self.swap_two_random_events(candidate)
         else:
             self.permute_students_for_random_course(candidate)

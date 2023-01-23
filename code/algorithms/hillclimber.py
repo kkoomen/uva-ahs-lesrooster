@@ -4,7 +4,6 @@ import random
 from typing import Union
 from code.algorithms.base import Algorithm
 from code.algorithms.greedy import GreedyLSD
-from code.entities.timeslot import Timeslot
 from code.utils.decorators import timer
 import matplotlib.pyplot as plt
 
@@ -55,17 +54,14 @@ class HillClimber(Algorithm):
         Mutate the timetable with some random actions.
 
         The actions are as follows:
-        - 30% chance to one of the worst events
-        - 30% chance to move a single event
-        - 30% chance to swap two random events
-        - 10% to a single student in a random course
+        - 40% chance to one of the worst events
+        - 40% chance to swap two random events
+        - 20% to a single student in a random course
         """
         n = random.random()
-        if n < 0.3:
+        if n < 0.4:
             self.move_worst_events()
-        elif 0.3 <= n < 0.6:
-            self.move_random_event()
-        elif 0.6 <= n < 0.9:
+        elif 0.4 <= n < 0.8:
             self.swap_two_random_events()
         else:
             self.permute_students_for_random_course()
@@ -79,7 +75,7 @@ class HillClimber(Algorithm):
         self.generate_state()
 
         # Stop if there is no improvement anymore after this amount of times.
-        no_improvement_limit = 2000
+        no_improvement_limit = iterations
 
         violations = len(self.timetable.get_violations())
         malus_score = self.timetable.calculate_malus_score()
