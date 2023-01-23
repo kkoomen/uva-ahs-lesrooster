@@ -583,31 +583,54 @@ class Timetable:
         days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
 
         # Create a 2D array of zeros with the same shape as the timetable list.
-        events = [[0 for _ in range(len(timeslots))] for _ in range(len(days))]
+        events_heatmap = [[0 for _ in range(len(timeslots))] for _ in range(len(days))]
+        scores_heatmap = [[0 for _ in range(len(timeslots))] for _ in range(len(days))]
 
-        # Add 1 for each event that is scheduled in that timeslot.
-        for i, day in enumerate(self.timetable):
-            for timeslot in day.values():
-                for event in timeslot:
-                    j = timeslots.index(event.timeslot)
-                    events[j][i] += 1
+        # Make two plots with 1 row and 2 columns.
+        fig, ax = plt.subplots(1, 2, figsize=(12, 6))
+        fig.tight_layout(pad=7)
 
-        # Create a heatmap of the events.
-        plt.imshow(events, cmap='gray_r', extent=[-0.5, len(days)-0.5,
-                                                  len(timeslots)-0.5, -0.5])
-
-        # Create the x-axis and y-axis ticks.
-        plt.xticks(range(len(days)), days)
-        plt.yticks(range(len(timeslots)), [f'{t}:00 - {t+2}:00' for t in timeslots])
-
-        # Adding the amount of events scheduled for each timeslot.
-        for i in range(len(days)):
-            for j in range(len(timeslots)):
-                if events[j][i] != '':
-                    plt.text(i, j, events[j][i], ha='center', va='center',
-                             color='r', fontweight='bold', fontsize='x-large')
-
+        # Set the super title for the plot.
         malus_score = self.calculate_malus_score()
-        plt.gca().set_title(f'Timetable (malus score: {malus_score})')
-        self.logger.info('Plotting timetable...')
+        fig.suptitle(f'Timetable (malus score: {malus_score})')
+
+        for i, day in enumerate(self.timetable):
+            for j, timeslot in enumerate(day.values()):
+                # Add the malus score for each timeslot.
+                scores_heatmap[j][i] = timeslot.calculate_malus_score()
+                for event in timeslot:
+                    # Add 1 for each event that is scheduled in that timeslot.
+                    events_heatmap[j][i] += 1
+
+        heatmaps = [
+            {
+                'title': 'Events',
+                'heatmap': events_heatmap,
+            },
+            {
+                'title': 'Malus scores',
+                'heatmap': scores_heatmap,
+            },
+        ]
+        for index, subplot in enumerate(ax):
+            item = heatmaps[index]
+            heatmap = item['heatmap']
+            subplot.set_title(item['title'])
+
+            # Create the heatmap.
+            subplot.imshow(heatmap, cmap='gray_r',
+                           extent=[-0.5, len(days)-0.5, len(timeslots)-0.5, -0.5])
+
+            # Create the x-axis and y-axis ticks.
+            subplot.set_xticks(range(len(days)), days)
+            subplot.set_yticks(range(len(timeslots)), [f'{t}:00 - {t+2}:00' for t in timeslots])
+
+            # Add the heatmap values inside the timeslots.
+            for i in range(len(days)):
+                for j in range(len(timeslots)):
+                    if heatmap[j][i] != '':
+                        subplot.text(i, j, heatmap[j][i], ha='center',
+                                     va='center', color='r', fontweight='bold',
+                                     fontsize='x-large')
+
         plt.show()
