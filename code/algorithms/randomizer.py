@@ -187,11 +187,11 @@ class Randomizer(Algorithm):
         self.logger.info(f'[RANDOM WALK] Finished {iterations} iterations event swapping + student permuting')
 
         # Plot the results
-        fig, ax = plt.subplots(len(malus_scores), 1)
+        fig, ax = plt.subplots(len(malus_scores), 1, figsize=(16, 9))
         fig.suptitle(f'Timetable (iterations = {iterations})')
         fig.supxlabel('iterations')
         fig.supylabel('malus points')
-        fig.tight_layout(pad=0.75)
+        fig.tight_layout(pad=6)
 
         for index, test_run in enumerate(malus_scores):
             subplot = ax[index]
