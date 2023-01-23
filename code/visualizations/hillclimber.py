@@ -5,7 +5,7 @@ algorithms as their starting solution.
 
 import matplotlib.pyplot as plt
 
-from code.algorithms.greedy import Greedy
+from code.algorithms.greedy import Greedy, GreedyLSD
 from code.algorithms.hillclimber import HillClimber
 from code.algorithms.randomizer import Randomizer
 
@@ -15,9 +15,9 @@ def plot_hillclimber_stats(iterations: int) -> None:
     Plot hill climber statistics using multiple algoritms in a single graph.
     """
     stats = {}
-    algs = [Randomizer, Greedy]
-    for alg in algs:
-        instance = alg()
+    algs = [Randomizer, Greedy, GreedyLSD]
+    for class_ref in algs:
+        instance = class_ref()
         hc = HillClimber(instance)
         hc.run(iterations)
         class_name = instance.__class__.__name__
