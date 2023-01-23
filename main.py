@@ -5,6 +5,7 @@ from datetime import datetime
 import logging
 from code.algorithms.tabu_search import TabuSearch
 from code.visualizations.graph_coloring import plot_course_conflict_graph
+from code.visualizations.hillclimber import plot_hillclimber_stats
 import matplotlib.pyplot as plt
 
 from code.algorithms.base import Algorithm
@@ -67,7 +68,7 @@ def parse_arguments() -> argparse.Namespace:
                         help='Hide any output produced by the logger for stdout')
 
     parser.add_argument('--visualization',
-                        choices=['course-conflicts'],
+                        choices=['course-conflicts', 'hillclimber'],
                         help='Show any of the visualizations of choice (will not run any other code besides this)')
 
     parser.add_argument('-a', '--algorithm',
@@ -140,9 +141,12 @@ def run_algorithm(args: argparse.Namespace):
         algorithm.timetable.show_plot()
 
 
-def show_visualization(name: str) -> None:
+def show_visualization(args) -> None:
+    name = args.visualization
     if name == 'course-conflicts':
         plot_course_conflict_graph()
+    elif name == 'hillclimber':
+        plot_hillclimber_stats(args.iterations)
 
 def main():
     """
@@ -159,7 +163,7 @@ def main():
 
     if args.visualization is not None:
         logger.info(f'Running visualization: {args.visualization}')
-        show_visualization(args.visualization)
+        show_visualization(args)
     else:
         logger.info(f'Selected algorithm: {args.algorithm}')
         run_algorithm(args)

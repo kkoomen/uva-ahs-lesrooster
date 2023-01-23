@@ -1,6 +1,8 @@
 import copy
 import logging
 import random
+from typing import Union
+from code.algorithms.base import Algorithm
 from code.algorithms.greedy import Greedy
 from code.utils.decorators import timer
 import matplotlib.pyplot as plt
@@ -8,14 +10,15 @@ import matplotlib.pyplot as plt
 from code.entities.timetable import Timetable
 
 
-class HillClimber(Greedy):
+class HillClimber(Algorithm):
     """
     Hill climber algorithm implementation which grabs a random state and accepts
     it if it is equally good or better than the previous state.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, algorithm: Union[Algorithm, None]=None) -> None:
         self.timetable = Timetable()
+        self.algorithm = algorithm if algorithm is not None else Greedy()
         self.logger = logging.getLogger(__name__)
         self.statistics = []
 
@@ -23,7 +26,8 @@ class HillClimber(Greedy):
         """
         Run the parent algorithm in order to generate a solution.
         """
-        super().run()
+        self.algorithm.run(1)
+        self.timetable = self.algorithm.timetable
 
         # Since this class extends another class, the other class is also
         # keeping track of some statistics, so we have to reset it here.
