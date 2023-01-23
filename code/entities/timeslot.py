@@ -161,7 +161,7 @@ class Timeslot:
         """
         saturation_degree = 0
 
-        scheduled_course_names = [event.course.name for event in self.events]
+        scheduled_course_names = remove_duplicates([event.course.name for event in self.events if event.course.name != course.name])
         for course_name in scheduled_course_names:
             if course_name in course.conflicting_courses:
                 saturation_degree += 1
