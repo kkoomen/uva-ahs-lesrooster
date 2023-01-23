@@ -54,14 +54,17 @@ class HillClimber(Algorithm):
         Mutate the timetable with some random actions.
 
         The actions are as follows:
-        - 40% chance to one of the worst events
-        - 40% chance to swap two random events
-        - 20% to a single student in a random course
+        - 30% chance to move events with a high malus score
+        - 30% chance to move a single event
+        - 30% chance to swap two random events
+        - 10% chance to permute students within a course
         """
         n = random.random()
-        if n < 0.4:
-            self.move_worst_events()
-        elif 0.4 <= n < 0.8:
+        if n < 0.3:
+            self.move_high_malus_score_events()
+        elif 0.3 <= n < 0.6:
+            self.move_random_event()
+        elif 0.6 <= n < 0.9:
             self.swap_two_random_events()
         else:
             self.permute_students_for_random_course()

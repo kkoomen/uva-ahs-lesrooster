@@ -24,8 +24,8 @@ def plot_hillclimber_stats(iterations: int) -> None:
         stats[class_name] = hc.statistics
 
     for (class_name, stats) in stats.items():
-        plt.xlabel('# of iterations')
-        plt.ylabel('# of malus points')
+        plt.xlabel('iterations')
+        plt.ylabel('malus points')
 
         x = [stat['iteration'] for stat in stats]
         y = [stat['malus_score'] for stat in stats]

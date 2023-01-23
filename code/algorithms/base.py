@@ -150,7 +150,7 @@ class Algorithm(abc.ABC):
 
         self.swap_two_events(event, other_event, timetable)
 
-    def move_worst_events(self, timetable: Union[Timetable, None]=None) -> None:
+    def move_high_malus_score_events(self, timetable: Union[Timetable, None]=None) -> None:
         """
         Find the timeslot with the highest malus score and move one of the
         events to another timeslot giving the least conflict for that event.
@@ -181,7 +181,7 @@ class Algorithm(abc.ABC):
                     lowest_degree = saturation_degree
                     other_timeslot = timeslot
 
-        if isinstance(other_timeslot, Timeslot) and current_timeslot is not other_timeslot:
+        if isinstance(other_timeslot, Timeslot) and current_timeslot is not other_timeslot and len(other_timeslot.events) > 0:
             # Get another event from this timeslot.
             other_event = random.choice(other_timeslot.events)
 
