@@ -651,20 +651,32 @@ class Timetable:
                 if hour not in debug_info[weekday_name]:
                     debug_info[weekday_name][hour] = {
                         'total_events': len(timeslot.events),
+                        'saturation_degree': [],
                         'malus_points': {},
                     }
 
-                malus_points_info = debug_info[weekday_name][hour]['malus_points']
+                info = debug_info[weekday_name][hour]
 
-                malus_points_info['timeslot_17'] = timeslot.calculate_timeslot_17_malus_score()
+                # Calculate saturation degrees.
+                for event in timeslot:
+                    info['saturation_degree'].append({
+                        'event_title': event.title,
+                        'course_name': event.course.name,
+                        'degree': timeslot.get_saturation_degree_for_course(event.course)
+                    })
+
+                # Calculate malus points.
+                info['malus_points']['timeslot_17'] = timeslot.calculate_timeslot_17_malus_score()
+
+                info['malus_points']['room_fitting'] = timeslot.calculate_room_overfitting_malus_score()
+
+                info['malus_points']['duplicate_coure_events'] = timeslot.calculate_duplicate_course_events_malus_score()
 
                 overlapping_student_courses = timeslot.get_overlapping_student_courses_events()
-                malus_points_info['overlapping_student_courses'] = {
+                info['malus_points']['overlapping_student_courses'] = {
                     'score': len(overlapping_student_courses),
                     'overlapping_student_courses': overlapping_student_courses,
                 }
-
-                malus_points_info['room_fitting'] = timeslot.calculate_room_overfitting_malus_score()
 
         # Print it rather than log it, because we use this for debugging only.
         print('---------------------------')
