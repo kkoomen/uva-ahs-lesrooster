@@ -90,10 +90,7 @@ Soft constraints (malus points):
 - 2 tussensloten tussen twee andere activiteiten per student geeft 3 maluspunten.
 - Elk vak conflict per student per tijdslot geeft 1 maluspunt.
 - Elke student die niet meer in een zaal past geeft 1 maluspunt.
-
-# Tests
-
-TODO
+- Elk dubbel ingeplande activiteit per tijdslot voor elk vak geeft 1 maluspunt (extra)
 
 # Auteurs
 
