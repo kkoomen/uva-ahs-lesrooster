@@ -108,9 +108,24 @@ class Timeslot:
 
         return points
 
+    def calculate_duplicate_course_events_malus_score(self) -> int:
+        """
+        Calculate the malus score for each duplicate event of the same course.
+        """
+        score = 0
+
+        visited_course_names = []
+        for event in self.events:
+            if event.course.name not in visited_course_names:
+                visited_course_names.append(event.course.name)
+            else:
+                score += 1
+
+        return score
+
     def calculate_malus_score(self) -> int:
         """
-        Calculates the malus score for this particular timeslot.
+        Calculate the malus score for this particular timeslot.
         """
         points = 0
 
@@ -122,6 +137,9 @@ class Timeslot:
 
         # Add one malus point for each student that does not fit into each room.
         points += self.calculate_room_overfitting_malus_score()
+
+        # Add one malus point for each duplicate event of the same course.
+        points += self.calculate_duplicate_course_events_malus_score()
 
         return points
 
