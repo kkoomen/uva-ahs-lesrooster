@@ -80,12 +80,18 @@ Vervolgens kunnen we ook `networkx` gebruiken om een visueel beeld te geven.
 
 # Resultaat
 
-Helaas, na veel geprobeerd te hebben, lukt het over het algemeen niet met de
-gegeven dataset om de Greedy-LSD variant minder maluspunten te laten genereren
-dan het greedy algoritme zelf. Het is een enkele keer gelukt dat ik 73
-maluspunten had (1 minder dan greedy) door een random keuze te maken als er
-meerdere opties zijn met dezelfde saturation degree, maar dit kwam heel weinig
-voor.
+Na veel geprobeerd te hebben, is het gelukt om de Greedy LSD 73 punten te laten
+genereren, dat is dus 1 punt minder dan greedy zelf.
+
+Per iteratie van het greedy algoritme is een `get_next_event()` methode die
+bepaald welke eerst volgende activiteit als eerste moet worden ingeplant. De
+volgende logica resulteert in een lager resultaat dan het greedy algortime zelf:
+- groepeer alle activiteiten die nog niet zijn ingepland de saturation degree
+- pak alle activiteiten met de hoogste saturation degree
+- sorteer al deze activiteiten aflopend op het totaal aantal activiteiten dat
+  moet worden ingepland voor het bijbehorende vak (bijv: 1x hoorcollege + 3x
+  werkcollege + 2x practicum = 6)
+- de eerste activiteit in deze lijst wordt ingeplant.
 
 ---
 
