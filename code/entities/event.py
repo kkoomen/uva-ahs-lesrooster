@@ -57,6 +57,21 @@ class Event:
         """
         self.students.append(student)
 
+    def serialize(self) -> dict:
+        """
+        Serialize the data inside this class to a JSON-friendly structure.
+        """
+        return {
+            'id': self.id,
+            'title': self.title,
+            'type': self.type.value,
+            'course': self.course.name,
+            'weekday': self.weekday,
+            'timeslot': self.timeslot,
+            'room': str(self.room),
+        }
+
+
     def assign_students(self, students: list[Student]) -> None:
         """
         Assign new students to the event.

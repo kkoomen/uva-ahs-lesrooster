@@ -97,3 +97,24 @@ def get_utc_offset() -> str:
 
     # Convert '+0100' to '+01:00'
     return f'{offset[:3]}:{offset[3:]}'
+
+
+def serialize(d: dict) -> dict:
+    """
+    Serialize all classes inside a given dictionary.
+
+    Each class can implement their custom `serialize` method in order to decide
+    what to return for that specific class.
+    """
+    for key, value in d.items():
+        if isinstance(value, dict):
+            serialize(value)
+        elif isinstance(value, list):
+            for i in range(len(value)):
+                if hasattr(value[i], 'serialize'):
+                    value[i] = value[i].serialize()
+                elif isinstance(value[i], (dict, list)):
+                    serialize(value[i])
+        elif hasattr(value, 'serialize'):
+            d[key] = value.serialize()
+    return d

@@ -92,6 +92,10 @@ def parse_arguments() -> argparse.Namespace:
                         default=1,
                         help='How many times the algorithm should run')
 
+    parser.add_argument('--debug-timetable',
+                        action='store_true',
+                        help='Print timetable debug information, such as malus point calculation details')
+
     # -- RANDOM ALGORITHM ARGUMENTS --------------------------------------------
     parser.add_argument('--random-walk',
                         action='store_true',
@@ -128,6 +132,9 @@ def run_algorithm(args: argparse.Namespace):
 
     algorithm.run(args.iterations)
     print_algorithm_info(algorithm)
+
+    if args.debug_timetable:
+        algorithm.timetable.print_debug_info()
 
     if args.export == 'csv':
         algorithm.timetable.export_csv()

@@ -1,7 +1,7 @@
 import copy
 import logging
 import random
-import concurrent.futures
+from code.entities.timeslot import Timeslot
 from code.utils.decorators import timer
 import matplotlib.pyplot as plt
 
@@ -47,15 +47,17 @@ class TabuSearch(Algorithm):
         Mutate the timetable with some random actions.
 
         The actions are as follows:
-        - 40% chance to move a single event
-        - 40% chance to swap two random events
-        - 10% to permute all students in a random course
+        - 30% chance to one of the worst events
+        - 30% chance to move a single event
+        - 30% chance to swap two random events
         - 10% to a single student in a random course
         """
         n = random.random()
-        if n < 0.40:
+        if n < 0.3:
+            self.move_worst_events(candidate)
+        elif 0.3 <= n < 0.6:
             self.move_random_event(candidate)
-        elif 0.40 <= n < 0.8:
+        elif 0.6 <= n < 0.9:
             self.swap_two_random_events(candidate)
         else:
             self.permute_students_for_random_course(candidate)
@@ -67,25 +69,11 @@ class TabuSearch(Algorithm):
         neighbors: list[Timetable] = []
 
         while n > 0:
-            with concurrent.futures.ThreadPoolExecutor(max_workers=n) as executor:
-                def worker():
-                    candidate = copy.deepcopy(best_candidate)
-                    self.mutate_candidate(candidate)
-                    return candidate
-
-                results  = []
-                for _ in range(n):
-                    results.append(executor.submit(worker))
-
-                # Wait for all the workers to complete.
-                concurrent.futures.wait(results)
-
-                # Check if we got any solutions.
-                for future in results:
-                    candidate = future.result()
-                    if candidate.is_solution():
-                        neighbors.append(candidate)
-                        n -= 1
+            candidate = copy.deepcopy(best_candidate)
+            self.mutate_candidate(candidate)
+            if candidate.is_solution():
+                neighbors.append(candidate)
+                n -= 1
 
         return neighbors
 

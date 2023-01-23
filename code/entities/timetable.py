@@ -8,6 +8,7 @@ import re
 import networkx as nx
 import ics
 import matplotlib.pyplot as plt
+import json
 
 from code.entities.event import Event
 from code.entities.room import Room
@@ -15,7 +16,7 @@ from code.entities.timeslot import Timeslot
 from code.utils.constants import OUT_DIR
 from code.utils.data import load_courses, load_rooms, load_students
 from code.utils.enums import Weekdays
-from code.utils.helpers import get_utc_offset, remove_duplicates
+from code.utils.helpers import get_utc_offset, remove_duplicates, serialize
 
 
 TimetableDay = dict[int, Timeslot]
@@ -634,3 +635,36 @@ class Timetable:
                                      fontsize='x-large')
 
         plt.show()
+
+    def print_debug_info(self) -> None:
+        """
+        Print debug info, such as malus score calculation for all timeslots.
+        """
+        debug_info = {}
+
+        for day_index, day in enumerate(self.timetable):
+            weekday = day_index + 1
+            weekday_name = Weekdays(weekday).name
+            debug_info[weekday_name] = {}
+
+            for hour, timeslot in day.items():
+                if hour not in debug_info[weekday_name]:
+                    debug_info[weekday_name][hour] = { 'malus_points': {} }
+
+                malus_points_info = debug_info[weekday_name][hour]['malus_points']
+
+                malus_points_info['timeslot_17'] = timeslot.calculate_timeslot_17_malus_score()
+
+                overlapping_student_courses = timeslot.get_overlapping_student_courses_events()
+                malus_points_info['overlapping_student_courses'] = {
+                    'score': len(overlapping_student_courses),
+                    'overlapping_student_courses': overlapping_student_courses,
+                }
+
+                malus_points_info['room_fitting'] = timeslot.calculate_room_overfitting_malus_score()
+
+        # Print it rather than log it, because we use this for debugging only.
+        print('---------------------------')
+        print('Timetable debug information')
+        print('---------------------------')
+        print(json.dumps(serialize(debug_info), sort_keys=True, indent=4))

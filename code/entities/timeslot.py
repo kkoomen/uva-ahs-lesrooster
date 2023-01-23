@@ -36,7 +36,7 @@ class Timeslot:
         return len(self.events)
 
     def __repr__(self) -> str:
-        return f'{self.__class__.__name__}(events:{len(self.events)})'
+        return f'{self.__class__.__name__}(value:{self.value}, events:{len(self.events)})'
 
     def __iter__(self) -> Generator:
         """
@@ -96,6 +96,18 @@ class Timeslot:
 
         return score
 
+    def calculate_timeslot_17_malus_score(self) -> int:
+        """
+        Calculcate the malus score whenever this timeslot is from 17:00 - 19:00.
+        """
+        points = 0
+
+        largest_rooms = [event.room.is_largest for event in self.events]
+        if self.value == 17 and any(largest_rooms):
+            points += 5
+
+        return points
+
     def calculate_malus_score(self) -> int:
         """
         Calculates the malus score for this particular timeslot.
@@ -103,9 +115,7 @@ class Timeslot:
         points = 0
 
         # The 17:00 timeslot adds 5 points if the largest room is booked.
-        largest_rooms = [event.room.is_largest for event in self.events]
-        if self.value == 17 and any(largest_rooms):
-            points += 5
+        points += self.calculate_timeslot_17_malus_score()
 
         # Add one malus punt for each overlapping course each student has.
         points += len(self.get_overlapping_student_courses_events())
@@ -121,10 +131,10 @@ class Timeslot:
         """
         overlapping_events = []
 
-        # Find all the courses that are overlapping for each student.
         # If the student id is already inside this list, then any other event
         # will be considered an overlapping event.
         student_ids = []
+
         for event in self.events:
             for student in event.students:
                 if student.student_id not in student_ids:

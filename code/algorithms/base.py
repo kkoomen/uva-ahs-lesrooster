@@ -28,50 +28,6 @@ class Algorithm(abc.ABC):
         """
         pass
 
-    def reassign_random_student_in_course(self, timetable: Union[Timetable, None]=None) -> None:
-        """
-        Seminars and practicals may contain 2 or more groups the students will
-        be divided over. Take a random student from one of these groups and place it inside another group.
-        """
-        if timetable is None:
-            timetable = self.timetable
-
-        course = random.choice(timetable.courses)
-
-        # The key will be a course name with the event type, i.e. 'Database wc'.
-        # The value is a list of scheduled events for that course type.
-        #
-        # Example:
-        # {
-        #   'Databases wc': [Event(), Event(), Event()]
-        #   'Databases pr': [Event(), Event()]
-        # }
-        course_events: dict[str, list[Event]] = {}
-
-        for day in timetable:
-            for timeslot in day.values():
-                for event in timeslot:
-                    if event.type not in course_events:
-                        course_events[event.type] = []
-
-                    if event.course == course and event.type != EventType.LECTURE:
-                        course_events[event.type].append(event)
-
-        # There might be seminars and practicals, so just choose one.
-        selected_type = random.choice(list(course_events.keys()))
-        events = course_events[selected_type]
-
-        # Only put a student in another group if there are 2+ events.
-        if len(events) >= 2:
-            # Take a random event.
-            event = events.pop(random.randrange(len(events)))
-            if len(event.students) > 0 and len(event.students) < event.get_capacity():
-                # Take a random student.
-                student = event.students.pop(random.randrange(len(event.students)))
-
-                # Assign student to any of the other events inside this course type.
-                random.choice(events).add_student(student)
-
     def permute_students_for_random_course(self, timetable: Union[Timetable, None]=None) -> None:
         """
         Seminars and practicals may contain 2 or more groups the students will
@@ -141,13 +97,13 @@ class Algorithm(abc.ABC):
         new_event.set_weekday(other_event.weekday)
         new_event.set_timeslot(other_event.timeslot)
 
-        other_new_event = copy.deepcopy(other_event)
-        other_new_event.set_room(event.room)
-        other_new_event.set_weekday(event.weekday)
-        other_new_event.set_timeslot(event.timeslot)
+        new_other_event = copy.deepcopy(other_event)
+        new_other_event.set_room(event.room)
+        new_other_event.set_weekday(event.weekday)
+        new_other_event.set_timeslot(event.timeslot)
 
         timetable.add_event(new_event)
-        timetable.add_event(other_new_event)
+        timetable.add_event(new_other_event)
 
     def create_similar_event(self, event: Event, timetable: Union[Timetable, None]=None) -> Event:
         """
@@ -186,3 +142,41 @@ class Algorithm(abc.ABC):
         other_event = events.pop(random.randrange(len(events)))
 
         self.swap_two_events(event, other_event, timetable)
+
+    def move_worst_events(self, timetable: Union[Timetable, None]=None) -> None:
+        """
+        Find the timeslot with the highest malus score and move one of the
+        events to another timeslot giving the least conflict for that event.
+        """
+        if timetable is None:
+            timetable = self.timetable
+
+        # Find all timeslots with a non-zero malus score.
+        timeslots = []
+        for day in timetable:
+            for timeslot in day.values():
+                if timeslot.calculate_malus_score() > 0:
+                    timeslots.append(timeslot)
+
+        # Take a random timeslot from those that still have malus points > 0.
+        current_timeslot = random.choice(timeslots)
+
+        # Take one of the events inside the timeslot.
+        event = random.choice(current_timeslot.events)
+
+        # Find the best timeslot for this event with the least course conflicts.
+        other_timeslot = None
+        lowest_degree = None
+        for day in timetable:
+            for timeslot in day.values():
+                saturation_degree = timeslot.get_saturation_degree_for_course(event.course)
+                if lowest_degree is None or saturation_degree < lowest_degree:
+                    lowest_degree = saturation_degree
+                    other_timeslot = timeslot
+
+        if isinstance(other_timeslot, Timeslot) and current_timeslot is not other_timeslot:
+            # Get another event from this timeslot.
+            other_event = random.choice(other_timeslot.events)
+
+            # Swap the two events.
+            self.swap_two_events(event, other_event, timetable)
