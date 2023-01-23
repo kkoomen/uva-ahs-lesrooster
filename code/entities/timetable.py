@@ -667,4 +667,4 @@ class Timetable:
         print('---------------------------')
         print('Timetable debug information')
         print('---------------------------')
-        print(json.dumps(serialize(debug_info), sort_keys=True, indent=4))
+        print(json.dumps(serialize(debug_info), indent=4))
