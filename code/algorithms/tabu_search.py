@@ -23,8 +23,8 @@ class TabuSearch(Algorithm):
         Plot the malus scores during the tabu search process.
         """
         iterations = len(self.statistics)
-        plt.xlabel('# of iterations')
-        plt.ylabel('# of malus points')
+        plt.xlabel('iterations')
+        plt.ylabel('malus points')
 
         x = range(1, iterations + 1)
         y = [stat['malus_score'] for stat in self.statistics]

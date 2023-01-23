@@ -29,8 +29,8 @@ class Greedy(Algorithm):
         """
         Plot the malus scores that we gathered when the algortihm ran.
         """
-        plt.xlabel('# of events')
-        plt.ylabel('# of malus points per chosen timeslot')
+        plt.xlabel('events')
+        plt.ylabel('malus points per chosen timeslot')
 
         scores = [stat['malus_score'] for stat in self.statistics]
         total_events = len(scores)
@@ -205,7 +205,7 @@ class RandomGreedy(Greedy):
 
     def plot_statistics(self) -> None:
         plt.xlabel('% random probability')
-        plt.ylabel('# of malus points')
+        plt.ylabel('malus points')
 
         x = [stat['probability'] for stat in self.random_greedy_statistics]
         y = [stat['malus_score'] for stat in self.random_greedy_statistics]

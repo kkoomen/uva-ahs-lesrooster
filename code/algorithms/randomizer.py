@@ -102,8 +102,8 @@ class Randomizer(Algorithm):
         retries = [stat['retries'] for stat in self.statistics]
         iterations = len(retries)
 
-        plt.xlabel('# of iterations')
-        plt.ylabel('# of retries')
+        plt.xlabel('iterations')
+        plt.ylabel('retries')
 
         plt.plot(range(1, iterations + 1), retries, label='retries')
 
@@ -189,8 +189,8 @@ class Randomizer(Algorithm):
         # Plot the results
         fig, ax = plt.subplots(len(malus_scores), 1)
         fig.suptitle(f'Timetable (iterations = {iterations})')
-        fig.supxlabel('# of iterations')
-        fig.supylabel('# of malus points')
+        fig.supxlabel('iterations')
+        fig.supylabel('malus points')
         fig.tight_layout(pad=0.75)
 
         for index, test_run in enumerate(malus_scores):

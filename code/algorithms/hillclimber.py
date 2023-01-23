@@ -37,8 +37,8 @@ class HillClimber(Algorithm):
         """
         Plot the malus scores during the hill climber process.
         """
-        plt.xlabel('# of iterations')
-        plt.ylabel('# of violations with malus points')
+        plt.xlabel('iterations')
+        plt.ylabel('violations + malus points')
 
         x = [stat['iteration'] for stat in self.statistics]
         y = [stat['violations'] + stat['malus_score'] for stat in self.statistics]
