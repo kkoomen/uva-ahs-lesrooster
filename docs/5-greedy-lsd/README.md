@@ -80,15 +80,20 @@ Vervolgens kunnen we ook `networkx` gebruiken om een visueel beeld te geven.
 
 # Resultaat
 
-Na veel geprobeerd te hebben, is het gelukt om de Greedy LSD 73 punten te laten
-genereren, dat is dus 1 punt minder dan greedy zelf.
+In een latere versie heb ik extra maluspunten toegekend aan elk tijdslot voor
+het aantal dubbel ingeplande activiteiten van hetzelfde vak. Bijvoorbeeld, als
+er in een tijdslot 3 activiteiten zitten van hetzelfde vak, dan zijn er 2 te
+veel hier, dus hier wordt een malus score van 2 extra toegekend. Dit resulteerde
+in een verhoging (zoals verwacht) in het totaal aantal maluspunten voor het
+rooster. Greedy heeft hiermee 128 maluspunten. Vervolgens heeft het Greedy LSD
+algoritme 100 maluspunten behaald, aldus 28 punten minder.
 
 Per iteratie van het greedy algoritme is een `get_next_event()` methode die
 bepaald welke eerst volgende activiteit als eerste moet worden ingeplant. De
 volgende logica resulteert in een lager resultaat dan het greedy algortime zelf:
 - groepeer alle activiteiten die nog niet zijn ingepland de saturation degree
 - pak alle activiteiten met de hoogste saturation degree
-- sorteer al deze activiteiten aflopend op het totaal aantal activiteiten dat
+- sorteer al deze activiteiten oplopend op het totaal aantal activiteiten dat
   moet worden ingepland voor het bijbehorende vak (bijv: 1x hoorcollege + 3x
   werkcollege + 2x practicum = 6)
 - de eerste activiteit in deze lijst wordt ingeplant.
