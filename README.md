@@ -50,8 +50,9 @@ Greedy algoritme:
 - `./main.py -a greedy --show-heatmap`
 - `./main.py -a greedy -e ics --show-heatmap`
 
-Visualisatie:
+Visualisaties:
 - `./main.py --visualization course-conflicts`
+- `./main.py --visualization hillclimber -i <iterations>`
 
 # Proces logboek
 
