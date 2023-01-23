@@ -112,10 +112,17 @@ class Algorithm(abc.ABC):
         if timetable is None:
             timetable = self.timetable
 
+        new_event = copy.deepcopy(event)
+
         timeslot = random.choice([n for n in Timeslot.OPTIONS if n != event.timeslot])
         weekday = random.choice([weekday.value for weekday in Weekdays])
         room = random.choice(timetable.rooms)
-        return Event(event.title, event.type, event.course, weekday, timeslot, room, event.students)
+
+        new_event.set_timeslot(timeslot)
+        new_event.set_weekday(weekday)
+        new_event.set_room(room)
+
+        return new_event
 
     def move_random_event(self, timetable: Union[Timetable, None]=None) -> None:
         """
