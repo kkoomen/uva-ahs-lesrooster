@@ -592,8 +592,7 @@ class Timetable:
         fig.tight_layout(pad=7)
 
         # Set the super title for the plot.
-        malus_score = self.calculate_malus_score()
-        fig.suptitle(f'Timetable (malus score: {malus_score})')
+        fig.suptitle('Timetable')
 
         for i, day in enumerate(self.timetable):
             for j, timeslot in enumerate(day.values()):
@@ -603,13 +602,16 @@ class Timetable:
                     # Add 1 for each event that is scheduled in that timeslot.
                     events_heatmap[j][i] += 1
 
+        total_events = len(self.get_events())
+        malus_score = self.calculate_malus_score()
+
         heatmaps = [
             {
-                'title': 'Events',
+                'title': f'Events (total = {total_events})',
                 'heatmap': events_heatmap,
             },
             {
-                'title': 'Malus scores',
+                'title': f'Malus scores (total = {malus_score})',
                 'heatmap': scores_heatmap,
             },
         ]
