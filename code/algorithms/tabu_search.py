@@ -1,11 +1,10 @@
 import copy
 import logging
 import random
-from code.entities.timeslot import Timeslot
 from code.utils.decorators import timer
 import matplotlib.pyplot as plt
 
-from code.algorithms.greedy import Greedy
+from code.algorithms.greedy import GreedyLSD
 from code.algorithms.base import Algorithm
 from code.entities.timetable import Timetable
 
@@ -38,7 +37,7 @@ class TabuSearch(Algorithm):
         """
         Generate a solution using any of the already implemented algorithms.
         """
-        algorithm: Algorithm = Greedy()
+        algorithm: Algorithm = GreedyLSD()
         algorithm.run()
         return algorithm.timetable
 

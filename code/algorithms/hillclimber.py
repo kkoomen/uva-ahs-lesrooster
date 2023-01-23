@@ -3,7 +3,7 @@ import logging
 import random
 from typing import Union
 from code.algorithms.base import Algorithm
-from code.algorithms.greedy import Greedy
+from code.algorithms.greedy import GreedyLSD
 from code.entities.timeslot import Timeslot
 from code.utils.decorators import timer
 import matplotlib.pyplot as plt
@@ -19,7 +19,7 @@ class HillClimber(Algorithm):
 
     def __init__(self, algorithm: Union[Algorithm, None]=None) -> None:
         self.timetable = Timetable()
-        self.algorithm = algorithm if algorithm is not None else Greedy()
+        self.algorithm = algorithm if algorithm is not None else GreedyLSD()
         self.logger = logging.getLogger(__name__)
         self.statistics = []
 
@@ -79,7 +79,7 @@ class HillClimber(Algorithm):
         self.generate_state()
 
         # Stop if there is no improvement anymore after this amount of times.
-        no_improvement_limit = 1000
+        no_improvement_limit = 2000
 
         violations = len(self.timetable.get_violations())
         malus_score = self.timetable.calculate_malus_score()
