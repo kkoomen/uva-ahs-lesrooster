@@ -670,7 +670,7 @@ class Timetable:
 
                 info['malus_points']['room_fitting'] = timeslot.calculate_room_overfitting_malus_score()
 
-                info['malus_points']['duplicate_coure_events'] = timeslot.calculate_duplicate_course_events_malus_score()
+                info['malus_points']['duplicate_course_events'] = timeslot.calculate_duplicate_course_events_malus_score()
 
                 overlapping_student_courses = timeslot.get_overlapping_student_courses_events()
                 info['malus_points']['overlapping_student_courses'] = {
