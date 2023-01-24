@@ -114,8 +114,13 @@ class Algorithm(abc.ABC):
 
         new_event = copy.deepcopy(event)
 
-        timeslot = random.choice([n for n in Timeslot.OPTIONS if n != event.timeslot])
-        weekday = random.choice([weekday.value for weekday in Weekdays])
+        # Put the timeslot in any other timeslot than the current one.
+        timeslot = random.choice(Timeslot.OPTIONS)
+        if timeslot == event.timeslot:
+            weekday = random.choice([weekday.value for weekday in Weekdays if weekday != event.weekday])
+        else:
+            weekday = random.choice([weekday.value for weekday in Weekdays])
+
         room = random.choice(timetable.rooms)
 
         new_event.set_timeslot(timeslot)
