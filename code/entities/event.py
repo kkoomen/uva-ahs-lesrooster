@@ -71,7 +71,6 @@ class Event:
             'room': str(self.room),
         }
 
-
     def assign_students(self, students: list[Student]) -> None:
         """
         Assign new students to the event.

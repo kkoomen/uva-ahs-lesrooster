@@ -1,4 +1,5 @@
 from collections.abc import Generator
+import copy
 import csv
 from datetime import datetime, timedelta
 import itertools
@@ -137,6 +138,12 @@ class Timetable:
 
         return sorted(events) == sorted(other_events)
 
+    def serialize(self) -> list:
+        """
+        Serialize the data inside this class to a JSON-friendly structure.
+        """
+        return self.timetable
+
     def get_events(self) -> list[Event]:
         """
         Get a list with all events in this timetable.
@@ -169,6 +176,9 @@ class Timetable:
 
         if event.timeslot not in weekday:
             weekday[event.timeslot] = Timeslot(event.timeslot)
+
+            # Sort the timeslots in ascending order.
+            self.timetable[event.weekday - 1] = dict(sorted(weekday.items()))
 
         weekday[event.timeslot].add_event(event)
 
@@ -573,6 +583,17 @@ class Timetable:
 
             self.logger.info(f'Successfully saved timetable for course {course_name_raw} with {total_events} events as {filepath}')
 
+    def export_json(self, filename: str = 'timetable.json') -> None:
+        JSON_OUT_DIR = os.path.join(OUT_DIR, 'json')
+
+        if not os.path.isdir(JSON_OUT_DIR):
+            os.mkdir(JSON_OUT_DIR)
+
+        filepath = os.path.join(JSON_OUT_DIR, filename)
+        with open(filepath, 'w') as file:
+            file.write(json.dumps(serialize(copy.deepcopy(self.timetable))))
+            file.close()
+
     def show_plot(self) -> None:
         """
         Plot all the events in the timetable.
@@ -595,8 +616,7 @@ class Timetable:
         fig.suptitle('Timetable')
 
         for i, day in enumerate(self.timetable):
-            sorted_day = dict(sorted(day.items()))
-            for j, timeslot in enumerate(sorted_day.values()):
+            for j, timeslot in enumerate(day.values()):
                 # Add the malus score for each timeslot.
                 scores_heatmap[j][i] = timeslot.calculate_malus_score()
                 for event in timeslot:

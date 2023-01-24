@@ -6,6 +6,7 @@ import copy
 from datetime import datetime
 import os
 import random
+from typing import Any
 from tzlocal import get_localzone
 
 from code.utils.constants import DATA_DIR
@@ -99,22 +100,19 @@ def get_utc_offset() -> str:
     return f'{offset[:3]}:{offset[3:]}'
 
 
-def serialize(d: dict) -> dict:
+def serialize(obj: Any) -> Any:
     """
-    Serialize all classes inside a given dictionary.
+    Serialize all classes inside a dictionary or list or the class itself.
 
     Each class can implement their custom `serialize` method in order to decide
-    what to return for that specific class.
+    what to return for that specific class when being serialized.
     """
-    for key, value in d.items():
-        if isinstance(value, dict):
-            serialize(value)
-        elif isinstance(value, list):
-            for i in range(len(value)):
-                if hasattr(value[i], 'serialize'):
-                    value[i] = value[i].serialize()
-                elif isinstance(value[i], (dict, list)):
-                    serialize(value[i])
-        elif hasattr(value, 'serialize'):
-            d[key] = value.serialize()
-    return d
+    if isinstance(obj, list):
+        for i, item in enumerate(obj):
+            obj[i] = serialize(item)
+    elif isinstance(obj, dict):
+        for key, value in obj.items():
+            obj[key] = serialize(value)
+    elif hasattr(obj, 'serialize'):
+        obj = serialize(obj.serialize())
+    return obj

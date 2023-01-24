@@ -186,3 +186,9 @@ class Timeslot:
                 saturation_degree += 1
 
         return saturation_degree
+
+    def serialize(self) -> list:
+        """
+        Serialize the data inside this class to a JSON-friendly structure.
+        """
+        return self.events
