@@ -6,6 +6,7 @@ import logging
 from code.algorithms.tabu_search import TabuSearch
 from code.visualizations.graph_coloring import plot_course_conflict_graph
 from code.visualizations.hillclimber import plot_hillclimber_stats
+from code.visualizations.hillclimber_vs_tabu import plot_hillclimber_vs_tabu_stats
 import matplotlib.pyplot as plt
 
 from code.algorithms.base import Algorithm
@@ -68,7 +69,7 @@ def parse_arguments() -> argparse.Namespace:
                         help='Hide any output produced by the logger for stdout')
 
     parser.add_argument('--visualization',
-                        choices=['course-conflicts', 'hillclimber'],
+                        choices=['course-conflicts', 'hillclimber', 'hillclimber-vs-tabu'],
                         help='Show any of the visualizations of choice (will not run any other code besides this)')
 
     parser.add_argument('-a', '--algorithm',
@@ -156,6 +157,8 @@ def show_visualization(args) -> None:
         plot_course_conflict_graph()
     elif name == 'hillclimber':
         plot_hillclimber_stats(args.iterations)
+    elif name == 'hillclimber-vs-tabu':
+        plot_hillclimber_vs_tabu_stats(args.iterations)
 
 def main():
     """
