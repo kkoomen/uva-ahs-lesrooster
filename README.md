@@ -83,7 +83,7 @@ Hard constraints:
 - Alleen de zaal met de grootste capaciteit mag geboekt worden van 17:00 - 19:00
 - 3 of meer tussensloten per student is niet toegestaan
 
-Soft constraints (malus points):
+Soft constraints (maluspunten):
 
 - Elke activiteit ingeboekt in het 17:00 - 19:00 tijdslot geeft 5 maluspunten.
 - 1 tussenslot tussen twee andere activiteiten per student geeft 1 maluspunt.
