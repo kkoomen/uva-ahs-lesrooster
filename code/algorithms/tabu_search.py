@@ -107,6 +107,11 @@ class TabuSearch(Algorithm):
                 self.logger.info('🎉  Found the best solution possible, hooray!')
                 break
 
+            # Aspiration criteria: allow tabu items as a new best solution.
+            for tabu in tabu_list:
+                if tabu[0].calculate_malus_score() < best_solution_score:
+                    best_solution = tabu[0]
+
             # Decrease the tenure.
             for tabu in tabu_list:
                 tabu[1] -= 1
