@@ -17,8 +17,8 @@ De pseudo code voor mijn constructieve algoritme is als volgt:
 Ook bedacht ik mij dat het logischer zou zijn om van links naar rechts in te
 plannen, in plaats van boven naar onder, zodat eerst de tijdsloten van 9 uur
 ingevuld worden voor elke dag, dan 11 uur, dan 15 uur etc, maar helaas gaf dit
-een veel slechter resultaat. Van boven naar onder geeft een malus score van 74
-en van links naar rechts geeft een malus score van 205.
+een veel slechter resultaat. Van boven naar onder geeft een malus score van 282
+en van links naar rechts geeft een malus score van 307.
 
 Het greedy algoritme berekent de beste optie voor een activiteit door de deze in
 elk tijdslot in te plannen in de zaal die perfect of groot genoeg is qua
@@ -28,31 +28,17 @@ we al deze mogelijkheden op het laagste aantal violations met laagste aantal
 maluspunten en vervolgens nog op vroegste tijdslot en day van de week. Dit geeft
 ons het beste eerst opkomende tijdslot met de minste maluspunten.
 
-Hieronder is een versie te zien zonder violations met 74 maluspunten. Dit toont
+Hieronder is een versie te zien zonder violations met 282 maluspunten. Dit toont
 aan dat het greedy algoritme het aantal maluspunten flink verminderd ten
-opzichte van het random algortime dat 1200+ maluspunten opleverde.
+opzichte van het random algortime dat 1000+ maluspunten opleverde.
 
 ![heatmap with timetable results](./heatmap.png)
 
-Hieronder een grafiek van hoe greedy alle 129 activiteiten inplant in een heel
-rooster. De y-as toont het minst aantal maluspunten dat op dat moment gekozen
-kon worden voor het zoveelste event op de x-as.
-
-![line graph showing 129 events being scheduled](./stats.png)
-
 # Random Greedy
 
-Na het implementeren van een greedy algoritme heb ik ook een *random  greedy*
-geïmplementeerd. Toen ik keek naar de grafiek van het greedy algoritme, toen
-viel het mij op dat voor de eerste ±22 events de malus score 0 is. Ik bedacht
-mij direct dat ik dit kan gebruiken in het random greedy algoritme, want als we
-meerdere opties hebben die allemaal 0 zijn in malus score dan kunnen we een
-random optie hiervan pakken. Helaas geeft dit nooit een betere optie dan het
-greedy algoritme zelf. Met deze logica was het minimale altijd maluspunten
-altijd boven de 100.
-
-Vervolgens heb ik geprobeerd om met bepaalde kansen soms random en soms greedy
-uit te voeren. Hieronder een overzicht van een deel wat ik getest heb:
+Na het implementeren van een greedy algoritme heb ik ook een *random greedy*
+geïmplementeerd. Ik heb geprobeerd om met bepaalde kansen soms random en soms
+greedy uit te voeren. Hieronder een overzicht van een deel wat ik getest heb:
 
 ![random greedy data plot](./random-greedy-stats.png)
 
