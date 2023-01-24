@@ -133,7 +133,7 @@ class Timeslot:
         points += self.calculate_timeslot_17_malus_score()
 
         # Add one malus punt for each overlapping course each student has.
-        points += len(self.get_overlapping_student_courses_events())
+        points += self.get_overlapping_student_courses_malus_score()
 
         # Add one malus point for each student that does not fit into each room.
         points += self.calculate_room_overfitting_malus_score()
@@ -143,24 +143,25 @@ class Timeslot:
 
         return points
 
-    def get_overlapping_student_courses_events(self) -> list[Event]:
+    def get_overlapping_student_courses_malus_score(self) -> int:
         """
         Find the events that overlap in this timeslot for each student.
         """
-        overlapping_events = []
+        score = 0
 
         # If the student id is already inside this list, then any other event
         # will be considered an overlapping event.
         student_ids = []
 
+        # Group all events by student id.
         for event in self.events:
             for student in event.students:
                 if student.student_id not in student_ids:
                     student_ids.append(student.student_id)
-                elif event not in overlapping_events:
-                    overlapping_events.append(event)
+                else:
+                    score += 1
 
-        return overlapping_events
+        return score
 
     def get_violations(self) -> list[Event]:
         """
