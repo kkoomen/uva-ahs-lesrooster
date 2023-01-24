@@ -51,8 +51,9 @@ Greedy algoritme:
 - `./main.py -a greedy -e ics --show-heatmap`
 
 Visualisaties:
-- `./main.py --visualization course-conflicts`
-- `./main.py --visualization hillclimber -i <iterations>`
+- `./main.py --visualization course-conflicts`: Visualize the course conflicts using graph coloring
+- `./main.py --visualization hillclimber -i <iterations>`: Run the hill climber algorithm on different initial solutions and plot the results
+- `./main.py --visualization hillclimber-vs-tabu -i <iterations>`: Run the hill climber and tabu search and plot the results
 
 # Proces logboek
 
@@ -68,6 +69,7 @@ resultaten beschrijf na elke fase te hebben afgerond.
 ├── main.py             # hoofdbestand
 ├── data                # bevat alle (csv) data bestanden
 ├── code                # de codebase zelf
+│   ├── visualizations  # bevat visualisaties voor het genereren van statistieken
 │   ├── algorithms      # bevat diverse algoritme implementaties
 │   ├── entities        # bevat alle entiteiten
 │   └── utils           # utility en helper functions

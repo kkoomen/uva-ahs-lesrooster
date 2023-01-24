@@ -99,7 +99,7 @@ class Event:
         """
         Get the formatted weekday value, i.e. 'mon', 'tue', etc.
         """
-        return Weekdays(self.weekday).value
+        return Weekdays(self.weekday).name
 
     def get_capacity(self) -> int:
         """

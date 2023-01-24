@@ -1,22 +1,20 @@
 """
-Generate a single graph for the hill climber algorithm that uses different other
-algorithms as their starting solution.
+Plot a single graph showing the result of hillclimber and tabu search.
 """
 
-import matplotlib.pyplot as plt
 import concurrent.futures
+import matplotlib.pyplot as plt
 
-from code.algorithms.greedy import Greedy, GreedyLSD
 from code.algorithms.hillclimber import HillClimber
-from code.algorithms.randomizer import Randomizer
+from code.algorithms.tabu_search import TabuSearch
 
 
-def plot_hillclimber_stats(iterations: int) -> None:
+def plot_hillclimber_vs_tabu_stats(iterations: int) -> None:
     """
-    Plot hill climber statistics using multiple algoritms in a single graph.
+    Run the hill climber and tabu search in parallel and plot the results.
     """
     stats = {}
-    algorithms = [Randomizer, Greedy, GreedyLSD]
+    algorithms = [TabuSearch, HillClimber]
 
     # Run the algorithms in parallel to speed up the generation.
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(algorithms)) as executor:
@@ -24,10 +22,9 @@ def plot_hillclimber_stats(iterations: int) -> None:
         for class_ref in algorithms:
             def worker():
                 instance = class_ref()
-                hc = HillClimber(instance)
-                hc.run(iterations)
+                instance.run(iterations)
                 class_name = instance.__class__.__name__
-                stats[class_name] = hc.statistics
+                stats[class_name] = instance.statistics
             workers.append(executor.submit(worker))
 
         # Wait for all workers to be completed.
@@ -44,5 +41,5 @@ def plot_hillclimber_stats(iterations: int) -> None:
         plt.plot(x, y, label=class_name)
 
     plt.legend()
-    plt.title(f'HillClimber (iterations = {iterations})')
+    plt.title(f'TabuSearch vs HillClimber (iterations = {iterations})')
     plt.show()

@@ -38,15 +38,16 @@ class HillClimber(Algorithm):
         Plot the malus scores during the hill climber process.
         """
         plt.xlabel('iterations')
-        plt.ylabel('violations + malus points')
+        plt.ylabel('malus points')
 
-        x = [stat['iteration'] for stat in self.statistics]
-        y = [stat['violations'] + stat['malus_score'] for stat in self.statistics]
+        iterations = len(self.statistics)
+        x = range(1, iterations + 1)
+        y = [stat['malus_score'] for stat in self.statistics]
         plt.plot(x, y)
 
         lowest_malus_score = min([stat['malus_score'] for stat in self.statistics])
-        parent_class_name = self.__class__.__bases__[0].__name__
-        plt.title(f'Hill climber based on {parent_class_name} solution (iterations = {max(x)}; malus score = {lowest_malus_score})')
+        base_algorithm_name = self.algorithm.__class__.__name__
+        plt.title(f'Hill climber using {base_algorithm_name} (iterations = {iterations}; malus score = {lowest_malus_score})')
         plt.show()
 
     def mutate_state(self) -> None:
@@ -92,7 +93,7 @@ class HillClimber(Algorithm):
                 return
 
             # Log the current iteration every 100 iterations.
-            if i % 100 == 0:
+            if i % 100 == 0 and i > 0:
                 self.logger.info(f'Starting iteration {i}/{iterations}')
 
             self.mutate_state()
@@ -123,13 +124,22 @@ class HillClimber(Algorithm):
 
                 self.statistics.append({
                     'iteration': i + 1,
-                    'violations': new_violations,
                     'malus_score': new_malus_score,
                 })
             else:
                 # Worse solution, reverse changes.
                 no_improvement_counter += 1
                 self.timetable = prev_state
+
+                if len(self.statistics) > 0:
+                    # If there is no change, just copy the previous stats.
+                    self.statistics.append(self.statistics[-1])
+                else:
+                    # If there is no statistics yet, add one.
+                    self.statistics.append({
+                        'iteration': i + 1,
+                        'malus_score': prev_malus_score,
+                    })
 
             prev_state = copy.deepcopy(self.timetable)
 
