@@ -27,7 +27,7 @@ Waarbij `<algorithm>` één van de volgende waardes kan zijn:
 - globale opties voor elk algoritme:
   - `-l, --log-level debug|info|warning|error|critical`
   - `-q, --quiet` toon geen stdout
-  - `-e, --export ics|csv` exporteert timetable naar `ics` of `csv` formaat
+  - `-e, --export ics|csv|json` exporteert timetable naar `ics`, `csv` of `json` formaat
   - `-i, --iterations <number>` aantal iteraties dat het algoritme moet runnen
   - `-s, --plot-stats` plot statistieken nadat het algoritme klaar is
   - `--plot-heatmap` plot de timetable heatmap
@@ -71,7 +71,7 @@ resultaten beschrijf na elke fase te hebben afgerond.
 │   ├── algorithms      # bevat diverse algoritme implementaties
 │   ├── entities        # bevat alle entiteiten
 │   └── utils           # utility en helper functions
-├── out                 # alle ics/csv exports komen hier terecht
+├── out                 # alle ics/csv/json exports komen hier terecht
 └── docs                # bevat het gedocumenteerde proces van dit hele project
 ```
 
