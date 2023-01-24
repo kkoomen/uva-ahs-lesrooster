@@ -595,7 +595,8 @@ class Timetable:
         fig.suptitle('Timetable')
 
         for i, day in enumerate(self.timetable):
-            for j, timeslot in enumerate(day.values()):
+            sorted_day = dict(sorted(day.items()))
+            for j, timeslot in enumerate(sorted_day.values()):
                 # Add the malus score for each timeslot.
                 scores_heatmap[j][i] = timeslot.calculate_malus_score()
                 for event in timeslot:
