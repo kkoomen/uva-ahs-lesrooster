@@ -20,7 +20,9 @@ Waarbij `<algorithm>` één van de volgende waardes kan zijn:
 - `random`
 - `greedy`
 - `random-greedy`
+- `greedy-lsd`
 - `hillclimber`
+- `tabu-search`
 
 `OPTIONS` kan zowel globale als algoritme specifieke opties kan bevatten.
 
