@@ -67,7 +67,7 @@ class TestCourse(TestCase):
             Student('Steven', 'London', '4', ['foo']),
         ]
         course = Course('foo', 1, 2, 3, 0, 0, 4, enrolled_students)
-        groups = course.create_student_groups(3)
+        groups = course.create_seminar_student_groups()
         self.assertEqual(len(groups), 2)
 
     def test_create_pracicum_student_groups(self):
@@ -78,7 +78,7 @@ class TestCourse(TestCase):
             Student('Steven', 'London', '4', ['foo']),
         ]
         course = Course('foo', 1, 0, 0, 2, 3, 4, enrolled_students)
-        groups = course.create_student_groups(3)
+        groups = course.create_practical_student_groups()
         self.assertEqual(len(groups), 2)
 
     def test_set_conflicting_courses(self):
