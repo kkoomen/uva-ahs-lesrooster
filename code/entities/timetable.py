@@ -584,15 +584,11 @@ class Timetable:
             self.logger.info(f'Successfully saved timetable for course {course_name_raw} with {total_events} events as {filepath}')
 
     def export_json(self, filename: str = 'timetable.json') -> None:
-        JSON_OUT_DIR = os.path.join(OUT_DIR, 'json')
-
-        if not os.path.isdir(JSON_OUT_DIR):
-            os.mkdir(JSON_OUT_DIR)
-
-        filepath = os.path.join(JSON_OUT_DIR, filename)
+        filepath = os.path.join(OUT_DIR, filename)
         with open(filepath, 'w') as file:
             file.write(json.dumps(serialize(copy.deepcopy(self.timetable))))
             file.close()
+        self.logger.info(f'Successfully saved timetable as {filepath}')
 
     def show_plot(self) -> None:
         """
