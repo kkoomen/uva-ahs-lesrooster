@@ -43,7 +43,6 @@ class TestUtilsHelpers(TestCase):
                 return {'bar': True}
 
         class Foo:
-            items = ['a', Bar()]
             def serialize(self):
                 return ['a', Bar()]
 
@@ -58,7 +57,7 @@ class TestUtilsHelpers(TestCase):
                 'foo': ['a', {'bar': True}],
                 'foo_list': [
                     ['a', {'bar': True}],
-                    ['a', {'bar': True}]
+                    ['a', {'bar': True}],
                 ],
             }
         )
