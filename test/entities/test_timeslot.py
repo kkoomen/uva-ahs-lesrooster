@@ -1,9 +1,9 @@
 from unittest import TestCase
+
 from code.entities.course import Course
 from code.entities.event import Event
 from code.entities.room import Room
 from code.entities.student import Student
-
 from code.entities.timeslot import Timeslot
 from code.utils.enums import EventType
 
