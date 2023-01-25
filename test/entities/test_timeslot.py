@@ -184,6 +184,3 @@ class TestTimeslot(TestCase):
 
         self.assertEqual(timeslot.get_overlapping_student_courses_malus_score(), 2)
         self.assertEqual(timeslot.calculate_malus_score(), 2)
-
-    def test_calculate_malus_score(self):
-        pass
