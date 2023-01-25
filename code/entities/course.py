@@ -68,10 +68,10 @@ class Course:
         total = self.lectures_amount
 
         if self.seminars_amount > 0:
-            total += math.ceil(self.enrolment / self.seminar_capacity)
+            total += math.ceil(self.enrolment / self.seminar_capacity * self.seminars_amount)
 
         if self.practicals_amount > 0:
-            total += math.ceil(self.enrolment / self.practical_capacity)
+            total += math.ceil(self.enrolment / self.practical_capacity * self.practicals_amount)
 
         return total
 
