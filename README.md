@@ -53,9 +53,9 @@ Greedy algoritme:
 - `./main.py -a greedy -e ics --show-heatmap`
 
 Visualisaties:
-- `./main.py --visualization course-conflicts`: Visualize the course conflicts using graph coloring
-- `./main.py --visualization hillclimber -i <iterations>`: Run the hill climber algorithm on different initial solutions and plot the results
-- `./main.py --visualization hillclimber-vs-tabu -i <iterations>`: Run the hill climber and tabu search and plot the results
+- `./main.py --visualization course-conflicts`: Visualiseer de course vak conflicten met graph coloring
+- `./main.py --visualization hillclimber -i <iterations>`: Pas hill climber toe op verschillende algoritme en plot het resultaat
+- `./main.py --visualization hillclimber-vs-tabu -i <iterations>`: Vergelijk hill climber en tabu search met elkaar
 
 # Proces logboek
 
