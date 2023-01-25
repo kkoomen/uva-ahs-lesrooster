@@ -38,11 +38,27 @@ class TestUtilsHelpers(TestCase):
         self.assertEqual(get_utc_offset(), '+01:00')
 
     def test_serialize(self):
-        class Foo:
-            items = ['a', 'b']
+        class Bar:
             def serialize(self):
-                return self.items
+                return {'bar': True}
 
-        self.assertEqual(serialize(Foo()), ['a', 'b'])
-        self.assertEqual(serialize([Foo()]), [['a', 'b']])
-        self.assertEqual(serialize({'foo': Foo(), 'foo_list': [Foo(), Foo()]}), {'foo': ['a', 'b'], 'foo_list': [['a', 'b'], ['a', 'b']]})
+        class Foo:
+            items = ['a', Bar()]
+            def serialize(self):
+                return ['a', Bar()]
+
+        self.assertEqual(serialize(Foo()), ['a', {'bar': True}])
+        self.assertEqual(serialize([Foo()]), [['a', {'bar': True}]])
+        self.assertEqual(
+            serialize({
+                'foo': Foo(),
+                'foo_list': [Foo(), Foo()],
+            }),
+            {
+                'foo': ['a', {'bar': True}],
+                'foo_list': [
+                    ['a', {'bar': True}],
+                    ['a', {'bar': True}]
+                ],
+            }
+        )
