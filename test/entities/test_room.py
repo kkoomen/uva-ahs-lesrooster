@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from code.entities.room import Room
 
-class TesttRoom(TestCase):
+class TestRoom(TestCase):
 
     def test_init(self):
         room1 = Room('C0.110', 20)
