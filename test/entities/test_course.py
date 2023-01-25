@@ -20,8 +20,8 @@ class TestCourse(TestCase):
         self.assertEqual(course.enrolled_students, [])
 
     def test_repr(self):
-        student1 = Student('John', 'Doe', '12345678', ['course1', 'course2'])
-        course = Course('foo', 1, 2, 10, 0, 0, 22, [student1])
+        student = Student('John', 'Doe', '1', ['course1', 'course2'])
+        course = Course('foo', 1, 2, 10, 0, 0, 22, [student])
         self.assertEqual(repr(course), 'Course(id:' + str(course.id) + ', name:foo, enrolled_students:1)')
 
     def test_eq(self):
@@ -40,7 +40,7 @@ class TestCourse(TestCase):
         course = Course('foo', 1, 2, 10, 0, 0, 22)
         self.assertEqual(len(course.enrolled_students), 0)
 
-        student = Student('John', 'Doe', '12345678', ['course1', 'course2'])
+        student = Student('John', 'Doe', '1', ['course1', 'course2'])
         course.register_students([student])
         self.assertEqual(len(course.enrolled_students), 1)
 
@@ -50,10 +50,10 @@ class TestCourse(TestCase):
 
     def test_create_student_groups(self):
         enrolled_students = [
-            Student('John', 'Doe', '12345678', ['foo']),
-            Student('Mary', 'Jane', '12345678', ['foo']),
-            Student('Mike', 'Smith', '12345678', ['foo']),
-            Student('Steven', 'London', '12345678', ['foo']),
+            Student('John', 'Doe', '1', ['foo']),
+            Student('Mary', 'Jane', '2', ['foo']),
+            Student('Mike', 'Smith', '3', ['foo']),
+            Student('Steven', 'London', '4', ['foo']),
         ]
         course = Course('foo', 1, 2, 3, 0, 0, 4, enrolled_students)
         groups = course.create_student_groups(3)
@@ -61,10 +61,10 @@ class TestCourse(TestCase):
 
     def test_create_seminar_student_groups(self):
         enrolled_students = [
-            Student('John', 'Doe', '12345678', ['foo']),
-            Student('Mary', 'Jane', '12345678', ['foo']),
-            Student('Mike', 'Smith', '12345678', ['foo']),
-            Student('Steven', 'London', '12345678', ['foo']),
+            Student('John', 'Doe', '1', ['foo']),
+            Student('Mary', 'Jane', '2', ['foo']),
+            Student('Mike', 'Smith', '3', ['foo']),
+            Student('Steven', 'London', '4', ['foo']),
         ]
         course = Course('foo', 1, 2, 3, 0, 0, 4, enrolled_students)
         groups = course.create_student_groups(3)
@@ -72,10 +72,10 @@ class TestCourse(TestCase):
 
     def test_create_pracicum_student_groups(self):
         enrolled_students = [
-            Student('John', 'Doe', '12345678', ['foo']),
-            Student('Mary', 'Jane', '12345678', ['foo']),
-            Student('Mike', 'Smith', '12345678', ['foo']),
-            Student('Steven', 'London', '12345678', ['foo']),
+            Student('John', 'Doe', '1', ['foo']),
+            Student('Mary', 'Jane', '2', ['foo']),
+            Student('Mike', 'Smith', '3', ['foo']),
+            Student('Steven', 'London', '4', ['foo']),
         ]
         course = Course('foo', 1, 0, 0, 2, 3, 4, enrolled_students)
         groups = course.create_student_groups(3)

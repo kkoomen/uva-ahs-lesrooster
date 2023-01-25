@@ -22,6 +22,12 @@ class TestEvent(TestCase):
         self.assertEqual(event.room, room)
         self.assertEqual(event.students, [])
 
+    def test_repr(self):
+        course = Course('bar', 1, 2, 10, 0, 0, 22)
+        room = Room('C0.110', 50)
+        event = Event('foo', EventType.LECTURE, course, 1, 9, room)
+        self.assertEqual(repr(event), 'Event(id:' + str(event.id) + ', title:foo, type:EventType.LECTURE, timeslot:9, course:bar, room:C0.110, weekday:1)')
+
     def test_lt(self):
         course = Course('foo', 1, 2, 10, 0, 0, 22)
 
@@ -60,17 +66,17 @@ class TestEvent(TestCase):
     def test_add_student(self):
         event = Event('foo', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50))
         self.assertEqual(event.students, [])
-        student = Student('John', 'Doe', '12345678', ['course1', 'course2'])
+        student = Student('John', 'Doe', '1', ['course1', 'course2'])
         event.add_student(student)
         self.assertEqual(event.students, [student])
 
     def test_assign_students(self):
-        student1 = Student('John', 'Doe', '12345678', ['course1', 'course2'])
+        student1 = Student('John', 'Doe', '1', ['course1', 'course2'])
         event = Event('foo', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50), [student1])
         self.assertEqual(event.students, [student1])
 
-        student2 = Student('Mary', 'Jane', '12345678', ['course1', 'course2'])
-        student3 = Student('Mike', 'Smith', '12345678', ['course1', 'course2'])
+        student2 = Student('Mary', 'Jane', '2', ['course1', 'course2'])
+        student3 = Student('Mike', 'Smith', '3', ['course1', 'course2'])
         event.assign_students([student2, student3])
         self.assertEqual(event.students, [student2, student3])
 

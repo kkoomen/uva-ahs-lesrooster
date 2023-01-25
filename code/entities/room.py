@@ -1,6 +1,6 @@
 class Room:
     """
-    Rooms are used for lecures, seminars and practicals and can be assigned to
+    Rooms are used for lectures, seminars and practicals and can be assigned to
     an `Event` in order to schedule that `Event` in a particular room.
     """
 

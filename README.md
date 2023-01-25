@@ -111,8 +111,8 @@ Soft constraints (maluspunten):
 
 # Tests
 
-Tests kunnen simpelweg uitgevoerd worden door `pytest` uit te voeren vanaf de
-root directory van dit project.
+- `coverage run --source code -m pytest`: run alle tests
+- `coverage report`: toon code coverage (kan alleen nadat je `coverage run` hebt uitgevoerd)
 
 # Auteurs
 
