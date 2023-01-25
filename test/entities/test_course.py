@@ -9,6 +9,7 @@ class TestCourse(TestCase):
     def test_init(self):
         course = Course('foo', 1, 2, 10, 0, 0, 22)
         self.assertEqual(isinstance(course.id, int), True)
+        self.assertEqual(len(str(course.id)) > 0, True)
         self.assertEqual(course.name, 'foo')
         self.assertEqual(course.lectures_amount, 1)
         self.assertEqual(course.seminars_amount, 2)
