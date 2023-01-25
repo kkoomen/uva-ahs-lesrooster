@@ -56,7 +56,7 @@ def parse_arguments() -> argparse.Namespace:
     """
     parser = argparse.ArgumentParser(
         prog = 'Lesrooster',
-        description = 'Generate timetables with different algorithms',
+        description = 'University Course Timetabling Problem with different algorithms',
         epilog = 'This program is part of the Algorithms and Heuristics course at the University of Amsterdam.')
 
     parser.add_argument('-l', '--log-level',

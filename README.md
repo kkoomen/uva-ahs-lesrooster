@@ -4,11 +4,31 @@ Deze repository bevat een implementatie voor de
 case voor de UvA en het gedocumenteerde proces dat is bijgehouden tijdens dit
 project.
 
+# Table of Contents
+
+- [Lesrooster](#lesrooster)
+- [Table of Contents](#table-of-contents)
+- [Proces logboek](#proces-logboek)
+- [Installatie](#installatie)
+- [Gebruik](#gebruik)
+    + [Voorbeelden](#voorbeelden)
+- [Project structuur](#project-structuur)
+- [Constraints](#constraints)
+- [Tests](#tests)
+- [Auteurs](#auteurs)
+
+# Proces logboek
+
+Ik houd een persoonlijk proces logboek bij in deze repo waar ik mijn proces en
+resultaten beschrijf na elke fase te hebben afgerond.
+
+[Klik hier](./docs/README.md) om het te bekijken.
+
 # Installatie
 
 - `git clone https://github.com/kkoomen/uva-ahs-lesrooster && cd uva-ahs-lesrooster`
 - `python3 -m venv env`
-- `./env/bin/activate`
+- `source ./env/bin/activate`
 - `pip3 install -r requirements.txt`
 
 # Gebruik
@@ -57,13 +77,6 @@ Visualisaties:
 - `./main.py --visualization hillclimber -i <iterations>`: Pas hill climber toe op verschillende algoritme en plot het resultaat
 - `./main.py --visualization hillclimber-vs-tabu -i <iterations>`: Vergelijk hill climber en tabu search met elkaar
 
-# Proces logboek
-
-Ik houd een persoonlijk proces logboek bij in deze repo waar ik mijn proces en
-resultaten beschrijf na elke fase te hebben afgerond.
-
-[Klik hier](./docs/README.md) om het te bekijken.
-
 # Project structuur
 
 ```
@@ -95,6 +108,11 @@ Soft constraints (maluspunten):
 - Elk vak conflict per student per tijdslot geeft 1 maluspunt.
 - Elke student die niet meer in een zaal past geeft 1 maluspunt.
 - Elk dubbel ingeplande activiteit per tijdslot voor elk vak geeft 1 maluspunt (extra)
+
+# Tests
+
+Tests kunnen simpelweg uitgevoerd worden door `pytest` uit te voeren vanaf de
+root directory van dit project.
 
 # Auteurs
 
