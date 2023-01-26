@@ -31,6 +31,8 @@ class TestTimetable(TestCase):
         # Mock the load_courses() function.
         self.course1 = Course('foo', 1, 0, 0, 0, 0, 5)
         self.course2 = Course('bar', 1, 1, 3, 0, 0, 5)
+        self.course1.set_conflicting_courses(['bar'])
+        self.course2.set_conflicting_courses(['foo'])
         mock_load_courses.return_value = [self.course1, self.course2]
 
         # Mock the load_students() function.
@@ -192,7 +194,11 @@ class TestTimetable(TestCase):
         self.assertEqual(timetable.timetable, [{}, {}, {}, {}, {}])
 
     def test_calculate_saturation_degree_for_unscheduled_event(self):
-        pass
+        timetable = self._new_timetable_instance()
+        timetable.add_event(self.event2)
+        timetable.add_event(self.event3)
+        timetable.add_event(self.event4)
+        self.assertEqual(timetable.calculate_saturation_degree_for_unscheduled_event(self.event8), 3)
 
     def test_get_available_timeslot_rooms(self):
         timetable = self._new_timetable_instance()
