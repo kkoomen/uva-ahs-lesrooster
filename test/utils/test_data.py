@@ -3,6 +3,7 @@ from unittest import TestCase, mock
 from code.utils.data import load_courses, load_rooms, load_students
 
 class TestUtilsData(TestCase):
+
     @mock.patch('code.utils.helpers.data_path')
     @mock.patch('csv.reader')
     def test_load_students(self, mock_csv_reader, data_path):
