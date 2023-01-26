@@ -53,6 +53,20 @@ class TestTimeslot(TestCase):
         self.assertEqual(next(iterator), event3)
         self.assertRaises(StopIteration, next, iterator)
 
+    def test_len(self):
+        timeslot = Timeslot(9)
+        event1 = Event('foo 1', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50))
+        event2 = Event('foo 2', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 2, 9, Room('C1.08', 50))
+        event3 = Event('foo 3', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 3, 9, Room('C1.08', 50))
+        timeslot.add_event(event1)
+        timeslot.add_event(event2)
+        timeslot.add_event(event3)
+        self.assertEqual(len(timeslot), 3)
+
+    def test_eq(self):
+        self.assertEqual(Timeslot(9) == Timeslot(9), True)
+        self.assertEqual(Timeslot(9) == Timeslot(11), False)
+
     def test_serialize(self):
         timeslot = Timeslot(9)
         event1 = Event('foo 1', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50))

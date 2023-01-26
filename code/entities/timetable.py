@@ -3,13 +3,13 @@ import copy
 import csv
 from datetime import datetime, timedelta
 import itertools
+import json
 import logging
 import os
 import re
-import networkx as nx
 import ics
 import matplotlib.pyplot as plt
-import json
+import networkx as nx
 
 from code.entities.event import Event
 from code.entities.room import Room
@@ -53,7 +53,10 @@ class Timetable:
     MAX_TIMESLOTS_PER_WEEK = 145
     DAYS_PER_WEEK = 5
 
-    def __init__(self) -> None:
+    def __init__(self,
+                 load_rooms=load_rooms,
+                 load_courses=load_courses,
+                 load_students=load_students) -> None:
         self.logger = logging.getLogger(__name__)
 
         self.timetable: TimetableList = self.new_timetable()
@@ -189,7 +192,11 @@ class Timetable:
         assert event.weekday is not None, 'weekday must be set'
         assert event.timeslot is not None, 'timeslot must be set'
 
-        self.timetable[event.weekday - 1][event.timeslot].remove_event(event)
+        timeslot = self.timetable[event.weekday - 1][event.timeslot]
+        timeslot.remove_event(event)
+
+        if len(timeslot) == 0:
+            del self.timetable[event.weekday - 1][event.timeslot]
 
     def remove_events(self, events: list[Event]) -> None:
         """
@@ -329,8 +336,7 @@ class Timetable:
         """
         Go through each day of the week and check per student if that day
         contains two events with 3 or more empty timeslots in-between. Mark the
-        two events (1 before and after the 3 empty slots) as violations, as this
-        is strictly not allowed.
+        17-timeslot as a violation.
 
         NOTE: 1 or 2 empty timeslots is allowed, but adds a malus point, which
         is less severe than having 3 or more.

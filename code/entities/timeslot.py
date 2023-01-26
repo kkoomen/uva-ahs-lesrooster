@@ -1,4 +1,5 @@
 from collections.abc import Generator
+from typing import Union
 from code.entities.course import Course
 
 from code.entities.event import Event
@@ -13,9 +14,15 @@ class Timeslot:
     OPTIONS = [9, 11, 13, 15, 17]
     TIMEFRAME = 2
 
-    def __init__(self, value: int) -> None:
+    def __init__(self, value: int, events: Union[list[Event], None]=None) -> None:
         self.value = value
-        self.events = []
+        self.events = events if events is not None else []
+
+    def __eq__(self, other) -> bool:
+        """
+        Check if two timeslots are the same class type and value.
+        """
+        return self.__class__ == other.__class__ and self.value == other.value
 
     def add_event(self, event: Event) -> None:
         """
@@ -28,6 +35,12 @@ class Timeslot:
         Remove an event from the events list.
         """
         self.events.remove(event)
+
+    def __len__(self) -> int:
+        """
+        Implements len() usage.
+        """
+        return len(self.events)
 
     def get_total_events(self) -> int:
         """

@@ -89,7 +89,8 @@ Visualisaties:
 │   ├── entities        # bevat alle entiteiten
 │   └── utils           # utility en helper functions
 ├── out                 # alle ics/csv/json exports komen hier terecht
-└── docs                # bevat het gedocumenteerde proces van dit hele project
+├── docs                # bevat het gedocumenteerde proces van dit hele project
+└── test                # bevat unit tests
 ```
 
 # Constraints
@@ -113,6 +114,9 @@ Soft constraints (maluspunten):
 
 - `coverage run --source code -m pytest`: run alle tests
 - `coverage report`: toon code coverage (kan alleen nadat je `coverage run` hebt uitgevoerd)
+
+Alle entities en de meeste utility functions hebben tests. In de `Timetable`
+class bevat alles een test behalve de csv/ics/json exports.
 
 # Auteurs
 
