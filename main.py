@@ -152,6 +152,9 @@ def run_algorithm(args: argparse.Namespace):
 
 
 def show_visualization(args) -> None:
+    """
+    Handle which visualization to run based on the args.visualization argument.
+    """
     name = args.visualization
     if name == 'course-conflicts':
         plot_course_conflict_graph()
@@ -159,6 +162,7 @@ def show_visualization(args) -> None:
         plot_hillclimber_stats(args.iterations)
     elif name == 'hillclimber-vs-tabu':
         plot_hillclimber_vs_tabu_stats(args.iterations)
+
 
 def main():
     """
@@ -179,6 +183,7 @@ def main():
     else:
         logger.info(f'Selected algorithm: {args.algorithm}')
         run_algorithm(args)
+
 
 if __name__ == '__main__':
     main()
