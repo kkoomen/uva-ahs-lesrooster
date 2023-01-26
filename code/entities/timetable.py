@@ -454,11 +454,7 @@ class Timetable:
 
         now = datetime.now()
         utc_offset = get_utc_offset()
-
-        if now.weekday() == 0:
-            last_monday = now
-        else:
-            last_monday = now - timedelta(days=now.weekday())
+        last_monday = now - timedelta(days=max(now.weekday(), 0))
 
         # Create a list of dates for the current week from mon-fri.
         current_week_dates = [(last_monday + timedelta(days=i)).strftime('%Y-%m-%d') for i in range(5)]
@@ -596,7 +592,7 @@ class Timetable:
             file.close()
         self.logger.info(f'Successfully saved timetable as {filepath}')
 
-    def show_plot(self) -> None:
+    def plot_heatmap(self) -> None:
         """
         Plot all the events in the timetable.
         """

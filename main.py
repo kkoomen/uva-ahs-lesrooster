@@ -148,7 +148,7 @@ def run_algorithm(args: argparse.Namespace):
         algorithm.plot_statistics()
 
     if args.plot_heatmap:
-        algorithm.timetable.show_plot()
+        algorithm.timetable.plot_heatmap()
 
 
 def show_visualization(args) -> None:

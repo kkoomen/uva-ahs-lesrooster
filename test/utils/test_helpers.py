@@ -2,6 +2,7 @@ import os
 import random
 from unittest import TestCase
 import re
+from code.utils.constants import ROOT_DIR
 
 from code.utils.helpers import (
     data_path,
@@ -15,9 +16,8 @@ from code.utils.helpers import (
 class TestUtilsHelpers(TestCase):
 
     def test_data_path(self):
-        root_dir = os.path.realpath(os.path.join(os.path.basename(__file__), '../'))
         filepath = data_path('foo.csv')
-        self.assertEqual(filepath, os.path.join(root_dir, 'data', 'foo.csv'))
+        self.assertEqual(filepath, os.path.join(ROOT_DIR, 'data', 'foo.csv'))
 
     def test_split_list(self):
         self.assertEqual(split_list(['a', 'b', 'c', 'd', 'e'], 2), [['a', 'b'], ['c', 'd'], ['e']])

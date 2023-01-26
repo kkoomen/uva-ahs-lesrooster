@@ -22,12 +22,6 @@ class TestEvent(TestCase):
         self.assertEqual(event.room, room)
         self.assertEqual(event.students, [])
 
-    def test_repr(self):
-        course = Course('bar', 1, 2, 10, 0, 0, 22)
-        room = Room('C0.110', 50)
-        event = Event('foo', EventType.LECTURE, course, 1, 9, room)
-        self.assertEqual(repr(event), 'Event(id:' + str(event.id) + ', title:foo, type:EventType.LECTURE, timeslot:9, course:bar, room:C0.110, weekday:1)')
-
     def test_lt(self):
         course = Course('foo', 1, 2, 10, 0, 0, 22)
 

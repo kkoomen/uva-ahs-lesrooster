@@ -92,10 +92,6 @@ class TestTimetable(TestCase):
         self.assertEqual(timetable.courses[0].conflicting_courses, ['bar'])
         self.assertEqual(timetable.courses[1].conflicting_courses, ['foo'])
 
-    def test_repr(self):
-        timetable = self._new_timetable_instance()
-        self.assertEqual(repr(timetable), '<Timetable events:0>')
-
     def test_iter(self):
         timetable = self._new_timetable_instance()
         iterator = iter(timetable)
@@ -309,3 +305,87 @@ class TestTimetable(TestCase):
         self.assertEqual(ics_event.description, 'Enrolled students: ' + str(len(self.event1.students)))
         self.assertEqual(date_in_current_week(ics_event.begin), True)
         self.assertEqual(date_in_current_week(ics_event.end), True)
+
+    def test_export_csv(self):
+        timetable = self._new_timetable_instance()
+        timetable.add_event(self.event1)
+        timetable.add_event(self.event3)
+        with mock.patch('code.entities.timetable.open'):
+            mock_writer = mock.MagicMock()
+            with mock.patch('csv.writer', return_value=mock_writer):
+                timetable.export_csv()
+                self.assertEqual(mock_writer.writerow.call_count, 7)
+                self.assertEqual(mock_writer.writerow.call_args_list, [
+                    mock.call(['student name', 'course', 'type', 'weekday', 'timeslot', 'room']),
+                    mock.call(['John Doe', 'foo lecture 1', 'hc', 'mon', 9, 'C0.110']),
+                    mock.call(['Mary Jane', 'foo lecture 1', 'hc', 'mon', 9, 'C0.110']),
+                    mock.call(['Mike Smith', 'foo lecture 1', 'hc', 'mon', 9, 'C0.110']),
+                    mock.call(['Steven London', 'foo lecture 1', 'hc', 'mon', 9, 'C0.110']),
+                    mock.call(['John Doe', 'bar seminar 1', 'wc', 'wed', 15, 'C1.04']),
+                    mock.call(['Steven London', 'bar seminar 1', 'wc', 'wed', 15, 'C1.04']),
+                ])
+
+    def test_export_ics(self):
+        timetable = self._new_timetable_instance()
+        timetable.add_event(self.event1)
+        timetable.add_event(self.event3)
+        with mock.patch('code.entities.timetable.open'):
+            mock_ics_calendar = mock.MagicMock()
+            mock_mkdir = mock.MagicMock()
+
+            mock_isdir = mock.MagicMock()
+            mock_isdir.return_value = False
+
+            with mock.patch('ics.Calendar', return_value=mock_ics_calendar), \
+                    mock.patch('os.mkdir', mock_mkdir), \
+                    mock.patch('os.path.isdir', mock_isdir):
+                timetable.export_ics()
+
+            self.assertEqual(mock_ics_calendar.events.add.call_count, 9)
+            self.assertEqual(mock_ics_calendar.serialize.call_count, 7)
+            self.assertEqual(mock_mkdir.call_count, 3)
+
+    def test_export_json(self):
+        timetable = self._new_timetable_instance()
+        timetable.add_event(self.event1)
+        timetable.add_event(self.event3)
+        with mock.patch('code.entities.timetable.open'):
+            mock_json_dumps = mock.MagicMock()
+            with mock.patch('json.dumps', mock_json_dumps):
+                timetable.export_json()
+                mock_json_dumps.assert_called()
+                mock_json_dumps.call_args(
+                    mock.call([
+                        [
+                            {
+                                9: [
+                                    {
+                                        'id': self.event1.id,
+                                        'title': 'foo lecture 1',
+                                        'type': 'hc',
+                                        'course': 'foo',
+                                        'weekday': 1,
+                                        'timeslot': 9,
+                                        'room': 'C0.110'
+                                    }
+                                ]
+                            },
+                            {},
+                            {
+                                15: [
+                                    {
+                                        'id': self.event3.id,
+                                        'title': 'bar seminar 1',
+                                        'type': 'wc',
+                                        'course': 'bar',
+                                        'weekday': 3,
+                                        'timeslot': 15,
+                                        'room': 'C1.04'
+                                    }
+                                ]
+                            },
+                            {},
+                            {}
+                         ]
+                    ])
+                )

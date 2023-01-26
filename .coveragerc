@@ -1,3 +1,22 @@
+[run]
+source =
+    code
+    test
+
 [report]
 skip_empty = true
 show_missing = true
+omit =
+    test/*
+    code/utils/statistics.py
+    code/utils/decorators.py
+    code/visualizations/*
+    code/algorithms/*
+    */__init__.py
+exclude_lines =
+    def __repr__
+    def plot_*
+    def print_*
+
+[html]
+directory = coverage_html

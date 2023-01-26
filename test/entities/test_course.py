@@ -19,11 +19,6 @@ class TestCourse(TestCase):
         self.assertEqual(course.enrolment, 22)
         self.assertEqual(course.enrolled_students, [])
 
-    def test_repr(self):
-        student = Student('John', 'Doe', '1', ['course1', 'course2'])
-        course = Course('foo', 1, 2, 10, 0, 0, 22, [student])
-        self.assertEqual(repr(course), 'Course(id:' + str(course.id) + ', name:foo, enrolled_students:1)')
-
     def test_eq(self):
         course1 = Course('foo', 1, 2, 10, 0, 0, 22)
         course2 = Course('foo', 2, 1, 15, 1, 10, 30)

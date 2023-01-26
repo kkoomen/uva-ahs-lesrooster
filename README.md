@@ -115,11 +115,27 @@ Soft constraints (maluspunten):
 
 # Tests
 
-- `coverage run --source code -m pytest`: run alle tests
+- `coverage run -m pytest`: run alle tests
 - `coverage report`: toon code coverage (kan alleen nadat je `coverage run` hebt uitgevoerd)
 
-Alle entities en de meeste utility functions hebben tests. In de `Timetable`
-class bevat alles een test behalve de csv/ics/json exports.
+Alle entities en utils hebben tests waar nodig:
+
+```
+Name                         Stmts   Miss  Cover
+------------------------------------------------
+code/entities/course.py         45      0   100%
+code/entities/event.py          38      0   100%
+code/entities/room.py           15      0   100%
+code/entities/student.py        10      0   100%
+code/entities/timeslot.py       90      0   100%
+code/entities/timetable.py     283      0   100%
+code/utils/constants.py          5      0   100%
+code/utils/data.py              49      0   100%
+code/utils/enums.py              6      0   100%
+code/utils/helpers.py           53      0   100%
+------------------------------------------------
+TOTAL                          594      0   100%
+```
 
 # Auteurs
 

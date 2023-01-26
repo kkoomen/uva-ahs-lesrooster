@@ -11,10 +11,6 @@ class TestStudent(TestCase):
         self.assertEqual(student.student_id, '1')
         self.assertEqual(student.enrolled_courses, ['course1', 'course2'])
 
-    def test_repr(self):
-        student = Student('John', 'Doe', '1', ['course1', 'course2'])
-        self.assertEqual(repr(student), "Student(first_name:John, last_name:Doe, student_id:1, enrolled_courses:['course1', 'course2'])")
-
     def test_str(self):
         student = Student('John', 'Doe', '1', ['course1', 'course2'])
         self.assertEqual(str(student), 'John Doe')

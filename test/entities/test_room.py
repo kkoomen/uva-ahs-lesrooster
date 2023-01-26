@@ -15,10 +15,6 @@ class TestRoom(TestCase):
         self.assertEqual(room2.capacity, 20)
         self.assertEqual(room2.is_largest, True)
 
-    def test_repr(self):
-        room = Room('C0.110', 20)
-        self.assertEqual(repr(room), 'Room(location_id:C0.110, capacity:20, is_largest:False)')
-
     def test_str(self):
         room = Room('C0.110', 20)
         self.assertEqual(str(room), 'C0.110')

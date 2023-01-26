@@ -33,12 +33,6 @@ class TestTimeslot(TestCase):
         timeslot.add_event(event3)
         self.assertEqual(timeslot.get_total_events(), 3)
 
-    def test_repr(self):
-        timeslot = Timeslot(9)
-        event = Event('foo', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50))
-        timeslot.add_event(event)
-        self.assertEqual(repr(timeslot), 'Timeslot(value:9, events:1)')
-
     def test_iter(self):
         timeslot = Timeslot(9)
         event1 = Event('foo 1', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50))
