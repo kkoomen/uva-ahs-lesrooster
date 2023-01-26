@@ -19,7 +19,12 @@ class TestUtilsData(TestCase):
         self.assertEqual(students[0].first_name, 'Yanick')
         self.assertEqual(students[0].last_name, 'Abbing')
         self.assertEqual(students[0].student_id, '52311353')
-        self.assertEqual(students[0].enrolled_courses, ['Analysemethoden en -technieken','Data Mining','Lineaire Algebra','Software engineering'])
+        self.assertEqual(students[0].enrolled_courses, [
+            'Analysemethoden en -technieken',
+            'Data Mining',
+            'Lineaire Algebra',
+            'Software engineering'
+        ])
 
     @mock.patch('code.utils.helpers.data_path')
     @mock.patch('csv.DictReader')
