@@ -314,16 +314,16 @@ class TestTimetable(TestCase):
             mock_writer = mock.MagicMock()
             with mock.patch('csv.writer', return_value=mock_writer):
                 timetable.export_csv()
-                self.assertEqual(mock_writer.writerow.call_count, 7)
-                self.assertEqual(mock_writer.writerow.call_args_list, [
-                    mock.call(['student name', 'course', 'type', 'weekday', 'timeslot', 'room']),
-                    mock.call(['John Doe', 'foo lecture 1', 'hc', 'mon', 9, 'C0.110']),
-                    mock.call(['Mary Jane', 'foo lecture 1', 'hc', 'mon', 9, 'C0.110']),
-                    mock.call(['Mike Smith', 'foo lecture 1', 'hc', 'mon', 9, 'C0.110']),
-                    mock.call(['Steven London', 'foo lecture 1', 'hc', 'mon', 9, 'C0.110']),
-                    mock.call(['John Doe', 'bar seminar 1', 'wc', 'wed', 15, 'C1.04']),
-                    mock.call(['Steven London', 'bar seminar 1', 'wc', 'wed', 15, 'C1.04']),
-                ])
+            self.assertEqual(mock_writer.writerow.call_count, 7)
+            self.assertEqual(mock_writer.writerow.call_args_list, [
+                mock.call(['student name', 'course', 'type', 'weekday', 'timeslot', 'room']),
+                mock.call(['John Doe', 'foo lecture 1', 'hc', 'mon', 9, 'C0.110']),
+                mock.call(['Mary Jane', 'foo lecture 1', 'hc', 'mon', 9, 'C0.110']),
+                mock.call(['Mike Smith', 'foo lecture 1', 'hc', 'mon', 9, 'C0.110']),
+                mock.call(['Steven London', 'foo lecture 1', 'hc', 'mon', 9, 'C0.110']),
+                mock.call(['John Doe', 'bar seminar 1', 'wc', 'wed', 15, 'C1.04']),
+                mock.call(['Steven London', 'bar seminar 1', 'wc', 'wed', 15, 'C1.04']),
+            ])
 
     def test_export_ics(self):
         timetable = self._new_timetable_instance()
@@ -353,39 +353,39 @@ class TestTimetable(TestCase):
             mock_json_dumps = mock.MagicMock()
             with mock.patch('json.dumps', mock_json_dumps):
                 timetable.export_json()
-                mock_json_dumps.assert_called()
-                mock_json_dumps.call_args(
-                    mock.call([
-                        [
-                            {
-                                9: [
-                                    {
-                                        'id': self.event1.id,
-                                        'title': 'foo lecture 1',
-                                        'type': 'hc',
-                                        'course': 'foo',
-                                        'weekday': 1,
-                                        'timeslot': 9,
-                                        'room': 'C0.110'
-                                    }
-                                ]
-                            },
-                            {},
-                            {
-                                15: [
-                                    {
-                                        'id': self.event3.id,
-                                        'title': 'bar seminar 1',
-                                        'type': 'wc',
-                                        'course': 'bar',
-                                        'weekday': 3,
-                                        'timeslot': 15,
-                                        'room': 'C1.04'
-                                    }
-                                ]
-                            },
-                            {},
-                            {}
-                         ]
-                    ])
-                )
+            mock_json_dumps.assert_called()
+            mock_json_dumps.call_args(
+                mock.call([
+                    [
+                        {
+                            9: [
+                                {
+                                    'id': self.event1.id,
+                                    'title': 'foo lecture 1',
+                                    'type': 'hc',
+                                    'course': 'foo',
+                                    'weekday': 1,
+                                    'timeslot': 9,
+                                    'room': 'C0.110'
+                                }
+                            ]
+                        },
+                        {},
+                        {
+                            15: [
+                                {
+                                    'id': self.event3.id,
+                                    'title': 'bar seminar 1',
+                                    'type': 'wc',
+                                    'course': 'bar',
+                                    'weekday': 3,
+                                    'timeslot': 15,
+                                    'room': 'C1.04'
+                                }
+                            ]
+                        },
+                        {},
+                        {}
+                        ]
+                ])
+            )
