@@ -1,4 +1,7 @@
 # Lesrooster
+
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/kkoomen/uva-ahs-lesrooster/test.yml?label=tests)
+
 Deze repository bevat een implementatie voor de
 [Lectures & Lesrooster](https://ah.proglab.nl/cases/lectures-en-lesroosters)
 case voor de UvA en het gedocumenteerde proces dat is bijgehouden tijdens dit
