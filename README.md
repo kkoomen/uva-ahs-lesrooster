@@ -106,11 +106,11 @@ Hard constraints:
 
 Soft constraints (maluspunten):
 
-- Elke activiteit ingeboekt in het 17:00 - 19:00 tijdslot geeft 5 maluspunten.
-- 1 tussenslot tussen twee andere activiteiten per student geeft 1 maluspunt.
-- 2 tussensloten tussen twee andere activiteiten per student geeft 3 maluspunten.
-- Elk vak conflict per student per tijdslot geeft 1 maluspunt.
-- Elke student die niet meer in een zaal past geeft 1 maluspunt.
+- Elke activiteit ingeboekt in het 17:00 - 19:00 tijdslot geeft 5 maluspunten
+- 1 tussenslot tussen twee andere activiteiten per student geeft 1 maluspunt
+- 2 tussensloten tussen twee andere activiteiten per student geeft 3 maluspunten
+- Elk vak conflict per student per tijdslot geeft 1 maluspunt
+- Elke student die niet meer in een zaal past geeft 1 maluspunt
 - Elk dubbel ingeplande activiteit per tijdslot voor elk vak geeft 1 maluspunt (extra)
 
 # Tests
