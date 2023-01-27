@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-
 from setuptools import setup, find_packages
 
 with open('README.md', 'r') as fh:
@@ -25,5 +24,5 @@ setup(
         'Operating System :: OS Independent',
     ],
     install_requires=install_requires,
-    python_requires='>=3.9',
+    python_requires='>=3.6',
 )
