@@ -12,6 +12,7 @@ project.
 - [Lesrooster](#lesrooster)
 - [Table of Contents](#table-of-contents)
 - [Proces logboek](#proces-logboek)
+- [Project eisen](#project-eisen)
 - [Installatie](#installatie)
 - [Gebruik](#gebruik)
     + [Voorbeelden](#voorbeelden)
@@ -26,6 +27,10 @@ Ik houd een persoonlijk proces logboek bij in deze repo waar ik mijn proces en
 resultaten beschrijf na elke fase te hebben afgerond.
 
 [Klik hier](./docs/README.md) om het te bekijken.
+
+# Project eisen
+
+Dit project vereist Python 3.9 of hoger.
 
 # Installatie
 
