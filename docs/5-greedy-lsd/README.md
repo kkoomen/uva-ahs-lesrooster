@@ -29,6 +29,8 @@ student die beide vakken volgt.
 Met andere woorden, als we weten dat er minimaal één student is die vak A en vak
 B volgt, dan weten we dus welke vakken we niet samen moeten inplannen.
 
+---
+
 Hieronder het stukje code dat de `networkx` package gebruikt om de graaf te
 construeren en zo de vak conflicten te genereren.
 
@@ -70,6 +72,8 @@ class Timetable:
         for course in self.courses:
             course.set_conflicting_courses(course_conflicts[course.name])
 ```
+
+---
 
 Vervolgens kunnen we ook `networkx` gebruiken om een visueel beeld te geven.
 
