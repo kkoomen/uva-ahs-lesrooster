@@ -1,3 +1,5 @@
+![cover image](./cover.png)
+
 # Lesrooster
 
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/kkoomen/uva-ahs-lesrooster/test.yml?label=tests)
