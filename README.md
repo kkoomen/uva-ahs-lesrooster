@@ -9,6 +9,8 @@ Deze repository bevat een implementatie voor de
 case voor de UvA en het gedocumenteerde proces dat is bijgehouden tijdens dit
 project.
 
+De eindpresentatie kan je [hier](./presentation.pdf) vinden.
+
 # Inhoudsopgave
 
 - [Lesrooster](#lesrooster)
