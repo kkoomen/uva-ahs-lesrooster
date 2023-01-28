@@ -56,11 +56,11 @@ class TestBaseAlgorithm(TestCase):
         # the _new_dummy_algorithm() to create a new timetable per test.
         self.timetable_args = [mock_load_rooms, mock_load_courses, mock_load_students]
 
-    def _new_timetable_instance(self) -> Algorithm:
+    def _new_dummy_algorithm(self) -> Algorithm:
         return DummyAlgorithm(Timetable(*self.timetable_args))
 
     def test_permute_students_for_random_course(self) -> None:
-        dummy_algorithm = self._new_timetable_instance()
+        dummy_algorithm = self._new_dummy_algorithm()
 
         event1 = Event('foo 1', EventType.SEMINAR, self.course1, 1, 9, self.room1, [self.student1, self.student2])
         event2 = Event('foo 2', EventType.SEMINAR, self.course1, 2, 9, self.room1, [self.student3, self.student4])
@@ -90,7 +90,7 @@ class TestBaseAlgorithm(TestCase):
         self.assertEqual(event2.students[1] == self.student3, True)
 
     def test_swap_two_events(self) -> None:
-        dummy_algorithm = self._new_timetable_instance()
+        dummy_algorithm = self._new_dummy_algorithm()
 
         event1 = Event('foo', EventType.LECTURE, self.course1, 1, 9, self.room1)
         event2 = Event('bar', EventType.PRACTICUM, self.course2, 3, 15, self.room2)
@@ -122,7 +122,7 @@ class TestBaseAlgorithm(TestCase):
         self.assertEqual(other_event2 == event2, True)
 
     def test_swap_two_random_events(self) -> None:
-        dummy_algorithm = self._new_timetable_instance()
+        dummy_algorithm = self._new_dummy_algorithm()
 
         event1 = Event('foo', EventType.LECTURE, self.course1, 1, 9, self.room1)
         event2 = Event('bar', EventType.PRACTICUM, self.course2, 3, 15, self.room2)
@@ -163,7 +163,7 @@ class TestBaseAlgorithm(TestCase):
         inside the create_similar_event() and then we can later use
         random.seed(0) to get timeslot value 15.
         """
-        dummy_algorithm = self._new_timetable_instance()
+        dummy_algorithm = self._new_dummy_algorithm()
         event = Event('foo', EventType.LECTURE, self.course1, 1, 9, self.room1)
 
         # No matter the seed value, the new timeslot should always be different
@@ -181,7 +181,7 @@ class TestBaseAlgorithm(TestCase):
             self.assertEqual(is_different_timeslot, True)
 
     def test_move_random_event(self) -> None:
-        dummy_algorithm = self._new_timetable_instance()
+        dummy_algorithm = self._new_dummy_algorithm()
         event = Event('foo', EventType.LECTURE, self.course1, 1, 9, self.room1)
         dummy_algorithm.timetable.add_event(event)
 
@@ -199,7 +199,7 @@ class TestBaseAlgorithm(TestCase):
         self.assertEqual(is_different_timeslot, True)
 
     def test_move_high_malus_score_events(self) -> None:
-        dummy_algorithm = self._new_timetable_instance()
+        dummy_algorithm = self._new_dummy_algorithm()
 
         # Give event 1 a malus score of 1 and event 2 a malus score of 0.
         event1 = Event('foo 1', EventType.LECTURE, self.course1, 1, 9, self.room2, [self.student1, self.student2, self.student3])
@@ -239,7 +239,7 @@ class TestBaseAlgorithm(TestCase):
         mock_random_values = [0, 0.3, 0.6, 0.9]
         for mock_value in mock_random_values:
             mock_random.return_value = mock_value
-            dummy_algorithm = self._new_timetable_instance()
+            dummy_algorithm = self._new_dummy_algorithm()
 
             event1 = Event('foo 1', EventType.SEMINAR, self.course1, 1, 9, self.room1, [self.student1, self.student2])
             event2 = Event('foo 2', EventType.SEMINAR, self.course1, 2, 9, self.room2, [self.student3, self.student4])
