@@ -6,7 +6,7 @@ from code.utils.enums import EventType
 
 class TestCourse(TestCase):
 
-    def test_init(self):
+    def test_init(self) -> None:
         course = Course('foo', 1, 2, 10, 0, 0, 22)
         self.assertEqual(isinstance(course.id, int), True)
         self.assertEqual(len(str(course.id)) > 0, True)
@@ -19,19 +19,19 @@ class TestCourse(TestCase):
         self.assertEqual(course.enrolment, 22)
         self.assertEqual(course.enrolled_students, [])
 
-    def test_eq(self):
+    def test_eq(self) -> None:
         course1 = Course('foo', 1, 2, 10, 0, 0, 22)
         course2 = Course('foo', 2, 1, 15, 1, 10, 30)
         self.assertEqual(course1 == course2, False)
         self.assertEqual(course1 == course1, True)
 
-    def test_get_capacity_for_type(self):
+    def test_get_capacity_for_type(self) -> None:
         course = Course('foo', 1, 2, 10, 0, 0, 22)
         self.assertEqual(course.get_capacity_for_type(EventType.LECTURE), 22)
         self.assertEqual(course.get_capacity_for_type(EventType.SEMINAR), 10)
         self.assertEqual(course.get_capacity_for_type(EventType.PRACTICUM), 0)
 
-    def test_register_students(self):
+    def test_register_students(self) -> None:
         course = Course('foo', 1, 2, 10, 0, 0, 22)
         self.assertEqual(len(course.enrolled_students), 0)
 
@@ -39,11 +39,11 @@ class TestCourse(TestCase):
         course.register_students([student])
         self.assertEqual(len(course.enrolled_students), 1)
 
-    def test_calculate_total_events(self):
+    def test_calculate_total_events(self) -> None:
         course = Course('foo', 1, 2, 10, 3, 7, 22)
         self.assertEqual(course.calculate_total_events(), 16)
 
-    def test_create_student_groups(self):
+    def test_create_student_groups(self) -> None:
         enrolled_students = [
             Student('John', 'Doe', '1', ['foo']),
             Student('Mary', 'Jane', '2', ['foo']),
@@ -54,7 +54,7 @@ class TestCourse(TestCase):
         groups = course.create_student_groups(3)
         self.assertEqual(len(groups), 2)
 
-    def test_create_seminar_student_groups(self):
+    def test_create_seminar_student_groups(self) -> None:
         enrolled_students = [
             Student('John', 'Doe', '1', ['foo']),
             Student('Mary', 'Jane', '2', ['foo']),
@@ -65,7 +65,7 @@ class TestCourse(TestCase):
         groups = course.create_seminar_student_groups()
         self.assertEqual(len(groups), 2)
 
-    def test_create_pracicum_student_groups(self):
+    def test_create_pracicum_student_groups(self) -> None:
         enrolled_students = [
             Student('John', 'Doe', '1', ['foo']),
             Student('Mary', 'Jane', '2', ['foo']),
@@ -76,7 +76,7 @@ class TestCourse(TestCase):
         groups = course.create_practical_student_groups()
         self.assertEqual(len(groups), 2)
 
-    def test_set_conflicting_courses(self):
+    def test_set_conflicting_courses(self) -> None:
         course = Course('foo', 1, 0, 0, 2, 3, 4)
         self.assertEqual(course.conflicting_courses, [])
         course.set_conflicting_courses(['foo', 'bar'])

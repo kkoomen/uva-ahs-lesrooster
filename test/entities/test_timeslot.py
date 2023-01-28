@@ -9,12 +9,12 @@ from code.utils.enums import EventType
 
 class TestTimeslot(TestCase):
 
-    def test_init(self):
+    def test_init(self) -> None:
         timeslot = Timeslot(9)
         self.assertEqual(timeslot.value, 9)
         self.assertEqual(timeslot.events, [])
 
-    def test_add_remove_event(self):
+    def test_add_remove_event(self) -> None:
         timeslot = Timeslot(9)
         self.assertEqual(timeslot.events, [])
         event = Event('foo', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50))
@@ -23,7 +23,7 @@ class TestTimeslot(TestCase):
         timeslot.remove_event(event)
         self.assertEqual(timeslot.events, [])
 
-    def test_get_total_events(self):
+    def test_get_total_events(self) -> None:
         timeslot = Timeslot(9)
         event1 = Event('foo 1', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50))
         event2 = Event('foo 2', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 2, 9, Room('C1.08', 50))
@@ -33,7 +33,7 @@ class TestTimeslot(TestCase):
         timeslot.add_event(event3)
         self.assertEqual(timeslot.get_total_events(), 3)
 
-    def test_iter(self):
+    def test_iter(self) -> None:
         timeslot = Timeslot(9)
         event1 = Event('foo 1', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50))
         event2 = Event('foo 2', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 2, 9, Room('C1.08', 50))
@@ -47,7 +47,7 @@ class TestTimeslot(TestCase):
         self.assertEqual(next(iterator), event3)
         self.assertRaises(StopIteration, next, iterator)
 
-    def test_len(self):
+    def test_len(self) -> None:
         timeslot = Timeslot(9)
         event1 = Event('foo 1', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50))
         event2 = Event('foo 2', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 2, 9, Room('C1.08', 50))
@@ -57,11 +57,11 @@ class TestTimeslot(TestCase):
         timeslot.add_event(event3)
         self.assertEqual(len(timeslot), 3)
 
-    def test_eq(self):
+    def test_eq(self) -> None:
         self.assertEqual(Timeslot(9) == Timeslot(9), True)
         self.assertEqual(Timeslot(9) == Timeslot(11), False)
 
-    def test_serialize(self):
+    def test_serialize(self) -> None:
         timeslot = Timeslot(9)
         event1 = Event('foo 1', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50))
         event2 = Event('foo 2', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 2, 9, Room('C1.08', 50))
@@ -69,7 +69,7 @@ class TestTimeslot(TestCase):
         timeslot.add_event(event2)
         self.assertEqual(timeslot.serialize(), [event1, event2])
 
-    def test_get_saturation_degree_for_course(self):
+    def test_get_saturation_degree_for_course(self) -> None:
         timeslot = Timeslot(9)
 
         course1 = Course('course 1', 1, 2, 10, 0, 0, 22)
@@ -91,7 +91,7 @@ class TestTimeslot(TestCase):
         self.assertEqual(timeslot.get_saturation_degree_for_course(course2), 1)
         self.assertEqual(timeslot.get_saturation_degree_for_course(course3), 0)
 
-    def test_get_timeslot_17_violations(self):
+    def test_get_timeslot_17_violations(self) -> None:
         timeslot = Timeslot(17)
 
         course = Course('course 1', 1, 2, 10, 0, 0, 22)
@@ -106,7 +106,7 @@ class TestTimeslot(TestCase):
         self.assertEqual(timeslot.get_timeslot_17_violations(), [event2, event3])
         self.assertEqual(timeslot.get_violations(), [event2, event3])
 
-    def test_get_double_booked_violations(self):
+    def test_get_double_booked_violations(self) -> None:
         timeslot = Timeslot(9)
 
         course = Course('course 1', 1, 2, 10, 0, 0, 22)
@@ -121,7 +121,7 @@ class TestTimeslot(TestCase):
         self.assertEqual(timeslot.get_double_booked_violations(), [event2])
         self.assertEqual(timeslot.get_violations(), [event2])
 
-    def test_calculate_room_overfitting_malus_score(self):
+    def test_calculate_room_overfitting_malus_score(self) -> None:
         timeslot = Timeslot(9)
         course = Course('course 1', 1, 2, 10, 0, 0, 22)
 
@@ -137,7 +137,7 @@ class TestTimeslot(TestCase):
         self.assertEqual(timeslot.calculate_room_overfitting_malus_score(), 3)
         self.assertEqual(timeslot.calculate_malus_score(), 3)
 
-    def test_calculate_timeslot_17_malus_score(self):
+    def test_calculate_timeslot_17_malus_score(self) -> None:
         timeslot = Timeslot(17)
 
         course = Course('course 1', 1, 2, 10, 0, 0, 22)
@@ -152,7 +152,7 @@ class TestTimeslot(TestCase):
         event.set_room(non_largest_room)
         self.assertEqual(timeslot.calculate_timeslot_17_malus_score(), 0)
 
-    def test_calculate_duplicate_course_events_malus_score(self):
+    def test_calculate_duplicate_course_events_malus_score(self) -> None:
         timeslot = Timeslot(9)
 
         course = Course('course 1', 1, 2, 10, 0, 0, 22)
@@ -167,7 +167,7 @@ class TestTimeslot(TestCase):
         self.assertEqual(timeslot.calculate_duplicate_course_events_malus_score(), 2)
         self.assertEqual(timeslot.calculate_malus_score(), 2)
 
-    def test_get_overlapping_student_courses_malus_score(self):
+    def test_get_overlapping_student_courses_malus_score(self) -> None:
         timeslot = Timeslot(9)
 
         student1 = Student('John', 'Doe', '1', ['course 1'])

@@ -6,7 +6,7 @@ class TestUtilsData(TestCase):
 
     @mock.patch('code.utils.helpers.data_path')
     @mock.patch('csv.reader')
-    def test_load_students(self, mock_csv_reader, data_path):
+    def test_load_students(self, mock_csv_reader, data_path) -> None:
         mock_csv_reader.return_value = iter([
             ['Achternaam', 'Voornaam', 'Stud.Nr.', 'Vak1', 'Vak2', 'Vak3', 'Vak4', 'Vak5'],
             ['Abbing', 'Yanick', '52311353', 'Analysemethoden en -technieken', 'Data Mining', 'Lineaire Algebra', 'Software engineering'],
@@ -29,7 +29,7 @@ class TestUtilsData(TestCase):
 
     @mock.patch('code.utils.helpers.data_path')
     @mock.patch('csv.DictReader')
-    def test_load_courses(self, mock_csv_reader, data_path):
+    def test_load_courses(self, mock_csv_reader, data_path) -> None:
         mock_csv_reader.return_value = iter([
             {
                 'Vak': 'Advanced Heuristics',
@@ -60,7 +60,7 @@ class TestUtilsData(TestCase):
 
     @mock.patch('code.utils.helpers.data_path')
     @mock.patch('csv.DictReader')
-    def test_load_rooms(self, mock_csv_reader, data_path):
+    def test_load_rooms(self, mock_csv_reader, data_path) -> None:
         mock_csv_reader.return_value = iter([
             {
                 'Zaalnummer': 'A1.04',

@@ -9,7 +9,7 @@ from code.entities.timeslot import Timeslot
 from code.entities.timetable import Timetable
 from code.utils.enums import EventType
 
-def date_in_current_week(date: datetime):
+def date_in_current_week(date: datetime) -> bool:
     """
     Check if a given datetime object is within the current week.
     """
@@ -22,7 +22,7 @@ class TestTimetable(TestCase):
     @mock.patch('code.utils.data.load_students')
     @mock.patch('code.utils.data.load_courses')
     @mock.patch('code.utils.data.load_rooms')
-    def setUp(self, mock_load_rooms, mock_load_courses, mock_load_students):
+    def setUp(self, mock_load_rooms, mock_load_courses, mock_load_students) -> None:
         # Mock the load_rooms() function.
         self.room1 = Room('C0.110', 5, True)
         self.room2 = Room('C1.04', 2)
@@ -76,10 +76,10 @@ class TestTimetable(TestCase):
         # the _new_timetable_instance() to create a new timetable per test.
         self.timetable_args = [mock_load_rooms, mock_load_courses, mock_load_students]
 
-    def _new_timetable_instance(self):
+    def _new_timetable_instance(self) -> Timetable:
         return Timetable(*self.timetable_args)
 
-    def test_init(self):
+    def test_init(self) -> None:
         timetable = self._new_timetable_instance()
 
         self.assertEqual(timetable.rooms, [self.room1, self.room2])
@@ -92,7 +92,7 @@ class TestTimetable(TestCase):
         self.assertEqual(timetable.courses[0].conflicting_courses, ['bar'])
         self.assertEqual(timetable.courses[1].conflicting_courses, ['foo'])
 
-    def test_iter(self):
+    def test_iter(self) -> None:
         timetable = self._new_timetable_instance()
         iterator = iter(timetable)
         self.assertEqual(next(iterator), {})
@@ -102,7 +102,7 @@ class TestTimetable(TestCase):
         self.assertEqual(next(iterator), {})
         self.assertRaises(StopIteration, next, iterator)
 
-    def test_getitem(self):
+    def test_getitem(self) -> None:
         timetable = self._new_timetable_instance()
         self.assertEqual(timetable[0], timetable.timetable[0])
         self.assertEqual(timetable[1], timetable.timetable[1])
@@ -110,7 +110,7 @@ class TestTimetable(TestCase):
         self.assertEqual(timetable[3], timetable.timetable[3])
         self.assertEqual(timetable[4], timetable.timetable[4])
 
-    def test_eq(self):
+    def test_eq(self) -> None:
         timetable1 = self._new_timetable_instance()
         timetable2 = self._new_timetable_instance()
 
@@ -123,7 +123,7 @@ class TestTimetable(TestCase):
         timetable2.add_event(self.event1)
         self.assertEqual(timetable1 == timetable2, True)
 
-    def test_serialize(self):
+    def test_serialize(self) -> None:
         timetable = self._new_timetable_instance()
 
         timetable.add_event(self.event1)
@@ -138,7 +138,7 @@ class TestTimetable(TestCase):
             {}
         ])
 
-    def test_get_events(self):
+    def test_get_events(self) -> None:
         timetable = self._new_timetable_instance()
 
         timetable.add_event(self.event1)
@@ -147,7 +147,7 @@ class TestTimetable(TestCase):
 
         self.assertEqual(timetable.get_events(), [self.event1, self.event2, self.event3])
 
-    def test_add_remove_event(self):
+    def test_add_remove_event(self) -> None:
         timetable = self._new_timetable_instance()
 
         timetable.add_event(self.event1)
@@ -163,24 +163,24 @@ class TestTimetable(TestCase):
         self.assertEqual(timetable.timetable, [{}, {}, {}, {}, {}])
         self.assertEqual(timetable.get_events(), [])
 
-    def test_get_total_timeslots(self):
+    def test_get_total_timeslots(self) -> None:
         timetable = self._new_timetable_instance()
         timetable.add_event(self.event1)
         timetable.add_event(self.event3)
         self.assertEqual(timetable.get_total_timeslots(), 2)
 
-    def test_get_total_empty_timeslots(self):
+    def test_get_total_empty_timeslots(self) -> None:
         timetable = self._new_timetable_instance()
         timetable.add_event(self.event3)
         timetable.add_event(self.event4)
         timeslot1, timeslot2 = timetable.timetable[2].values()
         self.assertEqual(timetable.get_total_empty_timeslots(timeslot1, timeslot2), 2)
 
-    def test_new_timetable(self):
+    def test_new_timetable(self) -> None:
         timetable = self._new_timetable_instance()
         self.assertEqual(timetable.new_timetable(), [{}, {}, {}, {}, {}])
 
-    def test_clear(self):
+    def test_clear(self) -> None:
         timetable = self._new_timetable_instance()
         timetable.add_event(self.event1)
         self.assertEqual(timetable.get_events(), [self.event1])
@@ -189,14 +189,14 @@ class TestTimetable(TestCase):
         self.assertEqual(timetable.get_events(), [])
         self.assertEqual(timetable.timetable, [{}, {}, {}, {}, {}])
 
-    def test_calculate_saturation_degree_for_unscheduled_event(self):
+    def test_calculate_saturation_degree_for_unscheduled_event(self) -> None:
         timetable = self._new_timetable_instance()
         timetable.add_event(self.event2)
         timetable.add_event(self.event3)
         timetable.add_event(self.event4)
         self.assertEqual(timetable.calculate_saturation_degree_for_unscheduled_event(self.event8), 3)
 
-    def test_get_available_timeslot_rooms(self):
+    def test_get_available_timeslot_rooms(self) -> None:
         timetable = self._new_timetable_instance()
 
         # Check timeslot 17:00 - 19:00.
@@ -211,7 +211,7 @@ class TestTimetable(TestCase):
         timeslot.add_event(self.event2)
         self.assertEqual(timetable.get_available_timeslot_rooms(timeslot), [self.room1])
 
-    def test_get_student_timetables(self):
+    def test_get_student_timetables(self) -> None:
         timetable = self._new_timetable_instance()
         timetable.add_event(self.event1)
         timetable.add_event(self.event2)
@@ -248,14 +248,14 @@ class TestTimetable(TestCase):
         }
         self.assertEqual(timetable.get_student_timetables(), output)
 
-    def test_get_events_by_course(self):
+    def test_get_events_by_course(self) -> None:
         timetable = self._new_timetable_instance()
         timetable.add_event(self.event1)
         timetable.add_event(self.event2)
         timetable.add_event(self.event3)
         self.assertEqual(timetable.get_events_by_course(), [[self.event1], [self.event2, self.event3]])
 
-    def test_get_empty_timeslot_violations(self):
+    def test_get_empty_timeslot_violations(self) -> None:
         timetable = self._new_timetable_instance()
         self.assertEqual(timetable.is_solution(), True)
         timetable.add_event(self.event1)
@@ -264,7 +264,7 @@ class TestTimetable(TestCase):
         self.assertEqual(timetable.get_violations(), [self.event5])
         self.assertEqual(timetable.is_solution(), False)
 
-    def test_calculate_empty_timeslots_malus_score(self):
+    def test_calculate_empty_timeslots_malus_score(self) -> None:
         timetable = self._new_timetable_instance()
         timetable.add_event(self.event3)
         timetable.add_event(self.event4)
@@ -274,7 +274,7 @@ class TestTimetable(TestCase):
         self.assertEqual(timetable.calculate_empty_timeslots_malus_score(), 4)
         self.assertEqual(timetable.calculate_malus_score(), 5)
 
-    def test_get_events_by_course_per_day(self):
+    def test_get_events_by_course_per_day(self) -> None:
         timetable = self._new_timetable_instance()
         timetable.add_event(self.event1)
         timetable.add_event(self.event2)
@@ -296,7 +296,7 @@ class TestTimetable(TestCase):
             []
         ])
 
-    def test_create_ics_event(self):
+    def test_create_ics_event(self) -> None:
         timetable = self._new_timetable_instance()
         ics_event = timetable.create_ics_event(self.event1)
         assert self.event1.room is not None, 'event1 room must bet set'
@@ -306,7 +306,7 @@ class TestTimetable(TestCase):
         self.assertEqual(date_in_current_week(ics_event.begin), True)
         self.assertEqual(date_in_current_week(ics_event.end), True)
 
-    def test_export_csv(self):
+    def test_export_csv(self) -> None:
         timetable = self._new_timetable_instance()
         timetable.add_event(self.event1)
         timetable.add_event(self.event3)
@@ -325,7 +325,7 @@ class TestTimetable(TestCase):
                 mock.call(['Steven London', 'bar seminar 1', 'wc', 'wed', 15, 'C1.04']),
             ])
 
-    def test_export_ics(self):
+    def test_export_ics(self) -> None:
         timetable = self._new_timetable_instance()
         timetable.add_event(self.event1)
         timetable.add_event(self.event3)
@@ -345,7 +345,7 @@ class TestTimetable(TestCase):
             self.assertEqual(mock_ics_calendar.serialize.call_count, 7)
             self.assertEqual(mock_mkdir.call_count, 3)
 
-    def test_export_json(self):
+    def test_export_json(self) -> None:
         timetable = self._new_timetable_instance()
         timetable.add_event(self.event1)
         timetable.add_event(self.event3)

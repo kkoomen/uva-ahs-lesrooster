@@ -15,35 +15,35 @@ from code.utils.helpers import (
 
 class TestUtilsHelpers(TestCase):
 
-    def test_data_path(self):
+    def test_data_path(self) -> None:
         filepath = data_path('foo.csv')
         self.assertEqual(filepath, os.path.join(ROOT_DIR, 'data', 'foo.csv'))
 
-    def test_split_list(self):
+    def test_split_list(self) -> None:
         self.assertEqual(split_list(['a', 'b', 'c', 'd', 'e'], 2), [['a', 'b'], ['c', 'd'], ['e']])
 
-    def test_split_list_random(self):
+    def test_split_list_random(self) -> None:
         random.seed(0)
         self.assertEqual(split_list_random(['a', 'b', 'c', 'd', 'e'], 2), [['b', 'c'], ['a', 'e'], ['d']])
 
-    def test_make_id(self):
+    def test_make_id(self) -> None:
         value = random.getrandbits(32)
         self.assertEqual(isinstance(value, int), True)
         self.assertEqual(len(str(value)) > 0, True)
 
-    def test_remove_duplicates(self):
+    def test_remove_duplicates(self) -> None:
         self.assertEqual(remove_duplicates(['a', 'b', 'b', 'c']), ['a', 'b', 'c'])
 
-    def test_get_utc_offset(self):
+    def test_get_utc_offset(self) -> None:
         self.assertEqual(re.match(r'^\+\d{2}:\d{2}$', get_utc_offset()) is not None, True)
 
-    def test_serialize(self):
+    def test_serialize(self) -> None:
         class Bar:
-            def serialize(self):
+            def serialize(self) -> dict[str, bool]:
                 return {'bar': True}
 
         class Foo:
-            def serialize(self):
+            def serialize(self) -> list:
                 return ['a', Bar()]
 
         self.assertEqual(serialize(Foo()), ['a', {'bar': True}])

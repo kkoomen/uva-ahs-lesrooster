@@ -8,7 +8,7 @@ from code.utils.enums import EventType
 
 class TestEvent(TestCase):
 
-    def test_init(self):
+    def test_init(self) -> None:
         course = Course('foo', 1, 2, 10, 0, 0, 22)
         room = Room('C0.110', 50)
         event = Event('foo', EventType.LECTURE, course, 1, 9, room)
@@ -22,7 +22,7 @@ class TestEvent(TestCase):
         self.assertEqual(event.room, room)
         self.assertEqual(event.students, [])
 
-    def test_lt(self):
+    def test_lt(self) -> None:
         course = Course('foo', 1, 2, 10, 0, 0, 22)
 
         # check if event1 is less than event2 based on weekday.
@@ -42,7 +42,7 @@ class TestEvent(TestCase):
         event6 = Event('foo', EventType.LECTURE, course, 1, 9, Room('C0.110', 50))
         self.assertEqual(event5 < event6, True)
 
-    def test_sorting(self):
+    def test_sorting(self) -> None:
         course = Course('foo', 1, 2, 10, 0, 0, 22)
         event1 = Event('foo 1', EventType.LECTURE, course, 2, 9, Room('C1.08', 50))
         event2 = Event('foo 2', EventType.LECTURE, course, 1, 11, Room('C1.12', 50))
@@ -50,21 +50,21 @@ class TestEvent(TestCase):
         event4 = Event('foo 4', EventType.LECTURE, course, 1, 9, Room('C1.04', 30))
         self.assertEqual(sorted([event1, event2, event3, event4]) == [event4, event3, event2, event1], True)
 
-    def test_eq(self):
+    def test_eq(self) -> None:
         course = Course('foo', 1, 2, 10, 0, 0, 22)
         event1 = Event('foo 1', EventType.LECTURE, course, 2, 9, Room('C1.08', 50))
         event2 = Event('foo 2', EventType.LECTURE, course, 1, 11, Room('C1.12', 50))
         self.assertEqual(event1 == event2, False)
         self.assertEqual(event1 == event1, True)
 
-    def test_add_student(self):
+    def test_add_student(self) -> None:
         event = Event('foo', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50))
         self.assertEqual(event.students, [])
         student = Student('John', 'Doe', '1', ['course1', 'course2'])
         event.add_student(student)
         self.assertEqual(event.students, [student])
 
-    def test_assign_students(self):
+    def test_assign_students(self) -> None:
         student1 = Student('John', 'Doe', '1', ['course1', 'course2'])
         event = Event('foo', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50), [student1])
         self.assertEqual(event.students, [student1])
@@ -74,7 +74,7 @@ class TestEvent(TestCase):
         event.assign_students([student2, student3])
         self.assertEqual(event.students, [student2, student3])
 
-    def test_serialize(self):
+    def test_serialize(self) -> None:
         event = Event('foo', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50))
         output = {
             'id': event.id,
@@ -87,7 +87,7 @@ class TestEvent(TestCase):
         }
         self.assertEqual(event.serialize(), output)
 
-    def test_set_room(self):
+    def test_set_room(self) -> None:
         room1 = Room('C1.08', 50)
         event = Event('foo', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, room1)
         self.assertEqual(event.room, room1)
@@ -96,19 +96,19 @@ class TestEvent(TestCase):
         event.set_room(room2)
         self.assertEqual(event.room, room2)
 
-    def test_set_timeslot(self):
+    def test_set_timeslot(self) -> None:
         event = Event('foo', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50))
         self.assertEqual(event.timeslot, 9)
         event.set_timeslot(11)
         self.assertEqual(event.timeslot, 11)
 
-    def test_set_weekday(self):
+    def test_set_weekday(self) -> None:
         event = Event('foo', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50))
         self.assertEqual(event.weekday, 1)
         event.set_weekday(2)
         self.assertEqual(event.weekday, 2)
 
-    def test_get_formatted_weekday(self):
+    def test_get_formatted_weekday(self) -> None:
         event = Event('foo', EventType.LECTURE, Course('bar', 1, 2, 10, 0, 0, 22), 1, 9, Room('C1.08', 50))
         self.assertEqual(event.get_formatted_weekday(), 'mon')
         event.set_weekday(2)
@@ -120,7 +120,7 @@ class TestEvent(TestCase):
         event.set_weekday(5)
         self.assertEqual(event.get_formatted_weekday(), 'fri')
 
-    def test_get_capacity(self):
+    def test_get_capacity(self) -> None:
         course = Course('bar', 1, 2, 10, 0, 0, 22)
         event1 = Event('foo', EventType.LECTURE, course, 1, 9, Room('C1.08', 50))
         event2 = Event('bar', EventType.SEMINAR, course, 2, 9, Room('C1.08', 50))
