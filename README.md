@@ -9,10 +9,10 @@ Deze repository bevat een implementatie voor de
 case voor de UvA en het gedocumenteerde proces dat is bijgehouden tijdens dit
 project.
 
-# Table of Contents
+# Inhoudsopgave
 
 - [Lesrooster](#lesrooster)
-- [Table of Contents](#table-of-contents)
+- [Inhoudsopgave](#inhoudsopgave)
 - [Proces logboek](#proces-logboek)
 - [Project eisen](#project-eisen)
 - [Installatie](#installatie)
@@ -73,7 +73,7 @@ Voor alle mogelijke opties, zie `./main.py --help`
 Random algoritme:
 - `./main.py -a random -i 10`
 - `./main.py -a random --random-walk -i 1000 --show-heatmap`
-- `./main.py -a random -e csv`
+- `./main.py -a random -e csv -e json`
 - `./main.py -a random -e ics --show-heatmap`
 
 Greedy algoritme:

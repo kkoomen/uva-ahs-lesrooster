@@ -78,7 +78,9 @@ def parse_arguments() -> argparse.Namespace:
 
     parser.add_argument('-e', '--export',
                         choices=['csv', 'ics', 'json'],
-                        help='Export the timetable result to one of the available choices')
+                        action='append',
+                        help='Export the timetable result to one of the available choices',
+                        nargs='?')
 
     parser.add_argument('-s', '--plot-stats',
                         action='store_true',
@@ -137,12 +139,13 @@ def run_algorithm(args: argparse.Namespace):
     if args.debug_timetable:
         algorithm.timetable.print_debug_info()
 
-    if args.export == 'csv':
-        algorithm.timetable.export_csv()
-    elif args.export == 'ics':
-        algorithm.timetable.export_ics()
-    elif args.export == 'json':
-        algorithm.timetable.export_json()
+    if args.export is not None:
+        if 'csv' in args.export:
+            algorithm.timetable.export_csv()
+        if 'ics' in args.export:
+            algorithm.timetable.export_ics()
+        if 'json' in args.export:
+            algorithm.timetable.export_json()
 
     if args.plot_stats:
         algorithm.plot_statistics()
