@@ -406,6 +406,31 @@ class Timetable:
 
         return rooms
 
+    def get_malus_score_distribution(self) -> dict[str, int]:
+        """
+        Returns a dictionary containing how the malus points for this timetable
+        is distributed, where the key is the group label and the value is a
+        number representing how much malus points were calculated for that
+        group, where as a group can be double booked rooms, student conflicts,
+        timeslot 17 events and more.
+        """
+        info = {
+            'student tussensloten': self.calculate_empty_timeslots_malus_score(),
+            'tijdslot 17': 0,
+            'student overlappende vakken': 0,
+            'zaal capaciteit': 0,
+            'dubbele vak activiteiten': 0,
+        }
+
+        for day in self.timetable:
+            for timeslot in day.values():
+                info['tijdslot 17'] += timeslot.calculate_timeslot_17_malus_score()
+                info['student overlappende vakken'] += timeslot.get_overlapping_student_courses_malus_score()
+                info['zaal capaciteit'] += timeslot.calculate_room_overfitting_malus_score()
+                info['dubbele vak activiteiten'] += timeslot.calculate_duplicate_course_events_malus_score()
+
+        return info
+
     def export_csv(self, filename: str = 'timetable.csv') -> None:
         """
         Export the timetable data to a CSV.
@@ -606,9 +631,10 @@ class Timetable:
         events_heatmap = [[0 for _ in range(len(timeslots))] for _ in range(len(days))]
         scores_heatmap = [[0 for _ in range(len(timeslots))] for _ in range(len(days))]
 
-        # Make two plots with 1 row and 2 columns.
-        fig, ax = plt.subplots(1, 2, figsize=(12, 6))
-        fig.tight_layout(pad=7)
+        # Make two plots with 1 row and 3 columns.
+        fig, ax = plt.subplots(1, 3, figsize=(20, 6))
+        fig.tight_layout(pad=8)
+        fig.subplots_adjust(wspace=0.5)
 
         # Set the super title for the plot.
         fig.suptitle('Timetable')
@@ -626,15 +652,15 @@ class Timetable:
 
         heatmaps = [
             {
-                'title': f'Events (total = {total_events})',
+                'title': f'Activiteiten (totaal = {total_events})',
                 'heatmap': events_heatmap,
             },
             {
-                'title': f'Malus scores (total = {malus_score})',
+                'title': f'Maluspunten (totaal = {malus_score})',
                 'heatmap': scores_heatmap,
             },
         ]
-        for index, subplot in enumerate(ax):
+        for index, subplot in enumerate(ax[:2]):
             item = heatmaps[index]
             heatmap = item['heatmap']
             subplot.set_title(item['title'])
@@ -654,6 +680,19 @@ class Timetable:
                         subplot.text(i, j, heatmap[j][i], ha='center',
                                      va='center', color='r', fontweight='bold',
                                      fontsize='x-large')
+
+        # Plot a third graph showing the malus points distribution.
+        bar_graph = ax[2]
+        malus_score_info = self.get_malus_score_distribution()
+        x = list(malus_score_info.keys())
+        y = list(malus_score_info.values())
+        bar_graph.set_xlabel('maluspunten')
+        bar_container = bar_graph.barh(x, y, edgecolor='white', color='crimson')
+        bar_graph.set_title(f'Maluspunten verdeling (totaal = {malus_score})')
+
+        for i, bar in enumerate(bar_container):
+            # Put the bar values on top of the bars.
+            bar_graph.text(bar.get_width(), i, y[i], fontweight='bold', va='center', ha='left')
 
         plt.show()
 
