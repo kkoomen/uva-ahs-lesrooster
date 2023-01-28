@@ -14,15 +14,18 @@ class Timeslot:
     OPTIONS = [9, 11, 13, 15, 17]
     TIMEFRAME = 2
 
-    def __init__(self, value: int, events: Union[list[Event], None]=None) -> None:
+    def __init__(self, value: int, weekday: int, events: Union[list[Event], None]=None) -> None:
         self.value = value
+        self.weekday = weekday
         self.events = events if events is not None else []
 
     def __eq__(self, other) -> bool:
         """
         Check if two timeslots are the same class type and value.
         """
-        return self.__class__ == other.__class__ and self.value == other.value
+        return self.__class__ == other.__class__ and \
+            self.value == other.value and \
+            self.weekday == other.weekday
 
     def add_event(self, event: Event) -> None:
         """

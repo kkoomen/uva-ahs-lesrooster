@@ -20,8 +20,20 @@ class Student:
     def __str__(self) -> str:
         return self.get_full_name()
 
+    def __lt__(self, other) -> bool:
+        """
+        Implements the < operator.
+        """
+        return self.get_full_name() < other.get_full_name()
+
     def get_full_name(self) -> str:
         """
         Get the full name of a student, which includes first and last name.
         """
         return f'{self.first_name} {self.last_name}'
+
+    def __eq__(self, other) -> bool:
+        """
+        Check if two students are of the same class type and have the same id.
+        """
+        return self.__class__ == other.__class__ and self.student_id == other.student_id

@@ -178,7 +178,7 @@ class Timetable:
         weekday = self.timetable[event.weekday - 1]
 
         if event.timeslot not in weekday:
-            weekday[event.timeslot] = Timeslot(event.timeslot)
+            weekday[event.timeslot] = Timeslot(event.timeslot, event.weekday)
 
             # Sort the timeslots in ascending order.
             self.timetable[event.weekday - 1] = dict(sorted(weekday.items()))
@@ -315,7 +315,7 @@ class Timetable:
                         if student.student_id not in student_timetables:
                             student_timetables[student.student_id] = self.new_timetable()
                         if hour not in student_timetables[student.student_id][day_index]:
-                            student_timetables[student.student_id][day_index][hour] = Timeslot(hour)
+                            student_timetables[student.student_id][day_index][hour] = Timeslot(hour, day_index + 1)
                         if event not in student_timetables[student.student_id][day_index][hour]:
                             student_timetables[student.student_id][day_index][hour].add_event(event)
 

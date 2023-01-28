@@ -69,7 +69,7 @@ class HillClimber(Algorithm):
         no_improvement_counter = 0
         for i in range(iterations):
             if no_improvement_counter == no_improvement_limit:
-                self.logger.info(f'Reached local optimum')
+                self.logger.info(f'Quitting, because no improvement has been found for {no_improvement_limit} iterations')
                 return
 
             # Log the current iteration every 100 iterations.

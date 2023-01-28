@@ -11,10 +11,10 @@ omit =
     code/utils/statistics.py
     code/utils/decorators.py
     code/visualizations/*
-    code/algorithms/*
     */__init__.py
 exclude_lines =
     def __repr__
+    def run
     def plot_*
     def print_*
 

@@ -117,7 +117,7 @@ class Algorithm(abc.ABC):
         # Put the timeslot in any other timeslot than the current one.
         timeslot = random.choice(Timeslot.OPTIONS)
         if timeslot == event.timeslot:
-            weekday = random.choice([weekday.value for weekday in Weekdays if weekday != event.weekday])
+            weekday = random.choice([weekday.value for weekday in Weekdays if weekday.value != event.weekday])
         else:
             weekday = random.choice([weekday.value for weekday in Weekdays])
 
@@ -181,12 +181,15 @@ class Algorithm(abc.ABC):
         lowest_degree = None
         for day in timetable:
             for timeslot in day.values():
+                if timeslot == current_timeslot:
+                    continue
+
                 saturation_degree = timeslot.get_saturation_degree_for_course(event.course)
                 if lowest_degree is None or saturation_degree < lowest_degree:
                     lowest_degree = saturation_degree
                     other_timeslot = timeslot
 
-        if isinstance(other_timeslot, Timeslot) and current_timeslot is not other_timeslot and len(other_timeslot.events) > 0:
+        if isinstance(other_timeslot, Timeslot) and len(other_timeslot.events) > 0:
             # Get another event from this timeslot.
             other_event = random.choice(other_timeslot.events)
 

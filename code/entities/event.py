@@ -47,9 +47,16 @@ class Event:
 
     def __eq__(self, other) -> bool:
         """
-        Check if two events are of the same class type and have the same id.
+        Check if two events are of the same class type and have the same values.
         """
-        return self.__class__ == other.__class__ and self.id == other.id
+        return self.__class__ == other.__class__ and \
+            self.type == other.type and \
+            self.room == other.room and \
+            self.weekday == other.weekday and \
+            self.timeslot == other.timeslot and \
+            self.course == other.course and \
+            self.title == other.title and \
+            sorted(self.students) == sorted(other.students)
 
     def add_student(self, student: Student) -> None:
         """

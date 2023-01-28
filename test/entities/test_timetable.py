@@ -123,6 +123,17 @@ class TestTimetable(TestCase):
         timetable2.add_event(self.event1)
         self.assertEqual(timetable1 == timetable2, True)
 
+        # Add another new events but only change the room.
+        another_event = Event('test', EventType.LECTURE, self.course1, 4, 9, self.room1)
+        timetable1.add_event(another_event)
+        timetable2.add_event(Event('test', EventType.LECTURE, self.course1, 4, 9, self.room2))
+        self.assertEqual(timetable1 == timetable2, False)
+
+        # Set the room the same as the other event.
+        another_event.set_room(self.room2)
+        self.assertEqual(timetable1 == timetable2, True)
+
+
     def test_serialize(self) -> None:
         timetable = self._new_timetable_instance()
 
@@ -131,9 +142,9 @@ class TestTimetable(TestCase):
         timetable.add_event(self.event3)
 
         self.assertEqual(timetable.serialize(), [
-            { 9: Timeslot(9, [self.event1, self.event2]) },
+            { 9: Timeslot(9, 1, [self.event1, self.event2]) },
             {},
-            { 15: Timeslot(15, [self.event3]) },
+            { 15: Timeslot(15, 3, [self.event3]) },
             {},
             {}
         ])
@@ -152,11 +163,11 @@ class TestTimetable(TestCase):
 
         timetable.add_event(self.event1)
         timetable.add_event(self.event2)
-        self.assertEqual(timetable.timetable, [{ 9: Timeslot(9, [self.event1, self.event2]) }, {}, {}, {}, {}])
+        self.assertEqual(timetable.timetable, [{ 9: Timeslot(9, 1, [self.event1, self.event2]) }, {}, {}, {}, {}])
         self.assertEqual(timetable.get_events(), [self.event1, self.event2])
 
         timetable.remove_event(self.event1)
-        self.assertEqual(timetable.timetable, [{ 9: Timeslot(9, [self.event2]) }, {}, {}, {}, {}])
+        self.assertEqual(timetable.timetable, [{ 9: Timeslot(9, 1, [self.event2]) }, {}, {}, {}, {}])
         self.assertEqual(timetable.get_events(), [self.event2])
 
         timetable.remove_events([self.event2])
@@ -200,13 +211,13 @@ class TestTimetable(TestCase):
         timetable = self._new_timetable_instance()
 
         # Check timeslot 17:00 - 19:00.
-        timeslot = Timeslot(17)
+        timeslot = Timeslot(17, 1)
         self.assertEqual(timetable.get_available_timeslot_rooms(timeslot), [self.room1])
         timeslot.add_event(self.event5)
         self.assertEqual(timetable.get_available_timeslot_rooms(timeslot), [])
 
         # Check another random timeslot.
-        timeslot = Timeslot(9)
+        timeslot = Timeslot(9, 1)
         self.assertEqual(timetable.get_available_timeslot_rooms(timeslot), [self.room1, self.room2])
         timeslot.add_event(self.event2)
         self.assertEqual(timetable.get_available_timeslot_rooms(timeslot), [self.room1])
@@ -218,30 +229,30 @@ class TestTimetable(TestCase):
         timetable.add_event(self.event3)
         output = {
             '1': [
-                { 9: Timeslot(9, [self.event1, self.event2]) },
+                { 9: Timeslot(9, 1, [self.event1, self.event2]) },
                 {},
                 {},
                 {},
                 {}
             ],
             '2': [
-                { 9: Timeslot(9, [self.event1]) },
+                { 9: Timeslot(9, 1, [self.event1]) },
                 {},
                 {},
                 {},
                 {}
             ],
             '3': [
-                { 9: Timeslot(9, [self.event1]) },
+                { 9: Timeslot(9, 1, [self.event1]) },
                 {},
                 {},
                 {},
                 {}
             ],
             '4': [
-                { 9: Timeslot(9, [self.event1, self.event2]) },
+                { 9: Timeslot(9, 1, [self.event1, self.event2]) },
                 {},
-                { 15: Timeslot(15, [self.event3]) },
+                { 15: Timeslot(15, 3, [self.event3]) },
                 {},
                 {}
             ],
@@ -273,6 +284,22 @@ class TestTimetable(TestCase):
         timetable.add_event(self.event8)
         self.assertEqual(timetable.calculate_empty_timeslots_malus_score(), 4)
         self.assertEqual(timetable.calculate_malus_score(), 5)
+
+    def test_get_malus_score_distribution(self) -> None:
+        timetable = self._new_timetable_instance()
+        timetable.add_event(self.event1)
+        timetable.add_event(self.event2)
+        timetable.add_event(self.event3)
+        timetable.add_event(self.event4)
+        timetable.add_event(self.event5)
+        timetable.add_event(self.event6)
+        self.assertEqual(timetable.get_malus_score_distribution(), {
+            'student tussensloten': 3,
+            'tijdslot 17': 5,
+            'student overlappende vakken': 3,
+            'zaal capaciteit': 0,
+            'dubbele vak activiteiten': 0
+        })
 
     def test_get_events_by_course_per_day(self) -> None:
         timetable = self._new_timetable_instance()

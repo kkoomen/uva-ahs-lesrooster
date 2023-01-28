@@ -64,13 +64,21 @@ class TabuSearch(Algorithm):
         best_solution = initial_solution
         tabu_list: set[int] = set()
 
+        # Stop if there is no improvement anymore after this amount of times.
+        no_improvement_limit = 10000
+
         violations = len(initial_solution.get_violations())
         malus_score = initial_solution.calculate_malus_score()
         self.logger.info(f'Initial solution state has {violations} violations and {malus_score} malus score')
 
         tabu_list.add(malus_score)
 
+        no_improvement_counter = 0
         for i in range(iterations):
+            if no_improvement_counter == no_improvement_limit:
+                self.logger.info(f'Quitting, because no improvement has been found for {no_improvement_limit} iterations')
+                return
+
             # Log the current iteration every 100 iterations.
             if i % 100 == 0 and i > 0:
                 self.logger.info(f'Starting iteration {max(i, 1)}/{iterations}')
@@ -83,10 +91,14 @@ class TabuSearch(Algorithm):
             if candidate_score < best_solution_score:
                 self.logger.info(f'Found new best solution with {candidate_score} malus score (previous:{best_solution_score})')
                 best_solution = candidate
-            elif candidate_score not in tabu_list:
-                tabu_list.add(candidate_score)
-                if len(tabu_list) > max_tabu_list_size:
-                    tabu_list.pop()
+                no_improvement_counter = 0
+            else:
+                no_improvement_counter += 1
+
+                if candidate_score not in tabu_list:
+                    tabu_list.add(candidate_score)
+                    if len(tabu_list) > max_tabu_list_size:
+                        tabu_list.pop()
 
             self.statistics.append({ 'malus_score': best_solution_score })
 

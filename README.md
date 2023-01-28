@@ -125,23 +125,28 @@ Soft constraints (maluspunten):
 - `coverage run -m pytest`: run alle tests
 - `coverage report`: toon code coverage (kan alleen nadat je `coverage run` hebt uitgevoerd)
 
-Alle entities en utils hebben tests waar nodig:
+Alle entities, utils en base algoritme class hebben tests waar nodig:
 
 ```
-Name                         Stmts   Miss  Cover
-------------------------------------------------
-code/entities/course.py         45      0   100%
-code/entities/event.py          38      0   100%
-code/entities/room.py           15      0   100%
-code/entities/student.py        10      0   100%
-code/entities/timeslot.py       90      0   100%
-code/entities/timetable.py     283      0   100%
-code/utils/constants.py          5      0   100%
-code/utils/data.py              49      0   100%
-code/utils/enums.py              6      0   100%
-code/utils/helpers.py           53      0   100%
-------------------------------------------------
-TOTAL                          594      0   100%
+Name                             Stmts   Miss  Cover
+----------------------------------------------------
+code/algorithms/base.py            117      0   100%
+code/algorithms/greedy.py           93     93     0%
+code/algorithms/hillclimber.py      20     20     0%
+code/algorithms/randomizer.py       61     61     0%
+code/algorithms/tabu_search.py      24     24     0%
+code/entities/course.py             45      0   100%
+code/entities/event.py              38      0   100%
+code/entities/room.py               15      0   100%
+code/entities/student.py            14      0   100%
+code/entities/timeslot.py           91      0   100%
+code/entities/timetable.py         291      0   100%
+code/utils/constants.py              5      0   100%
+code/utils/data.py                  49      0   100%
+code/utils/enums.py                  6      0   100%
+code/utils/helpers.py               53      0   100%
+----------------------------------------------------
+TOTAL                              922    198    79%
 ```
 
 # Auteurs
