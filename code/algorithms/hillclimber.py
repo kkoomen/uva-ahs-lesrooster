@@ -50,36 +50,16 @@ class HillClimber(Algorithm):
         plt.title(f'Hill climber using {base_algorithm_name} (iterations = {iterations}; malus score = {lowest_malus_score})')
         plt.show()
 
-    def mutate_state(self) -> None:
-        """
-        Mutate the timetable with some random actions.
-
-        The actions are as follows:
-        - 30% chance to move events with a high malus score
-        - 30% chance to move a single event
-        - 30% chance to swap two random events
-        - 10% chance to permute students within a course
-        """
-        n = random.random()
-        if n < 0.3:
-            self.move_high_malus_score_events()
-        elif 0.3 <= n < 0.6:
-            self.move_random_event()
-        elif 0.6 <= n < 0.9:
-            self.swap_two_random_events()
-        else:
-            self.permute_students_for_random_course()
-
     @timer
     def run(self, iterations=1) -> None:
         """
-        Run the hill climber until there are no more improvements.
+        Run the hill climber for n-iterations until a local optimum is reached.
         """
         self.timetable.clear()
         self.generate_state()
 
         # Stop if there is no improvement anymore after this amount of times.
-        no_improvement_limit = iterations
+        no_improvement_limit = 10000
 
         violations = len(self.timetable.get_violations())
         malus_score = self.timetable.calculate_malus_score()
@@ -94,7 +74,7 @@ class HillClimber(Algorithm):
 
             # Log the current iteration every 100 iterations.
             if i % 100 == 0 and i > 0:
-                self.logger.info(f'Starting iteration {i}/{iterations}')
+                self.logger.info(f'Starting iteration {max(i, 1)}/{iterations}')
 
             self.mutate_state()
 
@@ -102,6 +82,10 @@ class HillClimber(Algorithm):
             prev_malus_score = prev_state.calculate_malus_score()
             new_violations = len(self.timetable.get_violations())
             new_malus_score = self.timetable.calculate_malus_score()
+
+            if new_violations == 0 and new_malus_score == 0:
+                self.logger.info('🎉  Found the best solution possible, hooray!')
+                break
 
             # If it is a better solution or at least equally as good
             is_better_solution = (

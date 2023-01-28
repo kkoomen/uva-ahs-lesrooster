@@ -192,3 +192,26 @@ class Algorithm(abc.ABC):
 
             # Swap the two events.
             self.swap_two_events(event, other_event, timetable)
+
+    def mutate_state(self, timetable: Union[Timetable, None]=None) -> None:
+        """
+        Mutate the timetable with some random actions.
+
+        The actions are as follows:
+        - 30% chance to move one an event with malus score > 0
+        - 30% chance to move a single event
+        - 30% chance to swap two random events
+        - 10% chance to permute students within a course
+        """
+        if timetable is None:
+            timetable = self.timetable
+
+        n = random.random()
+        if n < 0.3:
+            self.move_high_malus_score_events(timetable)
+        elif 0.3 <= n < 0.6:
+            self.move_random_event(timetable)
+        elif 0.6 <= n < 0.9:
+            self.swap_two_random_events(timetable)
+        else:
+            self.permute_students_for_random_course(timetable)
