@@ -386,6 +386,6 @@ class TestTimetable(TestCase):
                         },
                         {},
                         {}
-                        ]
+                    ]
                 ])
             )
