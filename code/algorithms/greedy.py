@@ -260,7 +260,8 @@ class GreedyLSD(Greedy):
         # Sort by the total events a course has to schedule within the group of
         # events with the highest conflict.
         events_group = sorted(grouped_events[highest_degree],
-                              key=lambda event: event.course.calculate_total_events())
+                              key=lambda event: event.course.calculate_total_events(),
+                              reverse=True)
 
         event = events_group[0]
         return events.pop(events.index(event))
