@@ -4,6 +4,7 @@ This file contains helper functions that are used throughout the project.
 
 import copy
 from datetime import datetime
+import math
 import os
 import random
 from typing import Any
@@ -24,7 +25,7 @@ def split_list(items: list, k: int) -> list[list]:
     Split a list with items into groups of size `k`.
     """
     groups = []
-    total_groups = k + 1
+    total_groups = math.ceil(len(items) / k)
 
     for i in range(total_groups):
         start = k * i
@@ -41,7 +42,7 @@ def split_list_random(items: list, k: int) -> list[list]:
     """
     choices = copy.deepcopy(items)
     groups = []
-    total_groups = k + 1
+    total_groups = math.ceil(len(items) / k)
 
     for _ in range(total_groups):
         group = []
