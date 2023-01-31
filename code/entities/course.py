@@ -81,8 +81,9 @@ class Course:
 
         :returns: List with grouped students and total groups created.
         """
-        total_groups = math.ceil(self.enrolment / capacity)
-        group_capacity = math.ceil(self.enrolment / total_groups)
+        enrolment = len(self.enrolled_students)
+        total_groups = math.ceil(enrolment / capacity)
+        group_capacity = math.ceil(enrolment / total_groups)
         fn = split_list_random if random else split_list
         return fn(self.enrolled_students, group_capacity), total_groups
 
