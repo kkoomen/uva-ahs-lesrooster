@@ -84,10 +84,10 @@ class TestBaseAlgorithm(TestCase):
         random.seed(1)
 
         dummy_algorithm.permute_students_for_random_course()
-        self.assertEqual(event1.students[0] == self.student2, True)
+        self.assertEqual(event1.students[0] == self.student3, True)
         self.assertEqual(event1.students[1] == self.student1, True)
         self.assertEqual(event2.students[0] == self.student4, True)
-        self.assertEqual(event2.students[1] == self.student3, True)
+        self.assertEqual(event2.students[1] == self.student2, True)
 
     def test_swap_two_events(self) -> None:
         dummy_algorithm = self._new_dummy_algorithm()

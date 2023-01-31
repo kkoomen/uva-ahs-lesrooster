@@ -25,7 +25,7 @@ class TestUtilsHelpers(TestCase):
 
     def test_split_list_random(self) -> None:
         random.seed(0)
-        self.assertEqual(split_list_random(['a', 'b', 'c', 'd', 'e'], 2), [['b', 'c'], ['a', 'e'], ['d']])
+        self.assertEqual(split_list_random(['a', 'b', 'c', 'd', 'e'], 2), [['d', 'e'], ['a', 'c'], ['b']])
         self.assertEqual(split_list_random(['a', 'b', 'c', 'd', 'e'], 4), [['d', 'c', 'b', 'e'], ['a']])
 
     def test_make_id(self) -> None:

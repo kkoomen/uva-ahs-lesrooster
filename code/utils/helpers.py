@@ -49,7 +49,7 @@ def split_list_random(items: list, k: int) -> list[list]:
 
         for _ in range(k):
             if len(choices) > 0:
-                random_index = random.randrange(min(len(choices), k))
+                random_index = random.randrange(len(choices))
                 item = choices.pop(random_index)
                 group.append(item)
 
