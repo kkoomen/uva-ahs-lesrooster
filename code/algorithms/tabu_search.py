@@ -80,7 +80,7 @@ class TabuSearch(Algorithm):
                 return
 
             # Log the current iteration every 100 iterations.
-            if i % 100 == 0 and i > 0:
+            if (i + 1) % 100 == 0:
                 self.logger.info(f'Starting iteration {max(i, 1)}/{iterations}')
 
             candidate = self.get_neighbor(best_solution)

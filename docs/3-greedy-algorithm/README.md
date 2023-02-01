@@ -17,8 +17,7 @@ De pseudo code voor mijn constructieve algoritme is als volgt:
 Ook bedacht ik mij dat het logischer zou zijn om van links naar rechts in te
 plannen, in plaats van boven naar onder, zodat eerst de tijdsloten van 9 uur
 ingevuld worden voor elke dag, dan 11 uur, dan 15 uur etc, maar helaas gaf dit
-een veel slechter resultaat. Van boven naar onder geeft een malus score van 282
-en van links naar rechts geeft een malus score van 307.
+een veel slechter resultaat.
 
 Het greedy algoritme berekent de beste optie voor een activiteit door de deze in
 elk tijdslot in te plannen in de zaal die perfect of groot genoeg is qua
@@ -28,7 +27,7 @@ we al deze mogelijkheden op het laagste aantal violations met laagste aantal
 maluspunten en vervolgens nog op vroegste tijdslot en day van de week. Dit geeft
 ons het beste eerst opkomende tijdslot met de minste maluspunten.
 
-Hieronder is een versie te zien zonder violations met 282 maluspunten. Dit toont
+Hieronder is een versie te zien zonder violations met 286 maluspunten. Dit toont
 aan dat het greedy algoritme het aantal maluspunten flink verminderd ten
 opzichte van het random algortime dat 1000+ maluspunten opleverde.
 

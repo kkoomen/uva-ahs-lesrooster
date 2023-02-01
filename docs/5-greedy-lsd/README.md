@@ -89,9 +89,9 @@ het aantal dubbel ingeplande activiteiten van hetzelfde vak. Bijvoorbeeld, als
 er in een tijdslot 3 activiteiten zitten van hetzelfde vak, dan zijn er 2 te
 veel hier, dus hier wordt een malus score van 2 extra toegekend. Dit resulteerde
 in een verhoging (zoals verwacht) in het totaal aantal maluspunten voor het
-rooster. Greedy heeft hiermee 282 maluspunten. Vervolgens heeft het Greedy LSD
-algoritme 228 maluspunten behaald, aldus 54 punten minder. Hierbij heeft greedy
-195 student conflicten en de Greedy LSD 169, een verschil van 26 student
+rooster. Greedy heeft hiermee 286 maluspunten. Vervolgens heeft het Greedy LSD
+algoritme 243 maluspunten behaald, aldus 43 punten minder. Hierbij heeft greedy
+209 student conflicten en de Greedy LSD 176, een verschil van 33 student
 conflicten.
 
 Per iteratie van het greedy algoritme is een `get_next_event()` methode die

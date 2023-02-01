@@ -3,7 +3,8 @@ import logging
 import random
 from typing import Union
 from code.algorithms.base import Algorithm
-from code.algorithms.greedy import GreedyLSD
+from code.algorithms.greedy import Greedy, GreedyLSD
+from code.algorithms.randomizer import Randomizer
 from code.utils.decorators import timer
 import matplotlib.pyplot as plt
 
@@ -73,8 +74,8 @@ class HillClimber(Algorithm):
                 return
 
             # Log the current iteration every 100 iterations.
-            if i % 100 == 0 and i > 0:
-                self.logger.info(f'Starting iteration {max(i, 1)}/{iterations}')
+            if (i + 1) % 100 == 0:
+                self.logger.info(f'Starting iteration {i + 1}/{iterations}')
 
             self.mutate_state()
 

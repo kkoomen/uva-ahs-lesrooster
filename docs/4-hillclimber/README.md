@@ -39,9 +39,9 @@ minder en minder bij elk algoritme.
 
 | algoritme  | start maluspunten | eind maluspunten |
 | ---------- | ----------------- | ---------------- |
-| Randomizer | 1369              | 51               |
-| Greedy     | 282               | 46               |
-| Greedy LSD | 228               | 49               |
+| Randomizer | 1668              | 61               |
+| Greedy     | 286               | 52               |
+| Greedy LSD | 243               | 62               |
 
 Uit bovenstaande resultaat kunnen we concluderen dat de hill climber altijd
 convergeert bij deze casus en aldus erg effectief is in het minimaliseren van de
