@@ -24,7 +24,7 @@ elk tijdslot in te plannen in de zaal die perfect of groot genoeg is qua
 capaciteit. Vervolgens wordt een malus score voor deze situatie berekend en in
 een lijst gestopt. Uiteindelijk is elk tijdslot en zaal gecheckt en dan sorteren
 we al deze mogelijkheden op het laagste aantal violations met laagste aantal
-maluspunten en vervolgens nog op vroegste tijdslot en day van de week. Dit geeft
+maluspunten en vervolgens nog op vroegste tijdslot en dag van de week. Dit geeft
 ons het beste eerst opkomende tijdslot met de minste maluspunten.
 
 Hieronder is een versie te zien zonder violations met 286 maluspunten. Dit toont

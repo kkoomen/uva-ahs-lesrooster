@@ -2,7 +2,7 @@
 
 In deze fase heb ik een hill climber geïmplementeerd die alleen maar even goede
 of betere oplossingen accepteert. Dit algoritme gaat door tot dat het aantal
-opgegeven iteraties bereikt is, of als er na 500 iteraties geen strict betere
+opgegeven iteraties bereikt is, of als er na n-iteraties geen strict betere
 oplossing is gevonden.
 
 :exclamation: Het moet hier *strict* beter zijn omdat het anders in een
@@ -43,9 +43,9 @@ minder en minder bij elk algoritme.
 | Greedy     | 286               | 52               |
 | Greedy LSD | 243               | 62               |
 
-Uit bovenstaande resultaat kunnen we concluderen dat de hill climber altijd
+Uit bovenstaande resultaat kan geconcludeerd worden dat de hill climber altijd
 convergeert bij deze casus en aldus erg effectief is in het minimaliseren van de
-maluspunten, ongeacht hoe hoog het begint
+maluspunten, ongeacht hoe hoog het aantal maluspunten initieel is.
 
 ---
 

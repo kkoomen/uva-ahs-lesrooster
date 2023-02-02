@@ -17,9 +17,9 @@ genereren.
 Tot mijn verbazing doet de Hill Climber het over het algemeen veel beter dan de
 tabu search.
 
-![tabu search versus hill climber results for 10k iterations](./stats.png)
-
 Als er geen einde is, dan zou tabu search lager moeten uitkomen dan de hill
 climber. Het feit dat hill climber het hier beter lijkt te doen is mogelijk
 omdat er heel veel local optimums zijn in deze casus, waardoor de hill climber
 het erg goed doet.
+
+![tabu search versus hill climber results for 10k iterations](./stats.png)
