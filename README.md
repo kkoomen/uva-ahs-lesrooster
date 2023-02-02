@@ -2,7 +2,9 @@
 
 # Lesrooster
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/kkoomen/uva-ahs-lesrooster/test.yml?label=tests)
+<a href="https://github.com/kkoomen/uva-ahs-lesrooster/actions/workflows/test.yml">
+<img src="https://img.shields.io/github/actions/workflow/status/kkoomen/uva-ahs-lesrooster/test.yml?label=tests" />
+</a>
 
 Deze repository bevat een implementatie voor de
 [Lectures & Lesrooster](https://ah.proglab.nl/cases/lectures-en-lesroosters)
