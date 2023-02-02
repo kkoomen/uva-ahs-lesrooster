@@ -65,7 +65,7 @@ class TestCourse(TestCase):
         groups = course.create_seminar_student_groups()
         self.assertEqual(len(groups), 2)
 
-    def test_create_pracicum_student_groups(self) -> None:
+    def test_create_practical_student_groups(self) -> None:
         enrolled_students = [
             Student('John', 'Doe', '1', ['foo']),
             Student('Mary', 'Jane', '2', ['foo']),
