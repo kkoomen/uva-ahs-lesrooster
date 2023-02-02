@@ -92,16 +92,16 @@ maluspunten om te zien hoe het aantal maluspunten wordt beïnvloed door deze
 aanpassingen.
 
 Zoals in de onderstaande grafieken te zien is heeft het wisselen van studenten
-(students permuting) redelijke invloed tot 4000 iteraties en dan zweeft het om
-een bepaald aantal maluspunten heen. Waarschijnlijk was de gegenereerde
-oplossing erg slecht verdeeld qua studenten, waardoor een paar permutatie dit
-flink naar beneden heeft gehaald.
+(students permuting) redelijke invloed tot de eerste ±200 iteraties en dan
+zweeft het om een bepaald aantal maluspunten heen. Waarschijnlijk was de
+gegenereerde oplossing erg slecht verdeeld qua studenten, waardoor een paar
+permutatie dit flink naar beneden heeft gehaald.
 
 Het omwisselen van twee random activiteiten (event swapping) geeft meer speling
-in de malus score waarbij het varieert van 800+ tot wel 1400+.
+in de malus score waarbij het varieert van 1100+ tot wel 2000+.
 
-Bij grafiek 1 en 2 is het laagste aantal maluspunten 800+, maar als we kijken
-naar de combinatie van beide dan zien we dat het aantal zelfs de 400+ behaald.
+Bij grafiek 1 en 2 is het laagste aantal maluspunten 700+, maar als we kijken
+naar de combinatie van beide dan zien we dat het aantal zelfs de 500+ behaald.
 In grafiek 1 stijgt het soms zelfs uit boven de initiële aantal maluspunten. In
 grafiek 2 zien we dit totaal niet, maar in grafiek 3 zien we dat de combinatie
 van beide helpt om het aantal maluspunten nóg lager maakt en ook alleen maar
