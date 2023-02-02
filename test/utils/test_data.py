@@ -9,7 +9,7 @@ class TestUtilsData(TestCase):
     def test_load_students(self, mock_csv_reader, data_path) -> None:
         mock_csv_reader.return_value = iter([
             ['Achternaam', 'Voornaam', 'Stud.Nr.', 'Vak1', 'Vak2', 'Vak3', 'Vak4', 'Vak5'],
-            ['Abbing', 'Yanick', '52311353', 'Analysemethoden en -technieken', 'Data Mining', 'Lineaire Algebra', 'Software engineering'],
+            ['Abbing', 'Yanick', '52311353', 'Analysemethoden en -technieken', 'Data Mining', 'Lineaire Algebra', '', ''],
         ])
         data_path.return_value = 'students.csv'
 
@@ -24,7 +24,6 @@ class TestUtilsData(TestCase):
             'Analysemethoden en -technieken',
             'Data Mining',
             'Lineaire Algebra',
-            'Software engineering'
         ])
 
     @mock.patch('code.utils.helpers.data_path')
