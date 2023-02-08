@@ -76,15 +76,15 @@ Voor alle mogelijke opties, zie `./main.py --help`
 
 Random algoritme:
 - `./main.py -a random -i 10`
-- `./main.py -a random --random-walk -i 1000 --show-heatmap`
+- `./main.py -a random --random-walk -i 1000 --plot-heatmap`
 - `./main.py -a random -e csv -e json`
-- `./main.py -a random -e ics --show-heatmap`
+- `./main.py -a random -e ics --plot-heatmap`
 
 Greedy algoritme:
 - `./main.py -a greedy`
 - `./main.py -a random-greedy -s`
-- `./main.py -a greedy --show-heatmap`
-- `./main.py -a greedy -e ics --show-heatmap`
+- `./main.py -a greedy --plot-heatmap`
+- `./main.py -a greedy -e ics --plot-heatmap`
 
 Visualisaties:
 - `./main.py --visualization course-conflicts`: Visualiseer de course vak conflicten met graph coloring
